@@ -1,5 +1,5 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
+  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value \u2014 do not trust this file blindly.",
   "verifiedAt": "2026-09-16",
   "chain": {
     "name": "Arc",
@@ -42,6 +42,43 @@
   },
   "provenance": {
     "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
-    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit — reviewed manually, pull-payment only, no admin drain path"
+    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit \u2014 reviewed manually, pull-payment only, no admin drain path"
+  },
+  "instantV4": {
+    "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
+    "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
+    "uerc20Factory": "0xF94bFe8D7583C2272527C9A45efa5c07b4a26c22",
+    "instantLaunchStrategy": "0xfA5997445db1E9FB7F7664FD176379B6B26497f0",
+    "feeSplitter": "0xD6B05564ceA990b69ABF10B433279093758e2A54",
+    "beneficiaryVault": "0xC31c8853f6C0CA12421eb36906dB8BFaf89A85bA",
+    "swapRouterPoolSwapTest": "0xC8426731A1AA71943BeEfFf3dcE688C6f4295dDb",
+    "deployBlock": 21158000,
+    "poolKey": {
+      "currency0": "0x0000000000000000000000000000000000000000",
+      "fee": 10000,
+      "tickSpacing": 100,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "_note": "currency1 = the launched token"
+    },
+    "economics": {
+      "totalSupply": "1000000000e18 (fixed)",
+      "openingFdvUsd": 4204,
+      "initialTick": 123800,
+      "lpFeeBps": 100,
+      "lpFeeSplit": "50% platform treasury / 50% creator via BeneficiaryVault",
+      "launchFeeUsdc": 0
+    },
+    "flagship": {
+      "token": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+      "symbol": "SOLON",
+      "poolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77"
+    },
+    "upstream": {
+      "repo": "github.com/Uniswap/liquidity-launcher",
+      "commit": "dd8769cd45c0e9450e928513ee129b0af74f7f32",
+      "factoryRepo": "github.com/Uniswap/uerc20-factory",
+      "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
+      "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
+    }
   }
 }

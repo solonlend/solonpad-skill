@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the USDC-native launchpad on Arc (Circle's L1, chainId 5042) — by calling the on-chain Pons V2 engine directly, no frontend or account. Load when an autonomous agent needs to create a token, trade a bonding curve, track graduation, or claim creator fees on Arc.
+description: Launch, buy and sell memecoins on SolonPad — the USDC-native launchpad on Arc (Circle's L1, chainId 5042) — by calling the contracts directly, no frontend or account. Default mode launches tokens straight into a Uniswap v4 pool (instantly visible on GMGN/DexScreener/GeckoTerminal); a Pons V2 bonding-curve mode remains available. Load when an autonomous agent needs to create a token, trade, or claim creator fees on Arc.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.1.0
+version: 0.2.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -19,6 +19,17 @@ contracts. This directory IS the interface.
 Re-verify every address in `addresses.json` on-chain (`VERIFY.md`) before sending value.
 Provenance: 13/14 engine sources are whitespace-identical to the Sourcify `exact_match`
 of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
+
+## Two modes (v0.2.0)
+
+- **Instant v4 (DEFAULT)** — one multicall births the token directly in a Uniswap
+  v4 pool: no curve, no graduation, no launch fee. 1B fixed supply, all of it
+  pool-locked, opening FDV ≈$4.2K, 1% LP fee split 50/50 platform/creator.
+  Engine = official Uniswap Liquidity Launcher instances (Sourcify-verified,
+  2-line fee diff vs upstream). Addresses in `addresses.json → instantV4`;
+  sequences in `AGENT-GUIDE.md` §V4.
+- **Curve (Pons V2)** — the original progressive launch (4,000 phantom +
+  10,000 USDC graduation into v4). Everything below still applies to it.
 
 ## When to use
 - An agent wants to **create a token** on Arc in one transaction (1 USDC fee) and receive

@@ -23,3 +23,18 @@ Never trust `addresses.json` blindly (repo could be stale or tampered). Each che
    `https://sourcify.dev/server/v2/contract/4663/<addr>?fields=sources` and diff against
    `src/v2/` at the pinned commit. Expected: 13/14 files whitespace-identical,
    FeeEscrow reviewed separately.
+
+## Instant v4 checks (before value-moving txs in v4 mode)
+
+8. **Launcher is canonical**: `A.instantV4.liquidityLauncher` code hash matches the
+   deployment listed in github.com/Uniswap/liquidity-launcher (same vanity address
+   across chains). Sourcify: `/server/v2/contract/5042/<addr>`.
+9. **Strategy constants**: `strategy.LP_FEE() == 10000`, `strategy.TICK_SPACING() == 100`,
+   `strategy.TOTAL_SUPPLY() == 1e9 * 1e18`, `strategy.feeSplitter() == A.instantV4.feeSplitter`,
+   `strategy.initialTick() == 123800`. The source diff vs upstream commit
+   dd8769c is exactly the two constants — verify on Sourcify.
+10. **Splitter is terminal**: FeeSplitter has no owner and no withdraw; positions sent
+   to it are irrecoverable by design (fee streams only). Recipients and bps are
+   immutable constructor state.
+11. **Vault claim gating**: only the beneficiary NFT owner can claim; `collectFees`
+   pays the caller nothing.

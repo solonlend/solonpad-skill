@@ -1,5 +1,74 @@
 # SolonPad — agent call sequences
 
+Two launch modes. **Instant v4 (below) is the default since 2026-09-16**; the
+progressive bonding curve (Pons V2) remains available and is documented in the
+second half of this file. `A = addresses.json`, `V = A.instantV4`. Native USDC
+amounts are 18-dec `msg.value` throughout.
+
+## V4-0. Discover instant launches
+
+```
+created  = eth_getLogs({ address: V.uerc20Factory,  topics: [TokenCreated.topic],  fromBlock: V.deployBlock })
+launched = eth_getLogs({ address: V.instantLaunchStrategy, topics: [TokenLaunched.topic], fromBlock: V.deployBlock })
+# a SolonPad instant launch = TokenCreated and TokenLaunched in the SAME tx,
+# with finalPositionRecipient == V.feeSplitter
+```
+
+Pool key for every launch: `{currency0: 0x0, currency1: token, fee: 10000,
+tickSpacing: 100, hooks: 0x0}`; `poolId = keccak256(abi.encode(poolKey))`.
+State: `StateView.getSlot0(poolId)` → price; `token.tokenURI()` → on-chain JSON
+metadata (description / website / image).
+
+## V4-1. Launch a token (1 multicall, no launch fee)
+
+```
+graffiti = launcher.getGraffiti(you)
+token    = factory.getUERC20Address(name, symbol, 18, V.liquidityLauncher, graffiti)   # CREATE2 predict
+tokenData = abi.encode(UERC20Metadata{description, website, image, extraData: 0x})
+launcher.multicall([
+  createToken(V.uerc20Factory, name, symbol, 18, 1e9*1e18, V.liquidityLauncher, tokenData),
+  distributeToken(token, (V.instantLaunchStrategy, 1e9*1e18, abi.encode((feeBeneficiary))), bytes32(0)),
+])
+```
+
+- Supply is FIXED at 1,000,000,000 × 1e18 (strategy hard constraint).
+- The whole supply becomes a single-sided v4 position opening at ≈$4.2K FDV
+  (tick 123800); the LP NFT is locked in the FeeSplitter forever. You receive
+  no allocation — buy on market like everyone else.
+- `feeBeneficiary` gets the creator half of the 1% LP fee via a transferable
+  NFT in the BeneficiaryVault.
+
+## V4-2. Trade
+
+Any v4-compatible router works (it is a plain pool). Reference sequence with
+the deployed PoolSwapTest router `V.swapRouterPoolSwapTest`:
+
+```
+# buy: exact-in native USDC
+router.swap{value: in}(poolKey, {zeroForOne: true,  amountSpecified: -in,
+  sqrtPriceLimitX96: limit}, {takeClaims: false, settleUsingBurn: false}, "")
+# sell: approve token to router first, then zeroForOne: false
+```
+
+Set `sqrtPriceLimitX96` from your own quote ± slippage: the swap fills up to
+the limit and refunds the unspent input (partial fills are possible — check
+the received amount, not just success). Quote from `getSlot0` + position
+liquidity with standard v4 math.
+
+## V4-3. Creator fees
+
+```
+FeeSplitter.collectFees([tokenId])   # permissionless crank; caller gets nothing
+BeneficiaryVault.claim(tokenId, min0, min1)   # beneficiary NFT owner only
+```
+
+`tokenId` is the LP NFT id from the launch receipt (PositionManager Transfer
+to the FeeSplitter).
+
+---
+
+# Curve mode (Pons V2, progressive launch — optional)
+
 All amounts below are **native USDC with 18 decimals** (`msg.value` units) unless marked
 otherwise. `A = addresses.json`. ABIs in `abis/`. Run `VERIFY.md` first.
 

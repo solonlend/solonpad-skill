@@ -1,0 +1,402 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "_positionManager",
+    "type": "address",
+    "internalType": "contract IPositionManager"
+   },
+   {
+    "name": "splits_",
+    "type": "tuple[]",
+    "internalType": "struct FeeSplit[]",
+    "components": [
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "nativeBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "tokenBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "useCallback",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ]
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ },
+ {
+  "type": "function",
+  "name": "BPS_DENOMINATOR",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "MAX_BALANCE_ALLOWED",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "collectFees",
+  "inputs": [
+   {
+    "name": "tokenIds",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "getSplits",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple[]",
+    "internalType": "struct FeeSplit[]",
+    "components": [
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "nativeBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "tokenBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "useCallback",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ]
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "increaseLiquidity",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "liquidity",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount0Max",
+    "type": "uint128",
+    "internalType": "uint128"
+   },
+   {
+    "name": "amount1Max",
+    "type": "uint128",
+    "internalType": "uint128"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "onERC721Received",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "poolManager",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "positionManager",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPositionManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "event",
+  "name": "FeesCollected",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "nativeAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "tokenAmount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "FeesForwarded",
+  "inputs": [
+   {
+    "name": "recipient",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "currency",
+    "type": "address",
+    "indexed": true,
+    "internalType": "Currency"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "error",
+  "name": "BalanceExceedsMaxAllowed",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "CallbackRecipientNotContract",
+  "inputs": [
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "DuplicateRecipient",
+  "inputs": [
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "InvalidBaseCurrency",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "currency0",
+    "type": "address",
+    "internalType": "Currency"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "InvalidRecipient",
+  "inputs": [
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "InvalidSplitTotal",
+  "inputs": [
+   {
+    "name": "totalBps",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "NoSplits",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NoTokenIds",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotOwner",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "NotPositionManager",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "PoolManagerAlreadyUnlocked",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "Reentrancy",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "UncollectedFees",
+  "inputs": [
+   {
+    "name": "tokenId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "ZeroSplitBps",
+  "inputs": [
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ }
+]
