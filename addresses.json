@@ -1,0 +1,47 @@
+{
+  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
+  "verifiedAt": "2026-09-16",
+  "chain": {
+    "name": "Arc",
+    "chainId": 5042,
+    "chainIdHex": "0x13b2",
+    "gasToken": "USDC (native, 18-dec msg.value)",
+    "usdcErc20View": "0x3600000000000000000000000000000000000000",
+    "usdcErc20Decimals": 6,
+    "rpc": "https://rpc.mainnet.arc.io",
+    "explorer": "https://explorer.arc.io",
+    "blockTimeMs": 510
+  },
+  "solonpad": {
+    "launchFactory": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
+    "feeEscrow": "0x83922922776C121671072C9349D8Cc1867D4856f",
+    "memeHook": "0x9d1a376de8525a2cd622b5c2ce99984f8432e044",
+    "buybackVault": "0x6a64c681606845e5ed4e2340c59414b7d1810631",
+    "launchLocker": "0x3e93df005ab38b4d0b1ad197ee161e57a204a5e9",
+    "graduationExecutor": "0xb39af010a671629d976a0ebd776ed0ac7b20667a",
+    "launchDeployer": "0xe70e060f5c5034e65676fece611e1450c5c9b9ef",
+    "deployBlock": 21134269
+  },
+  "uniswapV4Canonical": {
+    "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+    "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
+    "universalRouter": "0x4fcA4a51Ab4F23A7447b3284fBd7D73289A89Fb1",
+    "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
+    "quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
+    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+    "_source": "developers.uniswap.org v4 deployments page, fetched 2026-09-16"
+  },
+  "economics": {
+    "launchFeeUsdc": 1,
+    "phantomReserveUsdc": 4000,
+    "graduationTargetUsdc": 10000,
+    "curveFeeBps": 100,
+    "tokenSupply": "1000000000e18",
+    "tickSpacing": 200,
+    "_note": "launchFee/phantom/graduation are owner-adjustable on the factory; curveFeeBps and supply are fixed to match the verified Pons V2 upstream."
+  },
+  "provenance": {
+    "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
+    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit — reviewed manually, pull-payment only, no admin drain path"
+  }
+}
