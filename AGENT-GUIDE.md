@@ -162,3 +162,26 @@ accrued fees to the escrow and executes the buyback slice; anyone may crank it.
 - Keep ≥0.05 native USDC for gas — a buy that spends the entire balance strands you.
 - A curve at >95% progress can graduate under you: send buys with `minOut` and accept
   the partial-fill refund path, never assume the full amount executes on-curve.
+
+
+## §Aggregator — trading any pad's pan through SolonFeeRouter (v0.3.0)
+
+One stateless contract per chain (`addresses.json → aggregator.feeRouter`), 0.5%
+interface fee on the quote leg, `minOut` net of fee. ABI: `abis/SolonFeeRouter.json`.
+
+- **Pons curve pans (RH, pre-graduation)**
+  - Buy (ETH quote): `feeRouter.curveBuy{value: quoteIn}(curve, address(0), quoteIn, minTokensOut)`
+    — tokens go straight to you; partial-fill refunds are forwarded back.
+  - Sell: `token.approve(feeRouter, amt)` → `feeRouter.curveSell(curve, token, address(0), amt, minQuoteOut)`.
+  - ERC20-quoted curves: pass the quote address and `approve` it instead; `msg.value` must be 0.
+- **Any open-hook v4 pool (both chains)**
+  - Buy: `feeRouter.v4Swap{value: amountIn}(poolKey, true, amountIn, minOut, false)`
+    (native quote) — ERC20 quote: approve the router, no value.
+  - Sell: `token.approve(feeRouter, amt)` → `feeRouter.v4Swap(poolKey, false, amt, minOut, true)`.
+  - `poolKey` comes verbatim from the read API (`poolKey` field). Direction:
+    `zeroForOne=true` spends currency0. Check the hook is in
+    `aggregator.hookRouting.open` first; closed hooks revert for external routers.
+- **Launching onto Pons from your own wallet (RH)** — call Pons directly:
+  `0x7eD5…1EC7e.launchToken{value: launchFee()}(params, 0, address(0))`; the
+  TokenParams tuple layout is in the Pons section of `abis/`. SolonPad's frontend
+  adds a flat 0.0002 ETH platform fee; calling the factory yourself, you owe nothing.

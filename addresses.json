@@ -1,84 +1,191 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value \u2014 do not trust this file blindly.",
-  "verifiedAt": "2026-09-16",
-  "chain": {
-    "name": "Arc",
-    "chainId": 5042,
-    "chainIdHex": "0x13b2",
-    "gasToken": "USDC (native, 18-dec msg.value)",
-    "usdcErc20View": "0x3600000000000000000000000000000000000000",
-    "usdcErc20Decimals": 6,
-    "rpc": "https://rpc.mainnet.arc.io",
-    "explorer": "https://explorer.arc.io",
-    "blockTimeMs": 510
-  },
-  "solonpad": {
-    "launchFactory": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
-    "feeEscrow": "0x83922922776C121671072C9349D8Cc1867D4856f",
-    "memeHook": "0x9d1a376de8525a2cd622b5c2ce99984f8432e044",
-    "buybackVault": "0x6a64c681606845e5ed4e2340c59414b7d1810631",
-    "launchLocker": "0x3e93df005ab38b4d0b1ad197ee161e57a204a5e9",
-    "graduationExecutor": "0xb39af010a671629d976a0ebd776ed0ac7b20667a",
-    "launchDeployer": "0xe70e060f5c5034e65676fece611e1450c5c9b9ef",
-    "deployBlock": 21134269
-  },
-  "uniswapV4Canonical": {
-    "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
-    "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
-    "universalRouter": "0x4fcA4a51Ab4F23A7447b3284fBd7D73289A89Fb1",
-    "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
-    "quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
-    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
-    "_source": "developers.uniswap.org v4 deployments page, fetched 2026-09-16"
+ "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value \u2014 do not trust this file blindly.",
+ "verifiedAt": "2026-09-17",
+ "chain": {
+  "name": "Arc",
+  "chainId": 5042,
+  "chainIdHex": "0x13b2",
+  "gasToken": "USDC (native, 18-dec msg.value)",
+  "usdcErc20View": "0x3600000000000000000000000000000000000000",
+  "usdcErc20Decimals": 6,
+  "rpc": "https://rpc.mainnet.arc.io",
+  "explorer": "https://explorer.arc.io",
+  "blockTimeMs": 510
+ },
+ "solonpad": {
+  "launchFactory": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
+  "feeEscrow": "0x83922922776C121671072C9349D8Cc1867D4856f",
+  "memeHook": "0x9d1a376de8525a2cd622b5c2ce99984f8432e044",
+  "buybackVault": "0x6a64c681606845e5ed4e2340c59414b7d1810631",
+  "launchLocker": "0x3e93df005ab38b4d0b1ad197ee161e57a204a5e9",
+  "graduationExecutor": "0xb39af010a671629d976a0ebd776ed0ac7b20667a",
+  "launchDeployer": "0xe70e060f5c5034e65676fece611e1450c5c9b9ef",
+  "deployBlock": 21134269
+ },
+ "uniswapV4Canonical": {
+  "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+  "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
+  "universalRouter": "0x4fcA4a51Ab4F23A7447b3284fBd7D73289A89Fb1",
+  "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
+  "quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "_source": "developers.uniswap.org v4 deployments page, fetched 2026-09-16"
+ },
+ "economics": {
+  "launchFeeUsdc": 1,
+  "phantomReserveUsdc": 4000,
+  "graduationTargetUsdc": 10000,
+  "curveFeeBps": 100,
+  "tokenSupply": "1000000000e18",
+  "tickSpacing": 200,
+  "_note": "launchFee/phantom/graduation are owner-adjustable on the factory; curveFeeBps and supply are fixed to match the verified Pons V2 upstream."
+ },
+ "provenance": {
+  "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
+  "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit \u2014 reviewed manually, pull-payment only, no admin drain path"
+ },
+ "instantV4": {
+  "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
+  "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
+  "uerc20Factory": "0xF94bFe8D7583C2272527C9A45efa5c07b4a26c22",
+  "instantLaunchStrategy": "0xfA5997445db1E9FB7F7664FD176379B6B26497f0",
+  "feeSplitter": "0xD6B05564ceA990b69ABF10B433279093758e2A54",
+  "beneficiaryVault": "0xC31c8853f6C0CA12421eb36906dB8BFaf89A85bA",
+  "swapRouterPoolSwapTest": "0xC8426731A1AA71943BeEfFf3dcE688C6f4295dDb",
+  "deployBlock": 21158000,
+  "poolKey": {
+   "currency0": "0x0000000000000000000000000000000000000000",
+   "fee": 10000,
+   "tickSpacing": 100,
+   "hooks": "0x0000000000000000000000000000000000000000",
+   "_note": "currency1 = the launched token"
   },
   "economics": {
-    "launchFeeUsdc": 1,
-    "phantomReserveUsdc": 4000,
-    "graduationTargetUsdc": 10000,
-    "curveFeeBps": 100,
-    "tokenSupply": "1000000000e18",
-    "tickSpacing": 200,
-    "_note": "launchFee/phantom/graduation are owner-adjustable on the factory; curveFeeBps and supply are fixed to match the verified Pons V2 upstream."
+   "totalSupply": "1000000000e18 (fixed)",
+   "openingFdvUsd": 4204,
+   "initialTick": 123800,
+   "lpFeeBps": 100,
+   "lpFeeSplit": "50% platform treasury / 50% creator via BeneficiaryVault",
+   "launchFeeUsdc": 0
   },
-  "provenance": {
-    "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
-    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit \u2014 reviewed manually, pull-payment only, no admin drain path"
+  "flagship": {
+   "token": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+   "symbol": "SOLON",
+   "poolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77"
   },
-  "instantV4": {
-    "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
-    "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
-    "uerc20Factory": "0xF94bFe8D7583C2272527C9A45efa5c07b4a26c22",
-    "instantLaunchStrategy": "0xfA5997445db1E9FB7F7664FD176379B6B26497f0",
-    "feeSplitter": "0xD6B05564ceA990b69ABF10B433279093758e2A54",
-    "beneficiaryVault": "0xC31c8853f6C0CA12421eb36906dB8BFaf89A85bA",
-    "swapRouterPoolSwapTest": "0xC8426731A1AA71943BeEfFf3dcE688C6f4295dDb",
-    "deployBlock": 21158000,
-    "poolKey": {
-      "currency0": "0x0000000000000000000000000000000000000000",
-      "fee": 10000,
-      "tickSpacing": 100,
-      "hooks": "0x0000000000000000000000000000000000000000",
-      "_note": "currency1 = the launched token"
-    },
-    "economics": {
-      "totalSupply": "1000000000e18 (fixed)",
-      "openingFdvUsd": 4204,
-      "initialTick": 123800,
-      "lpFeeBps": 100,
-      "lpFeeSplit": "50% platform treasury / 50% creator via BeneficiaryVault",
-      "launchFeeUsdc": 0
-    },
-    "flagship": {
-      "token": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-      "symbol": "SOLON",
-      "poolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77"
-    },
-    "upstream": {
-      "repo": "github.com/Uniswap/liquidity-launcher",
-      "commit": "dd8769cd45c0e9450e928513ee129b0af74f7f32",
-      "factoryRepo": "github.com/Uniswap/uerc20-factory",
-      "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
-      "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
-    }
+  "upstream": {
+   "repo": "github.com/Uniswap/liquidity-launcher",
+   "commit": "dd8769cd45c0e9450e928513ee129b0af74f7f32",
+   "factoryRepo": "github.com/Uniswap/uerc20-factory",
+   "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
+   "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
   }
+ },
+ "robinhood": {
+  "_comment": "SolonPad on Robinhood Chain (4663). Native ETH gas; instant v4 only (no curve). Verify like Arc before sending value.",
+  "chainId": 4663,
+  "rpc": "https://rpc.mainnet.chain.robinhood.com/rpc",
+  "uerc20Factory": "0x83922922776C121671072C9349D8Cc1867D4856f",
+  "beneficiaryVault": "0x8aF664E15D27F6E126662D12D2Db9AedD8113424",
+  "feeSplitter": "0x6A64C681606845E5Ed4E2340C59414b7d1810631",
+  "instantLaunchStrategy": "0x3e93DF005AB38B4D0B1aD197Ee161E57A204a5e9",
+  "nativeInitialTick": 201800,
+  "poolSwapTest": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
+  "feeRouter": "0xBef20379BdE976e807d8E6E9E831961512A02278",
+  "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
+  "flagshipToken": "0x0aC0EA2F38598F1526A03152233E4AC861b2d138",
+  "quoteInstances": {
+   "NVDA": {
+    "quote": "0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec",
+    "tick": 177600,
+    "splitter": "0xB39aF010A671629D976a0ebd776eD0aC7B20667A",
+    "strategy": "0xe70E060F5c5034e65676feCe611E1450c5c9B9ef"
+   },
+   "TSLA": {
+    "quote": "0x322f0929c4625ed5bad873c95208d54e1c003b2d",
+    "tick": 182700,
+    "splitter": "0x572dFa2b72168331d4E9877D80d1165158928432",
+    "strategy": "0xA65a6a95B84FDB666C7B7ec249a7B8A2Cb495803"
+   },
+   "AAPL": {
+    "quote": "0xaf3d76f1834a1d425780943c99ea8a608f8a93f9",
+    "tick": 181900,
+    "splitter": "0x637A23A8ABD2F23a9fF4dfa941A3419fdfDc309E",
+    "strategy": "0x602bA1779edbD63d9bca9c8cFEBcA56E0f64C055"
+   },
+   "META": {
+    "quote": "0xc0d6457c16cc70d6790dd43521c899c87ce02f35",
+    "tick": 189000,
+    "splitter": "0x13D08E4D1a41ccC5E793145500739D6DAbB94942",
+    "strategy": "0x19E7593C1d0A0508a560a1B5576E209F5cD99161"
+   },
+   "GOOGL": {
+    "quote": "0x2e0847e8910a9732eb3fb1bb4b70a580adad4fe3",
+    "tick": 182100,
+    "splitter": "0x0746909447A5298f06a6b7C3b7AF98e8f2967E43",
+    "strategy": "0xEA19c07E5f9EDAB5E45F3afd9b7E0D82E249Ced8"
+   },
+   "SPY": {
+    "quote": "0x117cc2133c37b721f49de2a7a74833232b3b4c0c",
+    "tick": 190100,
+    "splitter": "0xc240e6C80F231D7Bf9e21D146E6E397374Fa08DC",
+    "strategy": "0xf78F379D7E82521EB8c4C161f4A77e2F8219Ec5b"
+   },
+   "PONS": {
+    "quote": "0x39dbed3a2bd333467115de45665cc57f813c4571",
+    "tick": 119400,
+    "splitter": "0x957970316f088aa9913fE55aE6e8cDEBF3B4652E",
+    "strategy": "0x04D08A9510AEe9318a018e4A538E259fC56BaB2e"
+   },
+   "CASHCAT": {
+    "quote": "0x020bfc650a365f8bb26819deaabf3e21291018b4",
+    "tick": 107200,
+    "splitter": "0x07306255319b77338C1FC462bf31D4a75e31af5D",
+    "strategy": "0xF560662992611d9054451c40F54d69C19E25dBbe"
+   }
+  }
+ },
+ "aggregator": {
+  "_comment": "SolonPad aggregates every pad: Pons+pools.trade on RH, Minara/Azex/all v4 pools on Arc. FeeRouter wraps curve and v4 trades with a 0.5% interface fee on the quote leg (buys: input side; sells: output side; minOut is net of fee). Stateless, holds nothing between txs. ABI: abis/SolonFeeRouter.json.",
+  "feeRouter": {
+   "arc": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
+   "robinhood": "0xBef20379BdE976e807d8E6E9E831961512A02278"
+  },
+  "feeBps": 50,
+  "readApi": {
+   "launches": "https://solonpad.fun/api/launches?chain=arc|rh \u2014 every indexed pan incl. external pads; fields: source, hook, poolKey, curve, price, change24h, originDomain",
+   "market": "https://solonpad.fun/api/market/<token> \u2014 single-market detail"
+  },
+  "externalSources": {
+   "rh": {
+    "pons": {
+     "factory": "0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e",
+     "gradHook": "0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044"
+    },
+    "pools.trade": {
+     "factory": "0x000000e200088d55c39a11f609e5f667729ad49b"
+    }
+   },
+   "arc": {
+    "minara": {
+     "factory": "0xFf99D8f6C994607576eB652EDCf12E04a7EbfBf6",
+     "hook": "0xb6A65950534F061618B4AE102FBcbb8541a8e0cC"
+    },
+    "market": "all v4 pools quoted in native USDC, fee <= 3%"
+   }
+  },
+  "hookRouting": {
+   "open": [
+    "0x0000000000000000000000000000000000000000",
+    "0xb6A65950534F061618B4AE102FBcbb8541a8e0cC",
+    "0x4Ab0BF61327761fffC5910052d9E0b9a94F960CC",
+    "0x47e7936ae9891e61C5123db720593c05dE7120cc",
+    "0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044"
+   ],
+   "closed": [
+    "0x20EEad6db6b3d0a4491E9073119DD0EBFF166AcC"
+   ],
+   "_comment": "open = fork-probed: PoolSwapTest buy+sell succeed for an external caller. closed = hook reverts for non-allowlisted routers (display only)."
+  }
+ }
 }

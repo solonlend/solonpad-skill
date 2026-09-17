@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the USDC-native launchpad on Arc (Circle's L1, chainId 5042) — by calling the contracts directly, no frontend or account. Default mode launches tokens straight into a Uniswap v4 pool (instantly visible on GMGN/DexScreener/GeckoTerminal); a Pons V2 bonding-curve mode remains available. Load when an autonomous agent needs to create a token, trade, or claim creator fees on Arc.
+description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. Load when an autonomous agent needs to create a token, trade any pad's pan, or claim creator fees on Arc or Robinhood Chain.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.2.0
+version: 0.3.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -19,6 +19,23 @@ contracts. This directory IS the interface.
 Re-verify every address in `addresses.json` on-chain (`VERIFY.md`) before sending value.
 Provenance: 13/14 engine sources are whitespace-identical to the Sourcify `exact_match`
 of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
+
+## Multi-chain + aggregator (v0.3.0)
+
+- **Robinhood Chain (4663)** — same instant-v4 engine, native **ETH** gas/quote,
+  plus quote instances priced in tokenized stocks and memes (NVDA, TSLA, AAPL,
+  META, GOOGL, SPY, PONS, CASHCAT). No curve mode on RH. Addresses in
+  `addresses.json → robinhood`. Flagship: SOLON (`flagshipToken`).
+- **Aggregator** — SolonPad indexes every other pad's pools: Pons + pools.trade
+  on RH; Minara, Azex and ALL native-USDC v4 pools on Arc. Read layer:
+  `https://solonpad.fun/api/launches?chain=arc|rh` (fields: `source`, `hook`,
+  `poolKey`, `curve`, `price`, `change24h`, `originDomain`). Trade layer:
+  **SolonFeeRouter** (`addresses.json → aggregator.feeRouter`, ABI
+  `abis/SolonFeeRouter.json`) wraps curve buys/sells and v4 swaps with a 0.5%
+  interface fee on the quote leg — buys skim the input, sells skim the output,
+  `minOut` is always net of fee. Stateless; refunds and outputs forward in the
+  same call. Only hooks in `aggregator.hookRouting.open` are tradeable this
+  way (each was fork-probed); `closed` hooks are display/index only.
 
 ## Two modes (v0.2.0)
 
