@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. Load when an autonomous agent needs to create a token, trade any pad's pan, or claim creator fees on Arc or Robinhood Chain.
+description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, or claim creator fees.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.3.0
+version: 0.4.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -108,3 +108,27 @@ node pad-read.mjs 0xToken... 25       # + quote: what 25 USDC buys right now
 
 Not available to persons or entities in the United States, China, or sanctioned
 jurisdictions.
+
+## Agent loop (v0.4)
+
+The aggregator's read API turns this skill into a full agent trading layer:
+
+| Scenario | Where |
+|---|---|
+| Discover new pans incrementally | `GET /api/changes?chain=&since=` — `AGENT-GUIDE.md` §D1 |
+| One-call token due-diligence data | `GET /api/factsheet/{token}?chain=` — §D2 (tri-state fields) |
+| Score a pan before touching it | §D3 — calibrated rule table, evidence-chain output |
+| Trade with safety rails | §D4 — `[FINANCIAL EXECUTION]`, mandatory minOut |
+| Manage positions / creator fees | §V4-3, §5 |
+
+Fields the factsheet marks `unavailable` are unknown, never zero. The API is a
+convenience view — `VERIFY.md` shows how to spot-check it against the chain
+before trusting it with value.
+
+## When NOT to use (routing)
+- Cross-chain meme analytics, smart-money tracking, holder chip analysis →
+  that is GMGN's skill family, not us.
+- Solana / BSC / Base pans → not our chains (Arc 5042 + Robinhood 4663 only).
+- Deep holder-structure data → we do not have it; do not improvise it from
+  our fields.
+- Discover→score→trade on Arc/RH from one interface → this skill.

@@ -38,3 +38,19 @@ Never trust `addresses.json` blindly (repo could be stale or tampered). Each che
    immutable constructor state.
 11. **Vault claim gating**: only the beneficiary NFT owner can claim; `collectFees`
    pays the caller nothing.
+
+## Factsheet spot-check (v0.4)
+
+The read API is convenience, the chain is truth. Once per session, pick any
+listed token and cross-check:
+
+1. `factsheet.market` price vs `StateView.getSlot0(poolId)` computed price
+   (pool key from the factsheet's `identity.poolKey`, poolId = keccak of it).
+2. For an `argus.world` pan: `factsheet.fees.buyTaxBps/sellTaxBps` vs the Argus
+   Portal record — `Portal(0xB021Be536808f551b31789422Fd28a6c9c6e97Da)
+   .launches(token)`, words 6/7 of the 11-word struct.
+3. `asof.block` within ~100 blocks of `eth_blockNumber` (else the index is
+   catching up — treat market fields as stale).
+
+A mismatch means: trust the chain, distrust the endpoint, and stop trading
+through the API until they agree again.
