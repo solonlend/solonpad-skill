@@ -3,7 +3,7 @@ name: solonpad
 description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, or claim creator fees.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.4.0
+version: 0.4.2
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -86,6 +86,15 @@ of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
    - Graduated? trade the v4 pool via the Universal Router instead.
    - Creator fees: `escrow.claimToken(...)` / `escrow.claim(...)` — pull-payment, only
      your own credited balance.
+
+## Decode any revert (`errors.json`)
+
+Every custom error selector across the deployed contracts (and the v4/periphery
+stack you will touch through them) lives in `errors.json`:
+`selector → { sig, contracts, hint? }`. On a revert, look up the first 4 bytes
+of the return data; the battle-tested entries carry a `hint` telling you what
+to change. An unknown selector means the revert came from a third-party
+contract, not ours.
 
 ## Runnable reference tool (`tools/`)
 `pad-read.mjs` — read-only (no keys, no transactions): lists all launches with curve

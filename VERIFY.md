@@ -1,5 +1,13 @@
 # VERIFY — run once per session, before the first value-moving tx
 
+**One command runs every scriptable check below** (read-only, exits 1 on any red):
+
+```bash
+cd tools && npm i && node verify.mjs --factsheet 0xAnyListedToken
+```
+
+Manual-only items remain: provenance diffs (7, 8) and source-level review notes.
+
 Never trust `addresses.json` blindly (repo could be stale or tampered). Each check is one
 `eth_call` against `chain.rpc`. Abort on any mismatch.
 

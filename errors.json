@@ -1,0 +1,1539 @@
+{
+ "0x5901e9dd": {
+  "sig": "AboveFloor(uint256,uint256)",
+  "contracts": [
+   "WallTreasury"
+  ]
+ },
+ "0xd81b2f2e": {
+  "sig": "AllowanceExpired(uint256)",
+  "contracts": [
+   "IAllowanceTransfer"
+  ]
+ },
+ "0xe6a0d45f": {
+  "sig": "AlreadyGraduated()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ],
+  "hint": "The curve is closed both ways. Trade the v4 pool instead."
+ },
+ "0x0dc149f0": {
+  "sig": "AlreadyInitialized()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BuybackVault",
+   "PonsV2LaunchLocker"
+  ]
+ },
+ "0x3a81d6fc": {
+  "sig": "AlreadyRegistered()",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0xa741a045": {
+  "sig": "AlreadySet()",
+  "contracts": [
+   "PonsV2LaunchFactory",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x25fbd8be": {
+  "sig": "AlreadySubscribed(uint256,address)",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0x5090d6c6": {
+  "sig": "AlreadyUnlocked()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0xf13e659d": {
+  "sig": "AuthExhausted()",
+  "contracts": [
+   "RadianExecutor"
+  ]
+ },
+ "0xa4c91367": {
+  "sig": "AuthExpired()",
+  "contracts": [
+   "RadianExecutor"
+  ]
+ },
+ "0x5cd5d233": {
+  "sig": "BadSignature()",
+  "contracts": [
+   "RadianExecutor"
+  ]
+ },
+ "0x0bba69fb": {
+  "sig": "BadValue()",
+  "contracts": [
+   "PoFRouter"
+  ]
+ },
+ "0x8c54e309": {
+  "sig": "BadValue(uint256,uint256)",
+  "contracts": [
+   "RadianLaunchRouter"
+  ]
+ },
+ "0xace94481": {
+  "sig": "BurnNotificationReverted(address,bytes)",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0xaefeb924": {
+  "sig": "CannotUpdateEmptyPosition()",
+  "contracts": [
+   "Position"
+  ]
+ },
+ "0x857960b6": {
+  "sig": "CloneFailed()",
+  "contracts": [
+   "Clones1167",
+   "RadianLaunchRouter"
+  ]
+ },
+ "0x49e55bcb": {
+  "sig": "CombinedFeeTooHigh()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x6f5ffb7e": {
+  "sig": "ContractLocked()",
+  "contracts": [
+   "PositionManager",
+   "ReentrancyLock"
+  ]
+ },
+ "0x85258712": {
+  "sig": "CoreLpFeeMustBeZero()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x4ca249dc": {
+  "sig": "Create2EmptyBytecode()",
+  "contracts": [
+   "Create2",
+   "PonsV2LaunchDeployer"
+  ]
+ },
+ "0x9ad465dc": {
+  "sig": "CreatorTaxTooHigh()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ],
+  "hint": "Launch params: creatorTaxBps above the factory cap (500)."
+ },
+ "0x6e6c9830": {
+  "sig": "CurrenciesOutOfOrderOrEqual(address,address)",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0x5212cba1": {
+  "sig": "CurrencyNotSettled()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ],
+  "hint": "v4 accounting: the swap left an unsettled delta — usually wrong direction or wrong currency in the pool key."
+ },
+ "0x4e222a24": {
+  "sig": "CurveFeeTooHigh()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x025ac17e": {
+  "sig": "CurveGraduated()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ],
+  "hint": "Same as AlreadyGraduated: post-graduation, use the v4 pool."
+ },
+ "0x95e32dab": {
+  "sig": "CurveNotQuotable()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xbfb22adf": {
+  "sig": "DeadlinePassed(uint256)",
+  "contracts": [
+   "IPositionManager",
+   "PositionManager"
+  ],
+  "hint": "Your tx deadline elapsed before inclusion — rebuild with a fresh deadline."
+ },
+ "0x0d89438e": {
+  "sig": "DelegateCallNotAllowed()",
+  "contracts": [
+   "NoDelegateCall",
+   "PoolManager"
+  ]
+ },
+ "0x3351b260": {
+  "sig": "DeltaNotNegative(address)",
+  "contracts": [
+   "DeltaResolver",
+   "PositionManager"
+  ]
+ },
+ "0x4c085bf1": {
+  "sig": "DeltaNotPositive(address)",
+  "contracts": [
+   "DeltaResolver",
+   "PositionManager"
+  ]
+ },
+ "0x03dee4c5": {
+  "sig": "ERC1155InsufficientBalance(address,uint256,uint256,uint256)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x3e31884e": {
+  "sig": "ERC1155InvalidApprover(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x5b059991": {
+  "sig": "ERC1155InvalidArrayLength(uint256,uint256)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0xced3e100": {
+  "sig": "ERC1155InvalidOperator(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x57f447ce": {
+  "sig": "ERC1155InvalidReceiver(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x01a83514": {
+  "sig": "ERC1155InvalidSender(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0xe237d922": {
+  "sig": "ERC1155MissingApprovalForAll(address,address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0xfb8f41b2": {
+  "sig": "ERC20InsufficientAllowance(address,uint256,uint256)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0xe450d38c": {
+  "sig": "ERC20InsufficientBalance(address,uint256,uint256)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0xe602df05": {
+  "sig": "ERC20InvalidApprover(address)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0xec442f05": {
+  "sig": "ERC20InvalidReceiver(address)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0x96c6fd1e": {
+  "sig": "ERC20InvalidSender(address)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0x94280d62": {
+  "sig": "ERC20InvalidSpender(address)",
+  "contracts": [
+   "ERC20",
+   "ERC20Burnable",
+   "MockUSD",
+   "PonsV2LauncherToken",
+   "draft-IERC6093"
+  ]
+ },
+ "0xf27f64e4": {
+  "sig": "ERC20TransferFailed()",
+  "contracts": [
+   "Currency"
+  ]
+ },
+ "0x64283d7b": {
+  "sig": "ERC721IncorrectOwner(address,uint256,address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x177e802f": {
+  "sig": "ERC721InsufficientApproval(address,uint256)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0xa9fbf51f": {
+  "sig": "ERC721InvalidApprover(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x5b08ba18": {
+  "sig": "ERC721InvalidOperator(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x89c62b64": {
+  "sig": "ERC721InvalidOwner(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x64a0ae92": {
+  "sig": "ERC721InvalidReceiver(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x73c6ac6e": {
+  "sig": "ERC721InvalidSender(address)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x7e273289": {
+  "sig": "ERC721NonexistentToken(uint256)",
+  "contracts": [
+   "draft-IERC6093"
+  ]
+ },
+ "0x24d35a26": {
+  "sig": "ExcessiveInvalidation()",
+  "contracts": [
+   "IAllowanceTransfer"
+  ]
+ },
+ "0x021c0d43": {
+  "sig": "ExemptionListTooLong()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x203d82d8": {
+  "sig": "Expired()",
+  "contracts": [
+   "PoFVault",
+   "WallTreasury"
+  ]
+ },
+ "0xd6bda275": {
+  "sig": "FailedCall()",
+  "contracts": [
+   "Errors"
+  ]
+ },
+ "0xb06ebf3d": {
+  "sig": "FailedDeployment()",
+  "contracts": [
+   "Errors",
+   "PonsV2LaunchDeployer"
+  ]
+ },
+ "0x4033e4e3": {
+  "sig": "FeeTransferFailed()",
+  "contracts": [
+   "PonsV2GraduationExecutor",
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xed43c3a6": {
+  "sig": "GasLimitTooLow()",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0x9d4b7885": {
+  "sig": "Graduated()",
+  "contracts": [
+   "WallTreasury"
+  ]
+ },
+ "0xd43cabc3": {
+  "sig": "GraduationExecutorNotSet()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xbdcd75af": {
+  "sig": "GraduationRescueTooEarly(uint256)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x2c37d0eb": {
+  "sig": "GraduationSeedNotViable()",
+  "contracts": [
+   "PonsV2GraduationGuard",
+   "PonsV2LaunchFactory"
+  ],
+  "hint": "Graduation cannot seed the pool at current reserves; buy that pushes over the line will partially fill and refund."
+ },
+ "0x6d3bcfe5": {
+  "sig": "GraduationStillViable()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xe65af6a0": {
+  "sig": "HookAddressNotValid(address)",
+  "contracts": [
+   "Hooks"
+  ]
+ },
+ "0xa9e35b2f": {
+  "sig": "HookCallFailed()",
+  "contracts": [
+   "Hooks"
+  ],
+  "hint": "The pool's hook reverted your swap — treat the pan as display-only unless the hook family is listed open."
+ },
+ "0xfa0b71d6": {
+  "sig": "HookDeltaExceedsSwapAmount()",
+  "contracts": [
+   "Hooks"
+  ]
+ },
+ "0x0a85dc29": {
+  "sig": "HookNotImplemented()",
+  "contracts": [
+   "BaseHook",
+   "PonsV2MemeHook"
+  ],
+  "hint": "You called a hook entrypoint this hook does not support; external routing may be closed for this pool family."
+ },
+ "0x197001d6": {
+  "sig": "InexactQuoteTransfer(address,uint256,uint256)",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x495a9962": {
+  "sig": "InexactTransfer(address,uint256,uint256)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xaaad13f7": {
+  "sig": "InputLengthMismatch()",
+  "contracts": [
+   "BaseActionsRouter",
+   "PositionManager"
+  ]
+ },
+ "0x1dc930eb": {
+  "sig": "Insufficient()",
+  "contracts": [
+   "RadianExecutor"
+  ]
+ },
+ "0xf96fb071": {
+  "sig": "InsufficientAllowance(uint256)",
+  "contracts": [
+   "IAllowanceTransfer"
+  ]
+ },
+ "0xf4d678b8": {
+  "sig": "InsufficientBalance()",
+  "contracts": [
+   "DeltaResolver",
+   "PositionManager"
+  ]
+ },
+ "0xcf479181": {
+  "sig": "InsufficientBalance(uint256,uint256)",
+  "contracts": [
+   "Errors",
+   "PonsV2FeeEscrow",
+   "PonsV2LaunchDeployer"
+  ]
+ },
+ "0x098fb561": {
+  "sig": "InsufficientInputAmount()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BondingCurveMath"
+  ]
+ },
+ "0xbb55fd27": {
+  "sig": "InsufficientLiquidity()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BondingCurveMath"
+  ]
+ },
+ "0x42301c23": {
+  "sig": "InsufficientOutputAmount()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BondingCurveMath"
+  ],
+  "hint": "Curve slippage: output fell below your minOut. Re-quote against fresh reserves and retry."
+ },
+ "0x31cdb504": {
+  "sig": "InternalSwapRequiresOperator()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x800c7e91": {
+  "sig": "InvalidBasisPoints()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xc6cc5d7f": {
+  "sig": "InvalidBps()",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x48f5c3ed": {
+  "sig": "InvalidCaller()",
+  "contracts": [
+   "IPoolManager",
+   "IProtocolFees",
+   "PoolManager",
+   "ProtocolFees"
+  ]
+ },
+ "0xb0669cbc": {
+  "sig": "InvalidContractSignature()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "PositionManager",
+   "SignatureVerification"
+  ]
+ },
+ "0x38bbd576": {
+  "sig": "InvalidEthSender()",
+  "contracts": [
+   "NativeWrapper",
+   "PositionManager"
+  ]
+ },
+ "0x96206246": {
+  "sig": "InvalidFeeForExactOut()",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0x7a34030f": {
+  "sig": "InvalidFeePolicy()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ]
+ },
+ "0x2bb8bdd6": {
+  "sig": "InvalidGraduationThreshold()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x1e048e1d": {
+  "sig": "InvalidHookResponse()",
+  "contracts": [
+   "Hooks"
+  ]
+ },
+ "0x8af5ad98": {
+  "sig": "InvalidHopPriceLength()",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0x68b42c59": {
+  "sig": "InvalidLaunchConfigId()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xbc0ecfe3": {
+  "sig": "InvalidLaunchEconomics()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ]
+ },
+ "0x2b7ad4f8": {
+  "sig": "InvalidPhantomQuote()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xc256622b": {
+  "sig": "InvalidPoolKey()",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x00bfc921": {
+  "sig": "InvalidPrice()",
+  "contracts": [
+   "SqrtPriceMath"
+  ]
+ },
+ "0x4f2461b8": {
+  "sig": "InvalidPriceOrLiquidity()",
+  "contracts": [
+   "SqrtPriceMath"
+  ]
+ },
+ "0x8baa579f": {
+  "sig": "InvalidSignature()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "PositionManager",
+   "SignatureVerification"
+  ]
+ },
+ "0x4be6321b": {
+  "sig": "InvalidSignatureLength()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "PositionManager",
+   "SignatureVerification"
+  ]
+ },
+ "0x815e1d64": {
+  "sig": "InvalidSigner()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "PositionManager",
+   "SignatureVerification"
+  ]
+ },
+ "0xd9521a85": {
+  "sig": "InvalidSnipeTaxWindow()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x61487524": {
+  "sig": "InvalidSqrtPrice(uint160)",
+  "contracts": [
+   "TickMath"
+  ]
+ },
+ "0x8b86327a": {
+  "sig": "InvalidTick(int24)",
+  "contracts": [
+   "TickMath"
+  ]
+ },
+ "0x270815a0": {
+  "sig": "InvalidTickSpacing()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xed15e6cf": {
+  "sig": "InvalidTokenId(uint256)",
+  "contracts": [
+   "IPositionDescriptor"
+  ]
+ },
+ "0x374852ca": {
+  "sig": "InvalidTokenParams()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xa7d7d0c5": {
+  "sig": "InvalidVestingTerms()",
+  "contracts": [
+   "PonsV2BuybackVault"
+  ]
+ },
+ "0x14002113": {
+  "sig": "LPFeeTooLarge(uint24)",
+  "contracts": [
+   "LPFeeLibrary"
+  ]
+ },
+ "0xa8b63076": {
+  "sig": "LaunchConfigDisabled()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x1de25df3": {
+  "sig": "LaunchDependenciesNotWired()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x57332dcf": {
+  "sig": "LaunchDeployerNotSet()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xecb27319": {
+  "sig": "LaunchEconomicsMismatch(bytes32,bytes32)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x7e6d78a5": {
+  "sig": "LaunchFeeNotPaid()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x54e3ca0d": {
+  "sig": "ManagerLocked()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ],
+  "hint": "Reentrant v4 call pattern — route through a router (PoolSwapTest/FeeRouter), not raw PoolManager calls."
+ },
+ "0x31e30ad0": {
+  "sig": "MaximumAmountExceeded(uint128,uint128)",
+  "contracts": [
+   "PositionManager",
+   "SlippageCheck"
+  ]
+ },
+ "0x85b8e2f4": {
+  "sig": "MetadataTooLong()",
+  "contracts": [
+   "PonsV2LaunchDeployer"
+  ]
+ },
+ "0x6c34de9d": {
+  "sig": "MinOutTooLow(uint256,uint256)",
+  "contracts": [
+   "WallTreasury"
+  ]
+ },
+ "0x12816f22": {
+  "sig": "MinimumAmountInsufficient(uint128,uint128)",
+  "contracts": [
+   "PositionManager",
+   "SlippageCheck"
+  ],
+  "hint": "PositionManager slippage check: raise your min amounts or re-quote."
+ },
+ "0x3672d25f": {
+  "sig": "MinimumOutputRequired()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2MemeHook"
+  ],
+  "hint": "Curve/hook path: pass minOut >= 1 even when expecting dust — zero reverts (sweepFees pitfall)."
+ },
+ "0xeee66814": {
+  "sig": "MintAmountOverflow()",
+  "contracts": [
+   "PonsV2GraduationExecutor"
+  ]
+ },
+ "0x42b01bce": {
+  "sig": "MissingPrecompile(address)",
+  "contracts": [
+   "Errors"
+  ]
+ },
+ "0xe94f10e2": {
+  "sig": "ModifyLiquidityNotificationReverted(address,bytes)",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0xbda73abf": {
+  "sig": "MustClearExactPositiveDelta()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0x41b2accc": {
+  "sig": "NativeMismatch()",
+  "contracts": [
+   "SolonFeeRouter"
+  ],
+  "hint": "SolonFeeRouter: msg.value must equal the input for native-quoted trades and be 0 for ERC20-quoted ones — you used the wrong quote path."
+ },
+ "0xa0c968e7": {
+  "sig": "NativeSendFailed()",
+  "contracts": [
+   "SolonFeeRouter"
+  ]
+ },
+ "0xf4b3b1bc": {
+  "sig": "NativeTransferFailed()",
+  "contracts": [
+   "Currency"
+  ]
+ },
+ "0xbc760cfe": {
+  "sig": "NativeValueMismatch(uint256,uint256)",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ],
+  "hint": "Curve buy: msg.value must exactly equal amountIn (18-dec native units)."
+ },
+ "0xc2caa2a6": {
+  "sig": "NoBalance()",
+  "contracts": [
+   "PonsV2FeeEscrow"
+  ]
+ },
+ "0x7c402b21": {
+  "sig": "NoCodeSubscriber()",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0xa74f97ab": {
+  "sig": "NoLiquidityToReceiveFees()",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xa3fef2f8": {
+  "sig": "NoPendingChange()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x80e05c00": {
+  "sig": "NoSelfPermit()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "IERC721Permit_v4",
+   "IPositionManager",
+   "PositionManager"
+  ]
+ },
+ "0x5a8b05b0": {
+  "sig": "NoSwapOccurred()",
+  "contracts": [
+   "PoolSwapTest"
+  ]
+ },
+ "0x1fb09b80": {
+  "sig": "NonceAlreadyUsed()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "IPositionManager",
+   "IUnorderedNonce",
+   "PositionManager",
+   "UnorderedNonce"
+  ]
+ },
+ "0xb0ec849e": {
+  "sig": "NonzeroNativeValue()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ],
+  "hint": "This PoolManager call must not carry value for ERC20 currencies."
+ },
+ "0x0ca968d8": {
+  "sig": "NotApproved(address)",
+  "contracts": [
+   "IPositionManager",
+   "PositionManager"
+  ]
+ },
+ "0xba13c3d9": {
+  "sig": "NotAuthorizedLocker()",
+  "contracts": [
+   "PonsV2BuybackVault"
+  ]
+ },
+ "0x377dfc9a": {
+  "sig": "NotBuybackController()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xb9f93944": {
+  "sig": "NotCreatorFeeRecipient()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x4323a555": {
+  "sig": "NotEnoughLiquidity()",
+  "contracts": [
+   "SqrtPriceMath"
+  ]
+ },
+ "0x32cc7236": {
+  "sig": "NotFactory()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BuybackVault",
+   "PonsV2GraduationExecutor",
+   "PonsV2LaunchDeployer",
+   "PonsV2LaunchLocker",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x8d42130c": {
+  "sig": "NotFeeSweepOperator()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x87138d5c": {
+  "sig": "NotInitialized()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ],
+  "hint": "The curve for this token does not exist (wrong address or not a curve pan)."
+ },
+ "0xf512b278": {
+  "sig": "NotKeeper()",
+  "contracts": [
+   "PoFVault",
+   "RadianExecutor",
+   "WallTreasury"
+  ]
+ },
+ "0xea9eaa96": {
+  "sig": "NotLaunchForwarder()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x9e6ff739": {
+  "sig": "NotLauncher()",
+  "contracts": [
+   "PoFRouter"
+  ]
+ },
+ "0x30cd7471": {
+  "sig": "NotOwner()",
+  "contracts": [
+   "RadianExecutor",
+   "RadianLaunchRouter"
+  ]
+ },
+ "0xae18210a": {
+  "sig": "NotPoolManager()",
+  "contracts": [
+   "BaseActionsRouter",
+   "BaseHook",
+   "DeltaResolver",
+   "ImmutableState",
+   "NativeWrapper",
+   "PonsV2MemeHook",
+   "PoolInitializer_v4",
+   "PositionManager",
+   "SafeCallback"
+  ]
+ },
+ "0x20fdc658": {
+  "sig": "NotPositionManager()",
+  "contracts": [
+   "PonsV2LaunchLocker"
+  ]
+ },
+ "0xffa32558": {
+  "sig": "NotReadyToGraduate()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x237e6c28": {
+  "sig": "NotSubscribed()",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0x0da3333b": {
+  "sig": "NotVestBeneficiary()",
+  "contracts": [
+   "PonsV2BuybackVault"
+  ]
+ },
+ "0x584a7938": {
+  "sig": "NotWhitelisted()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xc2074c46": {
+  "sig": "NothingToGraduate()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x00f6b210": {
+  "sig": "NothingToRescue()",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x0ebd4a61": {
+  "sig": "NothingToSpend()",
+  "contracts": [
+   "WallTreasury"
+  ]
+ },
+ "0x342fa66d": {
+  "sig": "OverCap()",
+  "contracts": [
+   "RadianExecutor"
+  ]
+ },
+ "0x1e4fbdf7": {
+  "sig": "OwnableInvalidOwner(address)",
+  "contracts": [
+   "Ownable",
+   "Ownable2Step",
+   "PonsV2BuybackVault",
+   "PonsV2LaunchFactory",
+   "PonsV2LaunchLocker",
+   "PonsV2MemeHook",
+   "RadianStaking",
+   "RadianTreasury"
+  ]
+ },
+ "0x118cdaa7": {
+  "sig": "OwnableUnauthorizedAccount(address)",
+  "contracts": [
+   "Ownable",
+   "Ownable2Step",
+   "PonsV2BuybackVault",
+   "PonsV2LaunchFactory",
+   "PonsV2LaunchLocker",
+   "PonsV2MemeHook",
+   "RadianStaking",
+   "RadianTreasury"
+  ]
+ },
+ "0x2fab92ca": {
+  "sig": "OwnershipCannotBeRenounced()",
+  "contracts": [
+   "PonsV2BuybackVault",
+   "PonsV2LaunchFactory",
+   "PonsV2LaunchLocker",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x4e3de34f": {
+  "sig": "PairTokenDecimalsMismatch(uint8,uint8)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xe43c14ca": {
+  "sig": "PairTokenDecimalsUnavailable()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x764c63c8": {
+  "sig": "PairTokenEconomicsInvalid()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x49285dfb": {
+  "sig": "PairTokenNotApproved()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x26fbfa60": {
+  "sig": "PairTokenValidationFailed()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x7983c051": {
+  "sig": "PoolAlreadyInitialized()",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xd4b05fe0": {
+  "sig": "PoolManagerMustBeLocked()",
+  "contracts": [
+   "IPositionManager",
+   "PositionManager"
+  ]
+ },
+ "0x486aa307": {
+  "sig": "PoolNotInitialized()",
+  "contracts": [
+   "IPoolManager",
+   "Pool",
+   "PoolManager"
+  ]
+ },
+ "0xfe3099b6": {
+  "sig": "PositionAlreadyLocked()",
+  "contracts": [
+   "PonsV2LaunchLocker"
+  ]
+ },
+ "0x6b49c94a": {
+  "sig": "PositionNotHeld()",
+  "contracts": [
+   "PonsV2LaunchLocker"
+  ]
+ },
+ "0x7c9c6e8f": {
+  "sig": "PriceLimitAlreadyExceeded(uint160,uint160)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0x9e4d7cc7": {
+  "sig": "PriceLimitOutOfBounds(uint160)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xf5c787f1": {
+  "sig": "PriceOverflow()",
+  "contracts": [
+   "SqrtPriceMath"
+  ]
+ },
+ "0xc79e5948": {
+  "sig": "ProtocolFeeCurrencySynced()",
+  "contracts": [
+   "IPoolManager",
+   "IProtocolFees",
+   "PoolManager",
+   "ProtocolFees"
+  ]
+ },
+ "0xa7abe2f7": {
+  "sig": "ProtocolFeeTooLarge(uint24)",
+  "contracts": [
+   "IPoolManager",
+   "IProtocolFees",
+   "PoolManager",
+   "ProtocolFees"
+  ]
+ },
+ "0x3ee5aeb5": {
+  "sig": "ReentrancyGuardReentrantCall()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BuybackVault",
+   "PonsV2FeeEscrow",
+   "PonsV2LaunchFactory",
+   "PonsV2MemeHook",
+   "ReentrancyGuard"
+  ]
+ },
+ "0xf0c49d44": {
+  "sig": "RefundFailed()",
+  "contracts": [
+   "RadianLaunchRouter"
+  ]
+ },
+ "0x93dafdf1": {
+  "sig": "SafeCastOverflow()",
+  "contracts": [
+   "SafeCast"
+  ]
+ },
+ "0x327269a7": {
+  "sig": "SafeCastOverflowedIntDowncast(uint8,int256)",
+  "contracts": [
+   "SafeCast"
+  ]
+ },
+ "0xa8ce4432": {
+  "sig": "SafeCastOverflowedIntToUint(int256)",
+  "contracts": [
+   "PonsV2MemeHook",
+   "SafeCast"
+  ]
+ },
+ "0x6dfcc650": {
+  "sig": "SafeCastOverflowedUintDowncast(uint8,uint256)",
+  "contracts": [
+   "SafeCast"
+  ]
+ },
+ "0x24775e06": {
+  "sig": "SafeCastOverflowedUintToInt(uint256)",
+  "contracts": [
+   "PonsV2MemeHook",
+   "SafeCast"
+  ]
+ },
+ "0xe570110f": {
+  "sig": "SafeERC20FailedDecreaseAllowance(address,uint256,uint256)",
+  "contracts": [
+   "SafeERC20"
+  ]
+ },
+ "0x5274afe7": {
+  "sig": "SafeERC20FailedOperation(address)",
+  "contracts": [
+   "PoFRouter",
+   "PoFVault",
+   "PonsV2BondingCurve",
+   "PonsV2BuybackVault",
+   "PonsV2FeeEscrow",
+   "PonsV2GraduationExecutor",
+   "PonsV2LaunchFactory",
+   "PonsV2LaunchLocker",
+   "PonsV2MemeHook",
+   "RadianExecutor",
+   "RadianLaunchRouter",
+   "RadianTreasury",
+   "SafeERC20",
+   "SolonFeeRouter",
+   "WallStaking",
+   "WallTreasury"
+  ]
+ },
+ "0x5a9165ff": {
+  "sig": "SignatureDeadlineExpired()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "IERC721Permit_v4",
+   "IPositionManager",
+   "PositionManager"
+  ]
+ },
+ "0x3b99b53d": {
+  "sig": "SliceOutOfBounds()",
+  "contracts": [
+   "CalldataDecoder"
+  ]
+ },
+ "0x71c4efed": {
+  "sig": "SlippageExceeded(uint256,uint256)",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2GraduationExecutor",
+   "PonsV2MemeHook",
+   "SolonFeeRouter"
+  ]
+ },
+ "0x582157bb": {
+  "sig": "SqrtPriceOutOfBounds()",
+  "contracts": [
+   "PonsV2GraduationGuard",
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x81ea5e9e": {
+  "sig": "SubscriptionReverted(address,bytes)",
+  "contracts": [
+   "INotifier",
+   "IPositionManager",
+   "Notifier",
+   "PositionManager"
+  ]
+ },
+ "0xacb9fa2b": {
+  "sig": "SupplyTooHigh()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xc0b4e373": {
+  "sig": "SupplyTooLow()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xbe8b8507": {
+  "sig": "SwapAmountCannotBeZero()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0xb8e3c385": {
+  "sig": "TickLiquidityOverflow(int24)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xd5e2f7ab": {
+  "sig": "TickLowerOutOfBounds(int24)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xd4d8f3e6": {
+  "sig": "TickMisaligned(int24,int24)",
+  "contracts": [
+   "TickBitmap"
+  ]
+ },
+ "0xb70024f8": {
+  "sig": "TickSpacingTooLarge(int24)",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0xe9e90588": {
+  "sig": "TickSpacingTooSmall(int24)",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0x1ad777f8": {
+  "sig": "TickUpperOutOfBounds(int24)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xc4433ed5": {
+  "sig": "TicksMisordered(int24,int24)",
+  "contracts": [
+   "Pool"
+  ]
+ },
+ "0xb79d40e8": {
+  "sig": "TimelockExpired(uint256)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x810c4f2a": {
+  "sig": "TimelockNotElapsed(uint256)",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xcbdb7b30": {
+  "sig": "TokenNotFound()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x6fed7d85": {
+  "sig": "TooSoon()",
+  "contracts": [
+   "PoFVault",
+   "RadianExecutor",
+   "WallTreasury"
+  ]
+ },
+ "0x90b8ec18": {
+  "sig": "TransferFailed()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2FeeEscrow"
+  ]
+ },
+ "0x82b42900": {
+  "sig": "Unauthorized()",
+  "contracts": [
+   "ERC721Permit_v4",
+   "IERC721Permit_v4",
+   "IPositionManager",
+   "PositionManager"
+  ]
+ },
+ "0x30d21641": {
+  "sig": "UnauthorizedDynamicLPFeeUpdate()",
+  "contracts": [
+   "IPoolManager",
+   "PoolManager"
+  ]
+ },
+ "0xe0aeda7d": {
+  "sig": "UnexpectedNativeValue()",
+  "contracts": [
+   "PonsV2BondingCurve"
+  ],
+  "hint": "ERC20-quoted curve: approve the quote token and send no value."
+ },
+ "0xf7139e33": {
+  "sig": "UnknownPool()",
+  "contracts": [
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x8698bf37": {
+  "sig": "UnknownToken()",
+  "contracts": [
+   "PoFRouter",
+   "RadianExecutor"
+  ]
+ },
+ "0x5cda29d7": {
+  "sig": "UnsupportedAction(uint256)",
+  "contracts": [
+   "BaseActionsRouter",
+   "PositionManager"
+  ]
+ },
+ "0xdd737e7c": {
+  "sig": "UnsupportedPrice()",
+  "contracts": [
+   "PonsV2GraduationGuard",
+   "PonsV2GraduationMath",
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0x3433bb58": {
+  "sig": "V4ExactOutputUnfilled(uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0x8b063d73": {
+  "sig": "V4TooLittleReceived(uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0xa9b7edf7": {
+  "sig": "V4TooLittleReceivedPerHop(uint256,uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0x4713c18b": {
+  "sig": "V4TooLittleReceivedPerHopSingle(uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0x12bacdd3": {
+  "sig": "V4TooMuchRequested(uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0xe6518043": {
+  "sig": "V4TooMuchRequestedPerHop(uint256,uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0xefc8d8eb": {
+  "sig": "V4TooMuchRequestedPerHopSingle(uint256,uint256)",
+  "contracts": [
+   "IV4Router"
+  ]
+ },
+ "0x8a621fd9": {
+  "sig": "VestingTermsMismatch()",
+  "contracts": [
+   "PonsV2BuybackVault"
+  ]
+ },
+ "0x90bfb865": {
+  "sig": "WrappedError(address,bytes4,bytes,bytes)",
+  "contracts": [
+   "CustomRevert"
+  ]
+ },
+ "0x9465dbd4": {
+  "sig": "WrongGraduationPhase()",
+  "contracts": [
+   "PonsV2LaunchFactory"
+  ]
+ },
+ "0xd92e233d": {
+  "sig": "ZeroAddress()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2BuybackVault",
+   "PonsV2FeeEscrow",
+   "PonsV2GraduationExecutor",
+   "PonsV2LaunchFactory",
+   "PonsV2LaunchLocker",
+   "PonsV2LauncherToken",
+   "PonsV2MemeHook"
+  ]
+ },
+ "0x1f2a2005": {
+  "sig": "ZeroAmount()",
+  "contracts": [
+   "PonsV2BondingCurve",
+   "PonsV2GraduationGuard",
+   "PonsV2GraduationMath",
+   "PonsV2LaunchFactory"
+  ]
+ }
+}
