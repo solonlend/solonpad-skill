@@ -1,0 +1,368 @@
+{
+  "lane": "arc-sol",
+  "capturedAt": "2026-09-19T05:59:04.849Z",
+  "endpoint": "https://api.relay.link/quote",
+  "request": {
+    "user": "0x1111111111111111111111111111111111111111",
+    "recipient": "GxZs8NVvvrszzJLhpvpkfnXe3fLpxnnnKrVqKoTWAKVX",
+    "originChainId": 5042,
+    "destinationChainId": 792703809,
+    "originCurrency": "0x0000000000000000000000000000000000000000",
+    "destinationCurrency": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amount": "10000000000000000000",
+    "tradeType": "EXACT_INPUT",
+    "includeProtocolData": true
+  },
+  "intent": {
+    "user": "0x1111111111111111111111111111111111111111",
+    "recipient": "GxZs8NVvvrszzJLhpvpkfnXe3fLpxnnnKrVqKoTWAKVX",
+    "fromChain": 5042,
+    "toChain": 792703809,
+    "fromCurrency": "0x0000000000000000000000000000000000000000",
+    "toCurrency": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "amountWei": "10000000000000000000",
+    "minOutput": "8799999"
+  },
+  "quote": {
+    "requestId": "0x1789797544649d4990c4bcf9de4adf3a0cbaf1744171407ea64d016df88733a3",
+    "steps": [
+      {
+        "id": "deposit",
+        "action": "Confirm transaction in your wallet",
+        "description": "Depositing funds to the relayer to execute the swap for USDC",
+        "kind": "transaction",
+        "items": [
+          {
+            "status": "incomplete",
+            "data": {
+              "from": "0x1111111111111111111111111111111111111111",
+              "to": "0x4cD00E387622C35bDDB9b4c962C136462338BC31",
+              "data": "0x49290c1c000000000000000000000000111111111111111111111111111111111111111112b71bab4b4d8ebe563b276273e54846e88ce69796a8c44ef6583d0c88727749",
+              "value": "10000000000000000000",
+              "chainId": 5042,
+              "gas": "32713",
+              "maxFeePerGas": "25557477236",
+              "maxPriorityFeePerGas": "3557477236"
+            },
+            "check": {
+              "endpoint": "/intents/status?requestId=0x1789797544649d4990c4bcf9de4adf3a0cbaf1744171407ea64d016df88733a3",
+              "method": "GET"
+            }
+          }
+        ],
+        "requestId": "0x1789797544649d4990c4bcf9de4adf3a0cbaf1744171407ea64d016df88733a3",
+        "depositAddress": ""
+      }
+    ],
+    "fees": {
+      "gas": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "836061752821268",
+        "amountFormatted": "0.000836061752821268",
+        "amountUsd": "0.000836",
+        "minimumAmount": "836061752821268"
+      },
+      "relayer": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "243279472814772338",
+        "amountFormatted": "0.243279472814772338",
+        "amountUsd": "0.243245",
+        "minimumAmount": "243279472814772338"
+      },
+      "relayerGas": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "201277572548735094",
+        "amountFormatted": "0.201277572548735094",
+        "amountUsd": "0.201249",
+        "minimumAmount": "201277572548735094"
+      },
+      "relayerService": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "42001900266037244",
+        "amountFormatted": "0.042001900266037244",
+        "amountUsd": "0.041996",
+        "minimumAmount": "42001900266037244"
+      },
+      "app": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "0",
+        "amountFormatted": "0.0",
+        "amountUsd": "0",
+        "minimumAmount": "0"
+      },
+      "subsidized": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "0",
+        "amountFormatted": "0.0",
+        "amountUsd": "0",
+        "minimumAmount": "0"
+      }
+    },
+    "details": {
+      "operation": "swap",
+      "sender": "0x1111111111111111111111111111111111111111",
+      "recipient": "GxZs8NVvvrszzJLhpvpkfnXe3fLpxnnnKrVqKoTWAKVX",
+      "currencyIn": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "10000000000000000000",
+        "amountFormatted": "10.0",
+        "amountUsd": "9.998600",
+        "minimumAmount": "10000000000000000000"
+      },
+      "currencyOut": {
+        "currency": {
+          "chainId": 792703809,
+          "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "symbol": "USDC",
+          "name": "USD Coin",
+          "decimals": 6,
+          "metadata": {
+            "logoURI": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694",
+            "verified": true
+          }
+        },
+        "amount": "9756721",
+        "amountFormatted": "9.756721",
+        "amountUsd": "9.755355",
+        "minimumAmount": "9561587"
+      },
+      "refundCurrency": {
+        "currency": {
+          "chainId": 5042,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "USDC",
+          "name": "USD Coin (Gas Currency)",
+          "decimals": 18,
+          "metadata": {}
+        },
+        "amount": "10000000000000000000",
+        "amountFormatted": "10.0",
+        "amountUsd": "9.998600",
+        "minimumAmount": "10000000000000000000"
+      },
+      "totalImpact": {
+        "usd": "-0.243245",
+        "percent": "-2.43"
+      },
+      "swapImpact": {
+        "usd": "0.000000",
+        "percent": "0.00"
+      },
+      "expandedPriceImpact": {
+        "swap": {
+          "usd": "-0.006999"
+        },
+        "execution": {
+          "usd": "-0.221249"
+        },
+        "relay": {
+          "usd": "-0.014997"
+        },
+        "app": {
+          "usd": "0"
+        },
+        "sponsored": {
+          "usd": "0"
+        }
+      },
+      "rate": "0.9756721",
+      "slippageTolerance": {
+        "total": "200",
+        "origin": {
+          "usd": "0.000000",
+          "value": "0",
+          "percent": "0.00"
+        },
+        "destination": {
+          "usd": "0.194132",
+          "value": "195134",
+          "percent": "1.99"
+        }
+      },
+      "timeEstimate": 1,
+      "userBalance": "0",
+      "isFixedRate": false,
+      "route": {
+        "origin": {
+          "inputCurrency": {
+            "currency": {
+              "chainId": 5042,
+              "address": "0x0000000000000000000000000000000000000000",
+              "symbol": "USDC",
+              "name": "USD Coin (Gas Currency)",
+              "decimals": 18,
+              "metadata": {}
+            },
+            "amount": "10000000000000000000",
+            "amountFormatted": "10.0",
+            "amountUsd": "9.998600",
+            "minimumAmount": "10000000000000000000"
+          },
+          "outputCurrency": {
+            "currency": {
+              "chainId": 5042,
+              "address": "0x0000000000000000000000000000000000000000",
+              "symbol": "USDC",
+              "name": "USD Coin (Gas Currency)",
+              "decimals": 18,
+              "metadata": {}
+            },
+            "amount": "10000000000000000000",
+            "amountFormatted": "10.0",
+            "amountUsd": "9.998600",
+            "minimumAmount": "10000000000000000000"
+          },
+          "router": "relay"
+        },
+        "destination": {
+          "inputCurrency": {
+            "currency": {
+              "chainId": 792703809,
+              "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "symbol": "USDC",
+              "name": "USD Coin",
+              "decimals": 6,
+              "metadata": {
+                "logoURI": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694",
+                "verified": true
+              }
+            },
+            "amount": "9756721",
+            "amountFormatted": "9.756721",
+            "amountUsd": "9.755355",
+            "minimumAmount": "9561587"
+          },
+          "outputCurrency": {
+            "currency": {
+              "chainId": 792703809,
+              "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "symbol": "USDC",
+              "name": "USD Coin",
+              "decimals": 6,
+              "metadata": {
+                "logoURI": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694",
+                "verified": true
+              }
+            },
+            "amount": "9756721",
+            "amountFormatted": "9.756721",
+            "amountUsd": "9.755355",
+            "minimumAmount": "9561587"
+          },
+          "router": "relay"
+        }
+      }
+    },
+    "protocol": {
+      "v2": {
+        "orderId": "0x12b71bab4b4d8ebe563b276273e54846e88ce69796a8c44ef6583d0c88727749",
+        "hubType": "onchain",
+        "orderData": {
+          "version": "v1",
+          "solverChainId": "base",
+          "solver": "0xf70da97812cb96acdf810712aa562db8dfa3dbef",
+          "salt": "0xe10e3c07507213e0c9278c2726bfc3393e9cd0a7e7432eb1b2cc326f231c2283",
+          "inputs": [
+            {
+              "payment": {
+                "chainId": "arc",
+                "currency": "0x0000000000000000000000000000000000000000",
+                "amount": "10000000000000000000",
+                "weight": "1"
+              },
+              "refunds": [
+                {
+                  "chainId": "arc",
+                  "recipient": "0x1111111111111111111111111111111111111111",
+                  "currency": "0x0000000000000000000000000000000000000000",
+                  "minimumAmount": "0",
+                  "deadline": 1790402344,
+                  "extraData": "0x000000000000000000000000b92fe925dc43a0ecde6c8b1a2709c170ec4fff4f"
+                },
+                {
+                  "chainId": "solana",
+                  "recipient": "GxZs8NVvvrszzJLhpvpkfnXe3fLpxnnnKrVqKoTWAKVX",
+                  "currency": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                  "minimumAmount": "0",
+                  "deadline": 1790402344,
+                  "extraData": "0x"
+                }
+              ]
+            }
+          ],
+          "output": {
+            "chainId": "solana",
+            "payments": [
+              {
+                "recipient": "GxZs8NVvvrszzJLhpvpkfnXe3fLpxnnnKrVqKoTWAKVX",
+                "currency": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                "minimumAmount": "9561587",
+                "expectedAmount": "9756721"
+              }
+            ],
+            "calls": [],
+            "deadline": 1790402344,
+            "extraData": "0x"
+          },
+          "fees": []
+        },
+        "orderSignature": "0xb57ec0994329cc491607375924756f8f84121ed1c81f55c33421fedca507655d6b6c187927e266b9084c7f341e6739748a090ad7fb33572ad897f858866b846e1c",
+        "paymentDetails": {
+          "chainId": "arc",
+          "depository": "0x4cD00E387622C35bDDB9b4c962C136462338BC31",
+          "currency": "0x0000000000000000000000000000000000000000",
+          "amount": "10000000000000000000"
+        }
+      }
+    }
+  }
+}

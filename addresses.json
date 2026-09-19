@@ -1,5 +1,5 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value \u2014 do not trust this file blindly.",
+  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
   "verifiedAt": "2026-09-17",
   "chain": {
     "name": "Arc",
@@ -42,7 +42,7 @@
   },
   "provenance": {
     "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
-    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit \u2014 reviewed manually, pull-payment only, no admin drain path"
+    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit — reviewed manually, pull-payment only, no admin drain path"
   },
   "instantV4": {
     "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
@@ -153,8 +153,8 @@
     },
     "feeBps": 50,
     "readApi": {
-      "launches": "https://solonpad.fun/api/launches?chain=arc|rh \u2014 every indexed pan incl. external pads; fields: source, hook, poolKey, curve, price, change24h, originDomain",
-      "market": "https://solonpad.fun/api/market/<token> \u2014 single-market detail",
+      "launches": "https://solonpad.fun/api/launches?chain=arc|rh — every indexed pan incl. external pads; fields: source, hook, poolKey, curve, price, change24h, originDomain",
+      "market": "https://solonpad.fun/api/market/<token> — single-market detail",
       "factsheet": "https://solonpad.fun/api/factsheet/{token}?chain=arc|rh",
       "changes": "https://solonpad.fun/api/changes?chain=arc|rh&since={cursor}"
     },
@@ -189,5 +189,24 @@
       ],
       "_comment": "open = fork-probed: PoolSwapTest buy+sell succeed for an external caller. closed = hook reverts for non-allowlisted routers (display only)."
     }
+  },
+  "rail": {
+    "_comment": "Solon Rail: non-custodial cross-chain execution funded from Arc USDC. 0.5% fee enforced at source on every lane: EVM = FeeRouter contracts, Solana = Jupiter platformFeeBps into the treasury's USDC token account. Tools: tools/crossbuy.mjs / crosssell.mjs / sweepback.mjs (AGENT-GUIDE.md §E). Keys stay with the caller (RAIL_PK / RAIL_SOL_PK env).",
+    "feeBps": 50,
+    "bsc": {
+      "chainId": 56,
+      "feeRouter": "0xA65a6a95B84FDB666C7B7ec249a7B8A2Cb495803",
+      "quote": "0x55d398326f99059fF775485246999027B3197955",
+      "quoteSymbol": "USDT"
+    },
+    "solana": {
+      "relayChainId": 792703809,
+      "quoteMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "quoteSymbol": "USDC",
+      "feeMechanism": "jupiter platformFeeBps=50 + feeAccount",
+      "feeAccount": "4AJiPadLWt9t8rDocRr74ue1DYRhNcpWmfKj4Dz6jm8o",
+      "feeTreasury": "B2Ej9TNMfeoMSG9pYFyD5dXTtekkHWvaN4Wvq31wFp7Q"
+    },
+    "arcAndRobinhood": "home + native lanes reuse aggregator.feeRouter above"
   }
 }

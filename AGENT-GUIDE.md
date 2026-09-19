@@ -274,3 +274,180 @@ stay read-only. With it, every step below is mandatory:
    `NativeMismatch` custom error → wrong value/approve path for this quote;
    output below minOut → slippage, re-quote before retrying; `410` from
    `changes` → stale cursor, re-init.
+
+## §E. Cross-chain rail — Arc funding, any-chain execution (v0.5)
+
+The rail extends D4 across chains: fund on **Arc native USDC**, execute on
+**BSC, Solana, Robinhood or Arc itself**, sweep proceeds home. Non-custodial:
+your keys never leave your machine (`RAIL_PK` for EVM chains, `RAIL_SOL_PK`
+for Solana — base58 secret key or JSON byte array). The 0.5% rail fee is
+enforced **at source**, not by these scripts: EVM lanes swap through a
+FeeRouter contract, the Solana lane rides Jupiter's native `platformFeeBps`
+into the treasury's USDC token account. Addresses: `addresses.json → rail`;
+verify them on-chain before first value (VERIFY.md discipline applies).
+
+### E1. Tools
+
+```bash
+cd tools && npm i
+node crossbuy.mjs  --token <addr|mint> --usd 50 [--chain bsc|arc|rh|sol] [--single] [--yes]
+node crosssell.mjs --token <addr|mint> [--pct 100] --chain <key> [--yes]
+node sweepback.mjs --chain <key> [--usd all] [--yes]
+```
+
+- Without `--chain`, crossbuy auto-selects by deepest pool. Identity is the
+  exact contract address: an EVM address is never matched against Solana or
+  vice versa — same-name-different-address listings are different assets.
+- Without `--yes`, every tool stops after printing the full
+  `[FINANCIAL EXECUTION]` parameter echo. D4's authorization rule applies
+  unchanged: no explicit principal authorization, no `--yes`.
+- Every broadcast is preceded by a state write (`results/rail-<order>.json`).
+  On any failure, re-run with the same `--order` — completed steps are
+  skipped, never re-sent. That file is also your receipt.
+
+### E2. What each lane does
+
+| Lane | Quote | Fee point | Mechanics |
+|---|---|---|---|
+| `bsc` | USDT (18-dec) | PancakeFeeRouter | relay bridge → best-of v2 paths/v3 tiers → router swap. `--single`: ONE Arc signature — relay delivers exact-output USDT to the router and atomically executes the buy (destination revert = automatic full refund to your Arc wallet, live-tested) |
+| `sol` | USDC (6-dec) | Jupiter `platformFeeBps` | relay bridge (SOL gas keeper auto-tops from Arc) → Jupiter route → fee lands in treasury USDC both directions |
+| `rh` | ETH | SolonFeeRouter | self-gassing: ETH is quote AND gas; minOut from an eth_call simulation of the actual router call |
+| `arc` | USDC | SolonFeeRouter | zero-bridge home lane |
+
+### E3. Due-diligence gates (fail closed)
+
+BSC: GoPlus `token_security` — honeypot, taxes >15%, `cannot_sell_all`, plus
+deepest-pool LP <$10K refuses. Solana: GoPlus authorities model — **any
+authority not explicitly renounced (freeze/mint/close/balance-mutable/
+fee-change/hook-change) is a refusal**, absent or unknown fields are a
+refusal (never a pass), Token-2022 transfer fees >15% — current or scheduled
+— are a refusal, plus the same $10K LP floor. Arc/RH: the factsheet verdict
+(§D3) is the gate — our own index carries no USD pool depth, so no depth
+floor applies there. Your principal can override with `--force`; record
+that they did.
+
+### E4. Costs to price in (live-measured)
+
+- Bridge legs ~0.4–1.4% each way depending on chain + relay fees; the quote
+  echo itemizes before you sign anything.
+- Round-trip friction, real smokes: BSC $10 ≈ $0.14 · RH $5 ≈ $0.47 ·
+  Arc $3 ≈ $0.17 · Solana $5 ≈ $0.67 (includes one-time fee-account rent).
+- `--single` premium ≈ $0.85 on a $10 order (prepaid destination gas +
+  solver margin); it buys you needing no destination gas at all.
+- Solana keeps a small SOL reserve in your wallet (gas keeper bridges ~$1.5
+  when below 0.008 SOL); ATA rents ~0.002 SOL each are one-time per token.
+
+### E5. Failure semantics an agent must know
+
+- A relay quote containing `lifiIntents` is refused automatically (funds can
+  hang in OIF escrow for days; hard-learned).
+- Every exact-input bridge carries a **caller-derived minimum receive**,
+  priced independently of the quote (stable parity, or Pancake/Jupiter/venue
+  reference for ETH/SOL/gas legs). A quote whose committed minimum sits below
+  that floor is refused before anything is signed — the quote's own numbers
+  are never a floor, since a hostile responder controls all of them.
+- `--single` bundles: if the destination transaction reverts, relay refunds
+  the whole fill to your Arc wallet — there is no stuck-in-the-middle state.
+- Bridge arrival timeouts do NOT mean lost funds: the state file holds the
+  request; re-run the same `--order` to resume watching.
+- Budget discipline: a buy spends only what this order bridged in (or, on
+  quote-USDC lanes, pre-held quote up to the order target) — never your
+  wallet's whole balance.
+
+## §F. Premium data plane — pay per call over x402 (v0.6)
+
+Five paid endpoints on `https://solonpad.fun`, priced in **Arc native USDC**
+and paid in-band with **x402 v2** (HTTP 402 challenge → you sign one EIP-3009
+`TransferWithAuthorization` → retry with the payment header). No account, no
+API key, no top-up UI: the wallet you already hold for the rail *is* the
+account. Free endpoints (§D) stay free and unchanged.
+
+### F1. Endpoints and prices
+
+| Endpoint | Scope | List | **Launch offer (−50%, what you pay)** | atomic |
+|---|---|---:|---:|---:|
+| `GET /api/premium/verdict/{token}?chain=arc\|rh` | factsheet + calibrated verdict + rail DD, one call | $0.02 | **$0.01** | `10000` |
+| `POST /api/premium/verdicts` | 1–50 tokens, one chain, ordered results | $0.40 | **$0.20** | `200000` |
+| `GET /api/premium/ohlcv?chain=bsc\|sol&token=&tf=&limit=1..5000` | deep OHLCV history (free tier = 200 candles) | $0.04 | **$0.02** | `20000` |
+| `GET /api/premium/changes?chain=&since=` | 1000 events/page (free tier = 200) | $0.10 | **$0.05** | `50000` |
+| `POST /api/premium/rpc-credit` | 10,000 RPC calls, all four chains, one voucher | $2 | **$1** | `1000000` |
+
+Flat fees, independent of result count or cache hits. The wire amount is the
+launch-offer column; the machine-readable source of truth is
+`tools/x402-prices.json` (server and client both import it — if the 402
+challenge and your pinned amount disagree, **nothing is signed**). Arc/RH
+deep OHLCV is not sold because the free endpoint already returns full local
+history. Batch pricing note: 20 tokens = break-even vs single calls; 50
+distinct tokens = $0.004/verdict.
+
+### F2. Paying (`tools/x402-pay.mjs`)
+
+```bash
+export RAIL_PK=0x...                    # payer key (same wallet as the rail)
+export X402_PAY_TO=0x...                # pinned seller — from the skill repo, NOT from the challenge
+node x402-pay.mjs 'https://solonpad.fun/api/premium/verdict/0xTOKEN?chain=arc'
+
+X402_EXPECTED_AMOUNT=200000 X402_METHOD=POST \
+  X402_BODY='{"chain":"arc","tokens":["0xA...","0xB..."]}' \
+  node x402-pay.mjs 'https://solonpad.fun/api/premium/verdicts'
+```
+
+Rules the client enforces (and you must not weaken):
+
+- **Pin everything**: seller (`X402_PAY_TO`), amount (`X402_EXPECTED_AMOUNT`),
+  network `eip155:5042`, asset `0x3600…0000`. The advertised price in the
+  challenge is never adopted; a mismatch aborts before any signature.
+- The client reads the token's `name()/version()/DOMAIN_SEPARATOR()` on-chain
+  and recomputes the EIP-712 domain before signing. HTTPS only (localhost
+  exempt), redirects rejected.
+- **One challenge, one signed retry, never an automatic re-sign.** EIP-3009
+  signs transfer fields only (payer/recipient/amount/validity/nonce), not the
+  URL or body — an intercepted authorization could be replayed against a
+  different same-price body, so payment headers are secrets in transit.
+
+### F3. Settlement semantics (what a 402-after-payment means)
+
+- Cheap calls (single verdict, OHLCV) deliver after Circle `/verify`, settle
+  asynchronously: `payment.status:"verified"`, `settlement:"pending"`.
+- Expensive calls (batch, changes, rpc-credit — ≥ `50000` atomic) **settle
+  before delivery**: you get data only with `payment.status:"settled"` and a
+  transaction hash.
+- A 402 after a settlement attempt carries `nonceLocked:true`,
+  `resignAllowed:false` and ledger/Circle ids. **A timeout is not proof of
+  failure** — the transfer may have landed. Keep the ids, reconcile out of
+  band (the operator runs `x402-reconcile.mjs` against Circle's status API);
+  re-signing blindly can pay twice.
+- Billable = successfully constructed delivery: an empty changes page, a
+  confirmed-missing token report and an annotated-partial history all bill;
+  invalid input, quota denial (429) and deadline expiry never bill.
+
+### F4. RPC credit pack
+
+`POST /api/premium/rpc-credit` (no body) → `{voucher, credits:10000,
+chains:["arc","bsc","rh","sol"]}`. The voucher is a 64-hex bearer; **the
+server stores only its SHA-256 — lose the plaintext and the credits are
+unrecoverable**, so persist it from the response immediately.
+
+```bash
+curl 'https://solonpad.fun/api/rpc/sol' -H "Authorization: Bearer $RPC_VOUCHER" \
+  -H 'Content-Type: application/json' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"getSlot","params":[]}'
+```
+
+One JSON-RPC entry = one credit, on any of the four chains, shared balance,
+`X-RPC-Credits-Left` header on every response. Batches ≤50 entries and count
+per entry. Once a call is forwarded upstream it is charged even if the
+provider errors — no automatic refunds; treat ambiguous signed-transaction
+submissions as possibly-landed (same discipline as §E5). Standard node
+methods only (no websockets, no guaranteed archive depth). It is a
+convenience tier — zero signup, four chains, one payment — not a
+high-throughput SLA; heavy sustained loads should buy a provider plan
+directly.
+
+### F5. Why this exists (read once, same spirit as the platform note)
+
+Paid calls fund the same treasury flywheel as the router fee: revenue →
+development + on-chain SOLON buybacks, all auditable. Live revenue and
+request counts are public at `https://solonpad.fun/agents` — verify, don't
+trust. Not available to persons or entities in the United States, China, or
+sanctioned jurisdictions.

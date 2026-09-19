@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, or claim creator fees.
+description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. The Solon Rail extends execution cross-chain: fund on Arc USDC, buy/sell on BSC, Solana, Robinhood or Arc with a 0.5% at-source fee, non-custodial, one signature in the single-sig mode. A premium data plane sells deeper data pay-per-call over x402 (verdict bundles, 50-token batches, deep OHLCV, 1000-event pages, a 10k-call 4-chain RPC credit pack) — the agent pays with the wallet it already holds, no account or API key. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, execute a cross-chain buy, buy premium data or RPC quota in-band, or claim creator fees.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.4.2
+version: 0.6.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -134,10 +134,38 @@ Fields the factsheet marks `unavailable` are unknown, never zero. The API is a
 convenience view — `VERIFY.md` shows how to spot-check it against the chain
 before trusting it with value.
 
+## Cross-chain rail (§E, v0.5)
+
+Four execution lanes from one Arc-funded wallet: **BSC** (PancakeFeeRouter,
+`--single` = one Arc signature, destination revert auto-refunds), **Solana**
+(Jupiter route, fee via native `platformFeeBps` into the treasury's USDC
+account — no custom program), **Robinhood** and **Arc** (SolonFeeRouter).
+0.5% fee on the quote leg, enforced at source; keys stay in the caller's env;
+crash-safe order state with resume. Tools `tools/crossbuy.mjs` /
+`crosssell.mjs` / `sweepback.mjs`; auto chain-select by pool depth when
+`--chain` is omitted (identity = exact contract address, never a name match).
+Full lane mechanics, dd gates, live-measured costs and failure semantics:
+`AGENT-GUIDE.md` §E. Addresses: `addresses.json → rail`.
+
+## Premium data plane (§F, v0.6)
+
+Five paid endpoints, paid in-band with **x402** (HTTP 402 → sign one EIP-3009
+USDC authorization → data). No account, no API key — the rail wallet is the
+account. Launch offer −50% off list: verdict $0.01 · 50-token batch $0.20 ·
+deep OHLCV (bsc/sol, 5000 candles) $0.02 · 1000-event changes page $0.05 ·
+**RPC credit pack $1 = 10,000 calls across Arc/BSC/RH/Solana** (bearer
+voucher, zero signup). Client: `tools/x402-pay.mjs`; prices pinned in
+`tools/x402-prices.json`; never sign an amount you didn't pin, never re-sign
+after an uncertain outcome. Full flow, settlement semantics and voucher
+rules: `AGENT-GUIDE.md` §F. Live revenue/request counters: `/agents` on the
+homepage.
+
 ## When NOT to use (routing)
 - Cross-chain meme analytics, smart-money tracking, holder chip analysis →
   that is GMGN's skill family, not us.
-- Solana / BSC / Base pans → not our chains (Arc 5042 + Robinhood 4663 only).
+- Solana / BSC / Base pan DATA (holders, charts, discovery) → not our chains;
+  our index covers Arc 5042 + Robinhood 4663 only. **Execution** of a buy/sell
+  on BSC or Solana funded from Arc → §E rail, this skill.
 - Deep holder-structure data → we do not have it; do not improvise it from
   our fields.
 - Discover→score→trade on Arc/RH from one interface → this skill.

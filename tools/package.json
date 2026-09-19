@@ -1,2 +1,1 @@
-{ "name": "solonpad-skill-tools", "private": true, "type": "module",
-  "dependencies": { "viem": "^2.21.0" } }
+{"name":"solonpad-skill-tools","private":true,"type":"module","dependencies":{"@relay-protocol/settlement-sdk":"0.0.143","@solana/web3.js":"^1.99.0","bs58":"4.0.1","viem":"^2.21.0"}}
