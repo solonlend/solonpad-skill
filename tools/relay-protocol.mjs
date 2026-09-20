@@ -93,23 +93,33 @@ export async function validateRelayProtocol(q, intent) {
   // Arc native USDC has 18 decimals; its ERC20 representation has 6.
   // Only the decoded, pinned conversion route below can use this denomination.
   const converted = origin === 'arc' && same(intent.fromCurrency, zeroAddress) && same(payment.currency, ARC_USDC);
+  // 18dp native wei floors to the 6dp view; since 2026-09 relay prices its
+  // service fee into the native input, so the wei amount carries sub-1e12 dust
+  // and the credited 6dp payment sits below the floor by that fee. The binding
+  // invariants are the pinned router and that no order leg can credit more
+  // than the native value the transaction actually pays.
   const quotedInput = converted ? expectedInput / 1_000_000_000_000n : expectedInput;
   const paymentAmount = num(payment.amount);
-  assert(!converted || (expectedInput % 1_000_000_000_000n === 0n && same(tx.to, RELAY_ROUTER)), 'inexact Arc USDC conversion');
+  assert(!converted || same(tx.to, RELAY_ROUTER), 'unpinned Arc USDC conversion route');
   assert(payment.chainId === origin && same(payment.currency, converted ? ARC_USDC : intent.fromCurrency), 'order input payment mismatch');
   if (converted) {
     const conversion = q.details?.route?.origin?.outputCurrency;
     assert(conversion?.currency?.chainId === intent.fromChain && same(conversion.currency.address, ARC_USDC)
-      && num(conversion.amount) === quotedInput, 'conversion quote asset/amount mismatch');
+      && num(conversion.amount) <= quotedInput, 'conversion quote asset/amount mismatch');
     const minimum = num(conversion.minimumAmount);
-    assert(minimum > 0n && minimum <= paymentAmount && paymentAmount <= quotedInput, 'conversion input payment outside declared range');
+    assert(minimum > 0n && minimum <= paymentAmount && paymentAmount <= num(conversion.amount), 'conversion input payment outside declared range');
   } else assert(paymentAmount === quotedInput, 'order input payment mismatch');
   assert(order.output?.chainId === destination && order.output.payments?.length === 1, 'output chain/payment count mismatch');
   const output = order.output.payments[0];
   // Never fall back to the quote's own minimumAmount: it is attacker-controlled.
   assert(intent.txs || intent.minOutput !== undefined, 'exact-input intent missing caller minOutput floor');
   const minOutput = intent.txs ? BigInt(intent.amountWei) : BigInt(intent.minOutput);
-  assert(minOutput > 0n && same(output.recipient, intent.recipient) && same(output.currency, intent.toCurrency) && num(output.minimumAmount) >= minOutput, 'output recipient/currency/minimum mismatch');
+  // Since 2026-09 relay pays a calls-carrying order's output to its own router,
+  // which then executes the committed destination calls; the user's delivery is
+  // bound by the call commitments verified below plus the destination refund.
+  // Orders without destination calls must still pay the user directly.
+  const routerReceives = (intent.txs?.length ?? 0) > 0 && same(output.recipient, RELAY_ROUTER);
+  assert(minOutput > 0n && (same(output.recipient, intent.recipient) || routerReceives) && same(output.currency, intent.toCurrency) && num(output.minimumAmount) >= minOutput, 'output recipient/currency/minimum mismatch');
   assert(Number.isSafeInteger(order.output.deadline) && order.output.deadline > Math.floor(Date.now()/1000), 'order expired');
   assert(Array.isArray(order.inputs[0].refunds) && order.inputs[0].refunds.length > 0 && order.inputs[0].refunds.length <= 2, 'unsupported refunds');
   const refundChains = new Set();

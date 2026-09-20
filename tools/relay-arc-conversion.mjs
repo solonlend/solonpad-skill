@@ -32,7 +32,10 @@ export function verifyArcConversionExecutor(execution, expectedInput) {
   assert(same(execution.callTarget, EXECUTOR), 'target mismatch');
   const data = execution.targetData;
   assert(typeof data === 'string' && /^0x[0-9a-f]+$/i.test(data) && same(data.slice(0, 42), ENTRY), 'entry mismatch');
-  assert(expectedInput > 0n && expectedInput < (1n << 128n) && expectedInput % 1_000_000_000_000n === 0n, 'input out of bounds');
+  // Sub-1e12 dust appears since relay prices its fee into the native input
+  // (2026-09); every 6dp-denominated field below floors it, and the packed
+  // 18dp fields bind the exact dusty amount, so divisibility adds nothing.
+  assert(expectedInput > 0n && expectedInput < (1n << 128n), 'input out of bounds');
   let payload, route;
   try {
     payload = decodeCanonical(PAYLOAD, `0x${data.slice(42)}`);
@@ -41,14 +44,23 @@ export function verifyArcConversionExecutor(execution, expectedInput) {
     assert(false, 'unsupported or noncanonical encoding');
   }
   const [packed, signature] = payload;
-  assert(packed === ((expectedInput << 128n) | expectedInput) && signature.length === 132, 'input/signature mismatch');
-  const [recipient, modules, tokens, range, amounts, config, feeReceiver, reserved, deadline, extra] = route;
+  // 2026-09 re-capture: with fee-priced (dusty) native inputs the packed
+  // fields carry the input FLOORED to 6dp precision, while desc.amount (checked
+  // by the caller) still binds the exact dusty wei. The ±5% range halves are
+  // computed by relay in float64, so they sit within one double ulp of the
+  // exact products; a ±4096 wei band (~4e-16 relative) admits only that.
   const amount = expectedInput / 1_000_000_000_000n;
+  const rounded = amount * 1_000_000_000_000n;
   const wholeUnits = expectedInput / 1_000_000_000_000_000_000n;
+  assert(packed === ((rounded << 128n) | rounded) && signature.length === 132, 'input/signature mismatch');
+  const [recipient, modules, tokens, range, amounts, config, feeReceiver, reserved, deadline, extra] = route;
   assert(same(recipient, ROUTER) && same(feeReceiver, FEE_RECEIVER) && reserved === 0n && extra === '0x', 'recipient/auxiliary data mismatch');
   assert(modules.length === 1 && same(modules[0], MODULE), 'module mismatch');
-  assert(range === (((expectedInput * 95n / 100n) << 128n) | (expectedInput * 105n / 100n))
-    && amounts === ((expectedInput << 128n) | amount)
+  // The ±5% halves are exact bigint products in pre-2026-09 captures and
+  // float64 products (replicated bit-for-bit below) since; nothing else passes.
+  const band = (value, pct) => value === rounded * pct / 100n || value === BigInt(Number(rounded) * (Number(pct) / 100));
+  assert(band(range >> 128n, 95n) && band(range & ((1n << 128n) - 1n), 105n)
+    && amounts === ((rounded << 128n) | amount)
     && config === ((wholeUnits << 72n) | (1_000_000n << 24n)), 'numeric configuration mismatch');
   assert(deadline > BigInt(Math.floor(Date.now() / 1000)) && deadline <= BigInt(Number.MAX_SAFE_INTEGER), 'quote expired');
   assert(tokens.length === 2, 'token/call count mismatch');

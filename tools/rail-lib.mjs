@@ -181,14 +181,24 @@ export function orderState(orderId, options = {}) {
   };
 }
 
-export function singleDebitCap(usd, premiumBps = 1500, explicitMax) {
+// The default ceiling is a fixed allowance plus a share, because the cost has
+// that shape: measured 2026-09-20, an order pays about $0.75 of fixed bridge
+// and destination-execution cost plus 3% of its size. One flat percentage must
+// misjudge an end of the range — 15% refused a $5 order needing 17.15% while
+// granting $250 four times the headroom it could use. An explicit
+// --max-premium-bps remains the caller's own flat choice.
+export const PREMIUM_FIXED_USD = '1.2';
+export const PREMIUM_SHARE_BPS = 800;
+export function singleDebitCap(usd, premiumBps, explicitMax) {
   if (!Number.isFinite(usd) || usd <= 0) throw new Error('invalid order amount');
-  if (!Number.isInteger(premiumBps) || premiumBps < 0 || premiumBps > 10_000) throw new Error('invalid premium bps (0..10000)');
+  if (premiumBps !== undefined && (!Number.isInteger(premiumBps) || premiumBps < 0 || premiumBps > 10_000)) throw new Error('invalid premium bps (0..10000)');
   if (explicitMax !== undefined) {
     if (!/^[0-9]+(?:\.[0-9]{1,18})?$/.test(String(explicitMax)) || parseEther(String(explicitMax)) <= 0n) throw new Error('invalid explicit maximum Arc debit');
     return parseEther(String(explicitMax));
   }
-  return parseEther(String(usd)) * BigInt(10_000 + premiumBps) / 10_000n;
+  const budget = parseEther(String(usd));
+  if (premiumBps !== undefined) return budget * BigInt(10_000 + premiumBps) / 10_000n;
+  return budget + parseEther(PREMIUM_FIXED_USD) + budget * BigInt(PREMIUM_SHARE_BPS) / 10_000n;
 }
 
 // Return a confirmed receipt, or stop on ambiguity; never create a new nonce

@@ -18,7 +18,9 @@ if (!Number.isInteger(slippageBps) || slippageBps < 0 || slippageBps > (flag('fo
 
 const account = loadAccount();
 const singleMode = flag('single');
-const maxTotalDebit = singleMode ? singleDebitCap(usd, Number(arg('max-premium-bps', 1500)), arg('max-arc-debit')) : null;
+// No flag: the curve default. With the flag: the caller's own flat premium.
+const premiumFlag = arg('max-premium-bps');
+const maxTotalDebit = singleMode ? singleDebitCap(usd, premiumFlag === undefined ? undefined : Number(premiumFlag), arg('max-arc-debit')) : null;
 const orderId = arg('order', `buy-${token.slice(2, 8)}-${Date.now()}`);
 // an order is bound to (chain, token, usd) on first dispatch: a resume can
 // never re-select a different chain (arc/rh share state keys and interpret
