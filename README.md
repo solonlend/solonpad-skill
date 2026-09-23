@@ -11,6 +11,7 @@ contracts directly. No API, no account, no frontend required.
 - `VERIFY.md` — the on-chain checklist to run before sending value
 - `abis/` — the four ABIs an agent needs
 - `tools/pad-read.mjs` — runnable read-only reference reader
+- SOLON staking (`addresses.json → staking`, `abis/SolonStaking.json`, `AGENT-GUIDE.md` §G) — stake SOLON, earn the streamed platform-fee buyback; no lock, no cooldown ([solonpad.fun/stake](https://solonpad.fun/stake))
 
 Engine provenance: source-matched to Pons V2 (Robinhood Chain, Sourcify exact_match) —
 see `addresses.json → provenance`.

@@ -208,5 +208,21 @@
       "feeTreasury": "B2Ej9TNMfeoMSG9pYFyD5dXTtekkHWvaN4Wvq31wFp7Q"
     },
     "arcAndRobinhood": "home + native lanes reuse aggregator.feeRouter above"
+  },
+  "staking": {
+    "_comment": "SOLON staking on Arc (live 2026-09-23). Stake SOLON, earn SOLON. No lock, no cooldown. Unaudited. ABI: abis/SolonStaking.json. Verify per VERIFY.md §G.",
+    "solonStaking": "0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f",
+    "stakingToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+    "rewardToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+    "deployBlock": 22289051,
+    "owner": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
+    "distributor": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
+    "lanes": {
+      "0": "BUYBACK: daily platform-fee buyback injected by the distributor, streamed over 7 days",
+      "1": "GENESIS: one-off 12,690,000 SOLON seeded once by the owner, streamed over 30 days"
+    },
+    "priceReferencePoolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77",
+    "page": "https://solonpad.fun/stake",
+    "_note": "owner/distributor/stakeCap are mutable state: re-read owner(), distributor(), stakeCap() on-chain."
   }
 }

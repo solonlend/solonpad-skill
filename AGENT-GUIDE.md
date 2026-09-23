@@ -451,3 +451,65 @@ development + on-chain SOLON buybacks, all auditable. Live revenue and
 request counts are public at `https://solonpad.fun/agents` — verify, don't
 trust. Not available to persons or entities in the United States, China, or
 sanctioned jurisdictions.
+
+## §G. SOLON staking — stake SOLON, earn the streamed buyback (v0.7)
+
+`S = A.staking.solonStaking`, `SOLON = A.staking.stakingToken`, ABI
+`abis/SolonStaking.json`. All amounts are 18-dec SOLON wei. Run `VERIFY.md`
+§G first. `[FINANCIAL EXECUTION]` for every write below.
+
+### G1. Read
+
+```
+totalStaked()                 # principal, all stakers
+stakedOf(you) / earned(you)   # your principal / accrued reward
+rewardRate()                  # combined SOLON wei/sec of both lanes, now
+laneInfo(0|1)                 # (rate, periodFinish, duration, injected) — 0=BUYBACK 7d, 1=GENESIS 30d
+rewardReserve()               # rewards held for stakers (injected − paid − compounded)
+stakeCap() / paused()         # paused blocks stake/compound/notify only, never exits
+injectedOnDay(lane, ts/86400) # per-UTC-day injections
+```
+
+### G2. Write
+
+```
+SOLON.approve(S, amount)      # exact amount, not unlimited
+S.stake(amount)               # reverts "cap" if totalStaked + amount > stakeCap
+S.claim()                     # pays earned(you)
+S.compound()                  # restakes earned(you); subject to stakeCap
+S.unstake(amount)             # instant, no cooldown; pays principal + accrued reward
+```
+
+`unstake` settles and pays rewards through isolated self-calls under
+try/catch: if the reward leg ever reverts you still get principal back and
+the reward stays on the books (`RewardSettleFailed(you)`) — call `claim()`
+later.
+
+### G3. Funding (read-only for you)
+
+`notifyBuyback(amount, buybackTx)` — distributor only, `amount >= 1000e18`.
+Pulls SOLON and restarts the BUYBACK lane at `(amount + leftover) / 7 days`.
+`RewardAdded(0, amount, buybackTx)` carries the hash of the on-chain buyback
+the SOLON came from: fetch that tx and check it is a USDC→SOLON market buy
+from the treasury. `seedGenesis` (owner, once) funded lane 1 with
+12,690,000 SOLON over 30 days. Reward streamed while nothing is staked
+accrues to `idleRewards` and can only be put back into the BUYBACK lane.
+
+### G4. APR (same basis as the page)
+
+```
+buyback7d = Σ RewardAdded(lane 0).amount with block time in the window
+genesis7d = laneInfo(1).rate × seconds of the window the genesis lane was
+            streaming (its one-off RewardAdded is NOT counted as a lump)
+window    = last 7 UTC days incl. today (contract age if younger)
+APR       = (buyback7d + genesis7d) / windowDays × 365 / totalStaked × 100%
+```
+
+Stake and reward are both SOLON, so this equals annualised USD inflow ÷
+staked market value and needs no price feed. USD figures only: price SOLON
+at `StateView.getSlot0(A.staking.priceReferencePoolId)` (currency0 = native
+USDC, currency1 = SOLON, both 18-dec: USDC per SOLON = Q96² / sqrtPriceX96²).
+Report it as historical: it falls as `totalStaked` grows and drops when the
+genesis lane ends (`laneInfo(1).periodFinish`). Treat `totalStaked` near
+zero as "APR undefined", not as a huge number.
+

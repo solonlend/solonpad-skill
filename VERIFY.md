@@ -62,3 +62,17 @@ listed token and cross-check:
 
 A mismatch means: trust the chain, distrust the endpoint, and stop trading
 through the API until they agree again.
+
+## §G. Staking checks (before staking)
+
+1. `S.solon()` == `A.staking.stakingToken` == `A.instantV4.flagship.token`.
+2. `S.owner()` and `S.distributor()` match `addresses.json`; if not, find out
+   why before sending value (both are mutable state).
+3. `SOLON.balanceOf(S) >= S.totalStaked() + S.rewardReserve()` — principal
+   and committed rewards are fully backed.
+4. `S.stakeCap() - S.totalStaked() >= amount`, `S.paused() == false`.
+5. Source: `src/stake/SolonStaking.sol` in `solonlend/solonpad-contracts`.
+   Not yet Sourcify-verified on Arc and not audited. To check it yourself,
+   build with that repo's `foundry.toml` and compare `eth_getCode(S)` with
+   the artifact's `deployedBytecode`, masking `immutableReferences`.
+

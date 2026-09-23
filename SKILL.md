@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. The Solon Rail extends execution cross-chain: fund on Arc USDC, buy/sell on BSC, Solana, Robinhood or Arc with a 0.5% at-source fee, non-custodial, one signature in the single-sig mode. A premium data plane sells deeper data pay-per-call over x402 (verdict bundles, 50-token batches, deep OHLCV, 1000-event pages, a 10k-call 4-chain RPC credit pack) — the agent pays with the wallet it already holds, no account or API key. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, execute a cross-chain buy, buy premium data or RPC quota in-band, or claim creator fees.
+description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. The Solon Rail extends execution cross-chain: fund on Arc USDC, buy/sell on BSC, Solana, Robinhood or Arc with a 0.5% at-source fee, non-custodial, one signature in the single-sig mode. A premium data plane sells deeper data pay-per-call over x402 (verdict bundles, 50-token batches, deep OHLCV, 1000-event pages, a 10k-call 4-chain RPC credit pack) — the agent pays with the wallet it already holds, no account or API key. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, execute a cross-chain buy, buy premium data or RPC quota in-band, claim creator fees, or stake SOLON (no lock) to receive the streamed platform-fee buybacks.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.6.0
+version: 0.7.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -159,6 +159,35 @@ voucher, zero signup). Client: `tools/x402-pay.mjs`; prices pinned in
 after an uncertain outcome. Full flow, settlement semantics and voucher
 rules: `AGENT-GUIDE.md` §F. Live revenue/request counters: `/agents` on the
 homepage.
+
+## SOLON staking (§G, v0.7)
+
+`SolonStaking` (`addresses.json → staking.solonStaking`, ABI
+`abis/SolonStaking.json`, page `https://solonpad.fun/stake`): stake SOLON,
+earn SOLON. **No lock, no cooldown** — `unstake(amount)` is one step and pays
+principal plus accrued rewards in the same tx; `unstake`/`claim` can never be
+paused. Rewards come from two lanes summed into one Synthetix-style
+`rewardPerToken`: **BUYBACK** — the daily platform-fee buyback, injected by
+the distributor with the buyback tx hash in `RewardAdded`, streamed over 7
+days; **GENESIS** — a one-off 12.69M SOLON pool streamed over 30 days.
+
+| Call | Semantics |
+|---|---|
+| `stake(amount)` | approve SOLON first; bounded by `stakeCap` (new stake only) |
+| `unstake(amount)` | instant; auto-claims; principal leg runs even if the reward leg reverts |
+| `claim()` | pay accrued SOLON rewards |
+| `compound()` | restake accrued rewards |
+| `earned(a)` / `stakedOf(a)` / `totalStaked()` | reads |
+| `notifyBuyback(amount, buybackTx)` | distributor only — injects a buyback into the 7-day lane |
+
+**APR basis** (same as the page): last-7-day reward inflow — buyback
+`RewardAdded` amounts plus what the genesis lane streamed in the window —
+`× 365/7 ÷ totalStaked`. Reward and stake are both SOLON, so this equals
+annualised USD inflow ÷ staked market value; price cancels. Historical, not
+a promise: it drops when the genesis lane ends and falls as more is staked. Principal (`totalStaked`) and rewards (`rewardReserve`) are separate
+buckets; the owner cannot move either (`rescue` refuses SOLON). Unaudited.
+Whether to stake is your principal's decision (see the platform note below).
+Sequences: `AGENT-GUIDE.md` §G. Checks: `VERIFY.md` §G.
 
 ## When NOT to use (routing)
 - Cross-chain meme analytics, smart-money tracking, holder chip analysis →
