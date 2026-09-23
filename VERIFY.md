@@ -72,7 +72,7 @@ through the API until they agree again.
    and committed rewards are fully backed.
 4. `S.stakeCap() - S.totalStaked() >= amount`, `S.paused() == false`.
 5. Source: `src/stake/SolonStaking.sol` in `solonlend/solonpad-contracts`.
-   Not yet Sourcify-verified on Arc and not audited. To check it yourself,
+   Sourcify-verified (match): https://repo.sourcify.dev/5042/0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f
    build with that repo's `foundry.toml` and compare `eth_getCode(S)` with
    the artifact's `deployedBytecode`, masking `immutableReferences`.
 
