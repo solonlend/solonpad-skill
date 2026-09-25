@@ -1,13 +1,15 @@
 // verify.mjs — runs the scriptable checks of VERIFY.md against Arc mainnet.
-// Read-only: no keys, no transactions. Exit 0 = all green, 1 = any red.
-//   cd tools && npm i && node verify.mjs [--factsheet 0xToken]
-import { createPublicClient, http, keccak256, encodeAbiParameters, parseAbi } from 'viem';
+// Read-only: no keys, no transactions, no SolonPad API — chain reads only.
+// Exit 0 = all green, 1 = any red.
+//   cd tools && npm i && node verify.mjs
+import { createPublicClient, http, parseAbi } from 'viem';
 import { readFileSync } from 'node:fs';
 
 const A = JSON.parse(readFileSync(new URL('../addresses.json', import.meta.url)));
-const client = createPublicClient({ transport: http(A.chain.rpc) });
+const client = createPublicClient({ transport: http(A.chain.rpc, { retryCount: 5, retryDelay: 400 }) });
 const results = [];
 const check = (name, ok, detail = '') => { results.push([name, ok, detail]); console.log(`${ok ? ' OK ' : 'FAIL'}  ${name}${detail ? ' — ' + detail : ''}`); };
+const eq = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
 
 // 1. chain id
 const chainId = await client.getChainId();
@@ -15,7 +17,7 @@ check('chainId is 5042', chainId === 5042, `got ${chainId}`);
 
 // 2. factory wired to canonical v4
 const factoryPm = await client.readContract({ address: A.solonpad.launchFactory, abi: parseAbi(['function poolManager() view returns (address)']), functionName: 'poolManager' });
-check('factory.poolManager == canonical', factoryPm.toLowerCase() === A.uniswapV4Canonical.poolManager.toLowerCase(), factoryPm);
+check('factory.poolManager == canonical', eq(factoryPm, A.uniswapV4Canonical.poolManager), factoryPm);
 
 // 3. locker: has code, ABI has no unlock/withdraw/execute surface
 const lockerCode = await client.getCode({ address: A.solonpad.launchLocker });
@@ -44,32 +46,32 @@ const [launchFee, enabled] = await Promise.all([
 ]);
 check('economics readable', typeof enabled === 'boolean', `launchFee ${launchFee} wei-USDC, enabled ${enabled}`);
 
-// 9. instant v4 strategy constants
-const stratAbi = parseAbi(['function LP_FEE() view returns (uint24)', 'function TICK_SPACING() view returns (int24)', 'function TOTAL_SUPPLY() view returns (uint256)', 'function feeSplitter() view returns (address)']);
+// 9. instant v4 strategy constants (native USDC instance)
+const stratAbi = parseAbi(['function LP_FEE() view returns (uint24)', 'function TICK_SPACING() view returns (int24)', 'function TOTAL_SUPPLY() view returns (uint256)', 'function feeSplitter() view returns (address)', 'function initialTick() view returns (int24)', 'function quoteToken() view returns (address)']);
 const V = A.instantV4;
-const [lpFee, spacing, supply, splitter] = await Promise.all(['LP_FEE', 'TICK_SPACING', 'TOTAL_SUPPLY', 'feeSplitter'].map(fn => client.readContract({ address: V.instantLaunchStrategy, abi: stratAbi, functionName: fn })));
-check('instant v4 strategy constants', Number(lpFee) === 10000 && Number(spacing) === 100 && supply === 10n ** 27n && splitter.toLowerCase() === V.feeSplitter.toLowerCase(), `lpFee ${lpFee}, spacing ${spacing}, splitter ${splitter}`);
+const readStrat = (address, fns) => Promise.all(fns.map(fn => client.readContract({ address, abi: stratAbi, functionName: fn })));
+const [lpFee, spacing, supply, splitter, tick0] = await readStrat(V.instantLaunchStrategy, ['LP_FEE', 'TICK_SPACING', 'TOTAL_SUPPLY', 'feeSplitter', 'initialTick']);
+check('instant v4 strategy constants', Number(lpFee) === 10000 && Number(spacing) === 100 && supply === 10n ** 27n && eq(splitter, V.feeSplitter) && Number(tick0) === V.economics.initialTick,
+  `lpFee ${lpFee}, spacing ${spacing}, tick ${tick0}, splitter ${splitter}`);
 
-// Factsheet spot-check (optional): --factsheet 0xToken
-const tokenArg = process.argv[process.argv.indexOf('--factsheet') + 1];
-if (process.argv.includes('--factsheet') && tokenArg?.startsWith('0x')) {
-  const base = (A.aggregator?.readApi?.factsheet ?? '').split('/api/')[0] || 'https://solonpad.fun';
-  const res = await fetch(`${base}/api/factsheet/${tokenArg}?chain=arc`, { headers: { 'user-agent': 'solonpad-skill-verify/0.4' } });
-  if (!res.ok) check('factsheet reachable', false, `HTTP ${res.status}`);
-  else {
-    const fs = await res.json();
-    const tip = await client.getBlockNumber();
-    check('factsheet asof fresh (<=100 blocks)', tip - BigInt(fs.asof.block) <= 100n, `asof ${fs.asof.block}, tip ${tip}`);
-    const k = fs.identity.poolKey;
-    if (k) {
-      const poolId = keccak256(encodeAbiParameters(
-        [{ type: 'address' }, { type: 'address' }, { type: 'uint24' }, { type: 'int24' }, { type: 'address' }],
-        [k.currency0, k.currency1, k.fee, k.tickSpacing, k.hooks]));
-      const slot0 = await client.readContract({ address: A.uniswapV4Canonical.stateView, abi: parseAbi(['function getSlot0(bytes32) view returns (uint160 sqrtPriceX96, int24 tick, uint24 protocolFee, uint24 lpFee)']), functionName: 'getSlot0', args: [poolId] });
-      check('factsheet pool exists on-chain', slot0[0] > 0n, `sqrtPriceX96 ${slot0[0]}`);
-    }
-  }
+// 9b. every ERC-20 quote instance (stocks / memes) matches addresses.json
+for (const [sym, q] of Object.entries(V.quoteInstances ?? {}).filter(([k]) => !k.startsWith('_'))) {
+  const [qLpFee, qSpacing, qSupply, qSplitter, qTick, qQuote] = await readStrat(q.strategy, ['LP_FEE', 'TICK_SPACING', 'TOTAL_SUPPLY', 'feeSplitter', 'initialTick', 'quoteToken']);
+  check(`quote instance ${sym}`, Number(qLpFee) === 10000 && Number(qSpacing) === 100 && qSupply === 10n ** 27n && eq(qSplitter, q.splitter) && eq(qQuote, q.quote) && Number(qTick) === q.initialTick,
+    `quote ${qQuote}, tick ${qTick}`);
 }
+
+// §G staking: token wiring, roles, full backing
+const S = A.staking;
+const stakeAbi = parseAbi(['function solon() view returns (address)', 'function owner() view returns (address)', 'function distributor() view returns (address)', 'function totalStaked() view returns (uint256)', 'function rewardReserve() view returns (uint256)', 'function paused() view returns (bool)', 'function stakeCap() view returns (uint256)']);
+const erc20 = parseAbi(['function balanceOf(address) view returns (uint256)']);
+const [solon, owner, distributor, totalStaked, rewardReserve, paused, stakeCap] = await Promise.all(
+  ['solon', 'owner', 'distributor', 'totalStaked', 'rewardReserve', 'paused', 'stakeCap'].map(fn => client.readContract({ address: S.solonStaking, abi: stakeAbi, functionName: fn })));
+check('§G1 staking token == SOLON', eq(solon, S.stakingToken) && eq(solon, V.flagship.token), solon);
+check('§G2 staking owner/distributor match addresses.json', eq(owner, S.owner) && eq(distributor, S.distributor), `owner ${owner}, distributor ${distributor}`);
+const held = await client.readContract({ address: S.stakingToken, abi: erc20, functionName: 'balanceOf', args: [S.solonStaking] });
+check('§G3 staking fully backed', held >= totalStaked + rewardReserve, `balance ${held / 10n ** 18n} >= staked ${totalStaked / 10n ** 18n} + reserve ${rewardReserve / 10n ** 18n} SOLON`);
+console.log(`info  §G4 paused ${paused}, cap headroom ${(stakeCap - totalStaked) / 10n ** 18n} SOLON (check against your amount)`);
 
 const failed = results.filter(([, ok]) => !ok).length;
 console.log(`\n${results.length - failed}/${results.length} checks green${failed ? ` — ${failed} FAILED: do not move value` : ' — safe to proceed'}`);

@@ -1,6 +1,6 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1). Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
-  "verifiedAt": "2026-09-17",
+  "_comment": "SolonPad on Arc (Circle's L1) — Arc-only since v1.0. Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
+  "verifiedAt": "2026-09-25",
   "chain": {
     "name": "Arc",
     "chainId": 5042,
@@ -79,135 +79,63 @@
       "factoryRepo": "github.com/Uniswap/uerc20-factory",
       "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
       "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
-    }
-  },
-  "robinhood": {
-    "_comment": "SolonPad on Robinhood Chain (4663). Native ETH gas; instant v4 only (no curve). Verify like Arc before sending value.",
-    "chainId": 4663,
-    "rpc": "https://rpc.mainnet.chain.robinhood.com/rpc",
-    "uerc20Factory": "0x83922922776C121671072C9349D8Cc1867D4856f",
-    "beneficiaryVault": "0x8aF664E15D27F6E126662D12D2Db9AedD8113424",
-    "feeSplitter": "0x6A64C681606845E5Ed4E2340C59414b7d1810631",
-    "instantLaunchStrategy": "0x3e93DF005AB38B4D0B1aD197Ee161E57A204a5e9",
-    "nativeInitialTick": 201800,
-    "poolSwapTest": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
-    "feeRouter": "0xBef20379BdE976e807d8E6E9E831961512A02278",
-    "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
-    "flagshipToken": "0x0aC0EA2F38598F1526A03152233E4AC861b2d138",
+    },
     "quoteInstances": {
-      "NVDA": {
-        "quote": "0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec",
-        "tick": 177600,
-        "splitter": "0xB39aF010A671629D976a0ebd776eD0aC7B20667A",
-        "strategy": "0xe70E060F5c5034e65676feCe611E1450c5c9B9ef"
+      "_comment": "Instant v4 instances quoted in an 18-dec ERC-20 (tokenized stocks / memes on Arc) instead of native USDC. Same launcher, same 1B supply, LP_FEE 10000, TICK_SPACING 100, hooks 0x0; the strategy exposes quoteToken(). Pool key sorts (token, quote) by address. Read from each instance's own launch receipts on 2026-09-25 — re-verify strategy.quoteToken()/feeSplitter() on-chain (tools/verify.mjs does).",
+      "CRCL": {
+        "quote": "0x2ba0f44BDfC17FbA30edA9cdBeCB908cA45B043B",
+        "strategy": "0xDbb391d680b47E62f1B81ff36c44b6B9FB02D8cC",
+        "splitter": "0xc6A8ae9Bfc3E323f0F6110c33Ec7d74A2529986d",
+        "initialTick": 167700
       },
       "TSLA": {
-        "quote": "0x322f0929c4625ed5bad873c95208d54e1c003b2d",
-        "tick": 182700,
-        "splitter": "0x572dFa2b72168331d4E9877D80d1165158928432",
-        "strategy": "0xA65a6a95B84FDB666C7B7ec249a7B8A2Cb495803"
+        "quote": "0x4d1Efa7f5629f89FBDd7950b5eF73403A350Ad59",
+        "strategy": "0x1c6b8fff919844ec9888131754fa90cef1609a1e",
+        "splitter": "0x24b90BE7e407176A8aCE9e89777CB263a36C51f2",
+        "initialTick": 181400
+      },
+      "NVDA": {
+        "quote": "0x6505506540dC99f7366316B10E9CF1A584cbD42a",
+        "strategy": "0xf296508F9853F27C39E05886514A7b509EAf95AB",
+        "splitter": "0xDDb33878f2e39127f4efD995F806d4C418334f24",
+        "initialTick": 177400
       },
       "AAPL": {
-        "quote": "0xaf3d76f1834a1d425780943c99ea8a608f8a93f9",
-        "tick": 181900,
-        "splitter": "0x637A23A8ABD2F23a9fF4dfa941A3419fdfDc309E",
-        "strategy": "0x602bA1779edbD63d9bca9c8cFEBcA56E0f64C055"
-      },
-      "META": {
-        "quote": "0xc0d6457c16cc70d6790dd43521c899c87ce02f35",
-        "tick": 189000,
-        "splitter": "0x13D08E4D1a41ccC5E793145500739D6DAbB94942",
-        "strategy": "0x19E7593C1d0A0508a560a1B5576E209F5cD99161"
-      },
-      "GOOGL": {
-        "quote": "0x2e0847e8910a9732eb3fb1bb4b70a580adad4fe3",
-        "tick": 182100,
-        "splitter": "0x0746909447A5298f06a6b7C3b7AF98e8f2967E43",
-        "strategy": "0xEA19c07E5f9EDAB5E45F3afd9b7E0D82E249Ced8"
+        "quote": "0xAC7896A01a4efD2a647Fb1C94a6F1fFef8901488",
+        "strategy": "0xc97882b4f3cb5eb9afb001620f8ad11cedc1d3fb",
+        "splitter": "0xa80Dd5589AF28701035F00278524DBC6efac3D7A",
+        "initialTick": 181700
       },
       "SPY": {
-        "quote": "0x117cc2133c37b721f49de2a7a74833232b3b4c0c",
-        "tick": 190100,
-        "splitter": "0xc240e6C80F231D7Bf9e21D146E6E397374Fa08DC",
-        "strategy": "0xf78F379D7E82521EB8c4C161f4A77e2F8219Ec5b"
+        "quote": "0x0c3282e55885bb1e8341F8C36DA7B16E4F559993",
+        "strategy": "0xe2b51aa086d9146ac39b58c93c4922a654d3e525",
+        "splitter": "0xdb539cf8bcA0D50936215A87Ef4291CF13688deA",
+        "initialTick": 190100
       },
-      "PONS": {
-        "quote": "0x39dbed3a2bd333467115de45665cc57f813c4571",
-        "tick": 119400,
-        "splitter": "0x957970316f088aa9913fE55aE6e8cDEBF3B4652E",
-        "strategy": "0x04D08A9510AEe9318a018e4A538E259fC56BaB2e"
+      "ARGUS": {
+        "quote": "0xeCe5cA8bf9220718E5727754026757512212cb3c",
+        "strategy": "0x2d95738abc1a872855267ed5405c032232ed704b",
+        "splitter": "0xe5cE4fA81bF7557261Ca82721D43c25780cdD999",
+        "initialTick": 83000
       },
-      "CASHCAT": {
-        "quote": "0x020bfc650a365f8bb26819deaabf3e21291018b4",
-        "tick": 107200,
-        "splitter": "0x07306255319b77338C1FC462bf31D4a75e31af5D",
-        "strategy": "0xF560662992611d9054451c40F54d69C19E25dBbe"
+      "LONG": {
+        "quote": "0x2164bB17a2D38c1b5170E987b2c0416DF1EFc752",
+        "strategy": "0xedebb25c49db4e8806a3a1776fefcbcca28e19b2",
+        "splitter": "0x8866ab70b2A95C9A4484B7f04f33e5A9f53a76a4",
+        "initialTick": 63700
+      },
+      "DUKE": {
+        "quote": "0x41358Defd0dedc90528b3F1835715E907B686e6a",
+        "strategy": "0x62e0443dc6e844686bedb627493a7a92ca44d41a",
+        "splitter": "0x550baDf26666D20C60d115fE9d52Ca7d25B7B529",
+        "initialTick": 62500
       }
     }
   },
-  "aggregator": {
-    "_comment": "SolonPad aggregates every pad: Pons+pools.trade on RH, Minara/Azex/all v4 pools on Arc. FeeRouter wraps curve and v4 trades with a 0.5% interface fee on the quote leg (buys: input side; sells: output side; minOut is net of fee). Stateless, holds nothing between txs. ABI: abis/SolonFeeRouter.json.",
-    "feeRouter": {
-      "arc": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
-      "robinhood": "0xBef20379BdE976e807d8E6E9E831961512A02278"
-    },
-    "feeBps": 50,
-    "readApi": {
-      "launches": "https://solonpad.fun/api/launches?chain=arc|rh — every indexed pan incl. external pads; fields: source, hook, poolKey, curve, price, change24h, originDomain",
-      "market": "https://solonpad.fun/api/market/<token> — single-market detail",
-      "factsheet": "https://solonpad.fun/api/factsheet/{token}?chain=arc|rh",
-      "changes": "https://solonpad.fun/api/changes?chain=arc|rh&since={cursor}"
-    },
-    "externalSources": {
-      "rh": {
-        "pons": {
-          "factory": "0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e",
-          "gradHook": "0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044"
-        },
-        "pools.trade": {
-          "factory": "0x000000e200088d55c39a11f609e5f667729ad49b"
-        }
-      },
-      "arc": {
-        "minara": {
-          "factory": "0xFf99D8f6C994607576eB652EDCf12E04a7EbfBf6",
-          "hook": "0xb6A65950534F061618B4AE102FBcbb8541a8e0cC"
-        },
-        "market": "all v4 pools quoted in native USDC, fee <= 3%"
-      }
-    },
-    "hookRouting": {
-      "open": [
-        "0x0000000000000000000000000000000000000000",
-        "0xb6A65950534F061618B4AE102FBcbb8541a8e0cC",
-        "0x4Ab0BF61327761fffC5910052d9E0b9a94F960CC",
-        "0x47e7936ae9891e61C5123db720593c05dE7120cc",
-        "0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044"
-      ],
-      "closed": [
-        "0x20EEad6db6b3d0a4491E9073119DD0EBFF166AcC"
-      ],
-      "_comment": "open = fork-probed: PoolSwapTest buy+sell succeed for an external caller. closed = hook reverts for non-allowlisted routers (display only)."
-    }
-  },
-  "rail": {
-    "_comment": "Solon Rail: non-custodial cross-chain execution funded from Arc USDC. 0.5% fee enforced at source on every lane: EVM = FeeRouter contracts, Solana = Jupiter platformFeeBps into the treasury's USDC token account. Tools: tools/crossbuy.mjs / crosssell.mjs / sweepback.mjs (AGENT-GUIDE.md §E). Keys stay with the caller (RAIL_PK / RAIL_SOL_PK env).",
-    "feeBps": 50,
-    "bsc": {
-      "chainId": 56,
-      "feeRouter": "0xA65a6a95B84FDB666C7B7ec249a7B8A2Cb495803",
-      "quote": "0x55d398326f99059fF775485246999027B3197955",
-      "quoteSymbol": "USDT"
-    },
-    "solana": {
-      "relayChainId": 792703809,
-      "quoteMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "quoteSymbol": "USDC",
-      "feeMechanism": "jupiter platformFeeBps=50 + feeAccount",
-      "feeAccount": "4AJiPadLWt9t8rDocRr74ue1DYRhNcpWmfKj4Dz6jm8o",
-      "feeTreasury": "B2Ej9TNMfeoMSG9pYFyD5dXTtekkHWvaN4Wvq31wFp7Q"
-    },
-    "arcAndRobinhood": "home + native lanes reuse aggregator.feeRouter above"
+  "feeRouter": {
+    "_comment": "Optional stateless trade wrapper on Arc: v4Swap/curveBuy/curveSell with a 0.5% interface fee on the quote leg (minOut net of fee). Not required — own-pool trades can go straight through PoolSwapTest / the curve. ABI: abis/SolonFeeRouter.json.",
+    "address": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
+    "feeBps": 50
   },
   "staking": {
     "_comment": "SOLON staking on Arc (live 2026-09-23). Stake SOLON, earn SOLON. No lock, no cooldown. Unaudited. ABI: abis/SolonStaking.json. Verify per VERIFY.md §G.",

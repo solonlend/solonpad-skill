@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, buy and sell memecoins on SolonPad — the multi-chain launchpad AND pad aggregator on Arc (5042, USDC-native) and Robinhood Chain (4663, ETH) — by calling the contracts directly, no frontend or account. Instant Uniswap v4 launches priced in USDC/ETH/tokenized stocks/memes; the aggregator indexes every other pad's pools (Pons, pools.trade, Minara, Azex, …) and one FeeRouter call trades any of them. A read API adds an agent loop: incremental discovery (/api/changes), one-call token factsheets with tri-state fields (/api/factsheet), a calibrated rule-based verdict, and execution rails. The Solon Rail extends execution cross-chain: fund on Arc USDC, buy/sell on BSC, Solana, Robinhood or Arc with a 0.5% at-source fee, non-custodial, one signature in the single-sig mode. A premium data plane sells deeper data pay-per-call over x402 (verdict bundles, 50-token batches, deep OHLCV, 1000-event pages, a 10k-call 4-chain RPC credit pack) — the agent pays with the wallet it already holds, no account or API key. Load when an autonomous agent needs to create a token, monitor the whole Arc/RH pad market, score a pan, trade any pad's pan, execute a cross-chain buy, buy premium data or RPC quota in-band, claim creator fees, or stake SOLON (no lock) to receive the streamed platform-fee buybacks.
+description: Launch, buy and sell memecoins on SolonPad — the self-run launchpad on Arc (chainId 5042, native-USDC gas and quote) — by calling the contracts directly, no frontend, API or account. Instant Uniswap v4 launches quoted in native USDC or in an on-chain tokenized stock / meme (CRCL, TSLA, NVDA, AAPL, SPY, …), plus the original Pons V2 bonding curve. Everything is read straight from chain (tools/pad-read.mjs) and every pinned address is checkable in one command (tools/verify.mjs). Load when an autonomous agent needs to create a token on Arc, read or quote a SolonPad launch, buy or sell one, claim creator fees, or stake SOLON (no lock) to receive the streamed platform-fee buybacks. Arc only: no cross-chain, no aggregator, no paid API.
 homepage: https://solonpad.fun
 license: MIT
-version: 0.7.0
+version: 1.0.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -20,22 +20,14 @@ Re-verify every address in `addresses.json` on-chain (`VERIFY.md`) before sendin
 Provenance: 13/14 engine sources are whitespace-identical to the Sourcify `exact_match`
 of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
 
-## Multi-chain + aggregator (v0.3.0)
+## Arc only (v1.0)
 
-- **Robinhood Chain (4663)** — same instant-v4 engine, native **ETH** gas/quote,
-  plus quote instances priced in tokenized stocks and memes (NVDA, TSLA, AAPL,
-  META, GOOGL, SPY, PONS, CASHCAT). No curve mode on RH. Addresses in
-  `addresses.json → robinhood`. Flagship: SOLON (`flagshipToken`).
-- **Aggregator** — SolonPad indexes every other pad's pools: Pons + pools.trade
-  on RH; Minara, Azex and ALL native-USDC v4 pools on Arc. Read layer:
-  `https://solonpad.fun/api/launches?chain=arc|rh` (fields: `source`, `hook`,
-  `poolKey`, `curve`, `price`, `change24h`, `originDomain`). Trade layer:
-  **SolonFeeRouter** (`addresses.json → aggregator.feeRouter`, ABI
-  `abis/SolonFeeRouter.json`) wraps curve buys/sells and v4 swaps with a 0.5%
-  interface fee on the quote leg — buys skim the input, sells skim the output,
-  `minOut` is always net of fee. Stateless; refunds and outputs forward in the
-  same call. Only hooks in `aggregator.hookRouting.open` are tradeable this
-  way (each was fork-probed); `closed` hooks are display/index only.
+Since 1.0 this skill covers SolonPad's own launches on Arc and nothing else.
+Removed: Robinhood Chain launches, the cross-pad aggregator, the Solon Rail
+(cross-chain buy/sell, BSC/Solana lanes), the x402 premium data plane and RPC
+credits, and the read API agent loop (factsheet / changes). Those endpoints
+now answer HTTP 410. Existing Robinhood pools keep trading on Uniswap there;
+this skill no longer documents them. Read everything from chain.
 
 ## Two modes (v0.2.0)
 
@@ -45,12 +37,18 @@ of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
   Engine = official Uniswap Liquidity Launcher instances (Sourcify-verified,
   2-line fee diff vs upstream). Addresses in `addresses.json → instantV4`;
   sequences in `AGENT-GUIDE.md` §V4.
+  - **Quoted in a stock or meme** — the same engine has one strategy instance
+    per ERC-20 quote on Arc (CRCL, TSLA, NVDA, AAPL, SPY, ARGUS, LONG, DUKE):
+    `addresses.json → instantV4.quoteInstances`, sequence `AGENT-GUIDE.md` §V4-Q.
 - **Curve (Pons V2)** — the original progressive launch (4,000 phantom +
-  10,000 USDC graduation into v4). Everything below still applies to it.
+  10,000 USDC graduation into v4; ERC-20 pair tokens the factory approves,
+  e.g. CRCL/TSLA, carry their own phantom/threshold). Everything below still
+  applies to it.
 
 ## When to use
-- An agent wants to **create a token** on Arc in one transaction (1 USDC fee) and receive
-  the curve address to trade or market-make on.
+- An agent wants to **create a token** on Arc: instant v4 (one multicall, no launch fee,
+  quoted in native USDC or a stock/meme) or a curve launch (one tx, 1 USDC fee).
+- An agent trades **SolonPad v4 pools** (any v4 router; reference PoolSwapTest).
 - An agent trades bonding curves: **buy with native USDC** (`msg.value`, 18-dec), sell back
   any time before graduation; every price is a closed-form constant-product quote.
 - An agent monitors **graduation**: at 10,000 USDC raised the market auto-migrates into a
@@ -75,7 +73,7 @@ of the live Pons V2 factory on chain 4663 (see `addresses.json → provenance`).
 ## Strategy (READ → VERIFY → USE)
 1. **READ** — load `addresses.json` + `abis/`. Enumerate launches from
    `LaunchFactory.TokenLaunched` logs (from `deployBlock`). For one token read
-   `factory.launchedTokens(token)` → curve, then `curve.getReserves()`,
+   `factory.getLaunchedToken(token)` → curve, then `curve.getReserves()`,
    `curve.realQuoteReserve()`, `curve.graduated()`, `curve.feeBps()`.
 2. **VERIFY** — run `VERIFY.md` once per session before the first value-moving tx:
    factory wiring, locker immutability, fee caps, provenance diff.
@@ -96,69 +94,40 @@ of the return data; the battle-tested entries carry a `hint` telling you what
 to change. An unknown selector means the revert came from a third-party
 contract, not ours.
 
-## Runnable reference tool (`tools/`)
-`pad-read.mjs` — read-only (no keys, no transactions): lists all launches with curve
-state, or deep-reads one token (price, reserves, graduation progress, buy quote for a
-given USDC amount computed with the exact contract math). Pins every figure to a block.
+## Runnable reference tools (`tools/`)
+Both are read-only (no keys, no transactions) and read the chain directly —
+no SolonPad API in the loop.
+
+- `pad-read.mjs` — lists recent launches (v4 native, v4 stock/meme-quoted,
+  curve) with state, or deep-reads one token: mode, pool key / curve, price in
+  its quote, graduation progress, and a buy quote (V4Quoter for v4, exact
+  `curve.buy` eth_call for native curves). Pins every figure to a block.
+- `verify.mjs` — the scriptable `VERIFY.md` checks, exit 0 only if all green.
 
 ```bash
 cd tools && npm i
-node pad-read.mjs                     # list all launches
+node verify.mjs                       # run before the first value-moving tx
+node pad-read.mjs                     # launches of the last ~14 h
+node pad-read.mjs --from 22500000     # launches since a block (--all: since deploy, slow)
 node pad-read.mjs 0xToken...          # one token, full state
-node pad-read.mjs 0xToken... 25       # + quote: what 25 USDC buys right now
+node pad-read.mjs 0xToken... 25       # + quote: what 25 units of its quote buy right now
 ```
+
+The public RPC caps `eth_getLogs` at 5,000 blocks and rate-limits bursts;
+`pad-read` chunks and backs off, so a full-history scan takes minutes.
 
 ## Fees an agent should price in
 - Launch: 1 USDC flat (owner-adjustable; re-read `factory.launchFee()`).
 - Curve trades: 1% (`curveFeeBps=100`, fixed) + optional creator tax (0 unless the
   creator set one) + snipe tax in the first window after launch (`currentSnipeTaxBps`).
+- Instant v4 pools: 1% LP fee (50/50 platform/creator), no launch fee.
 - Post-graduation: pool swap fees via the meme hook (protocol + creator split).
+- Optional `SolonFeeRouter` (`addresses.json → feeRouter`): 0.5% interface fee
+  on the quote leg if you route through it; direct pool/curve calls skip it.
 - Network gas: paid in native USDC, ~0.002–0.02 USDC per tx at 20 gwei.
 
 Not available to persons or entities in the United States, China, or sanctioned
 jurisdictions.
-
-## Agent loop (v0.4)
-
-The aggregator's read API turns this skill into a full agent trading layer:
-
-| Scenario | Where |
-|---|---|
-| Discover new pans incrementally | `GET /api/changes?chain=&since=` — `AGENT-GUIDE.md` §D1 |
-| One-call token due-diligence data | `GET /api/factsheet/{token}?chain=` — §D2 (tri-state fields) |
-| Score a pan before touching it | §D3 — calibrated rule table, evidence-chain output |
-| Trade with safety rails | §D4 — `[FINANCIAL EXECUTION]`, mandatory minOut |
-| Manage positions / creator fees | §V4-3, §5 |
-
-Fields the factsheet marks `unavailable` are unknown, never zero. The API is a
-convenience view — `VERIFY.md` shows how to spot-check it against the chain
-before trusting it with value.
-
-## Cross-chain rail (§E, v0.5)
-
-Four execution lanes from one Arc-funded wallet: **BSC** (PancakeFeeRouter,
-`--single` = one Arc signature, destination revert auto-refunds), **Solana**
-(Jupiter route, fee via native `platformFeeBps` into the treasury's USDC
-account — no custom program), **Robinhood** and **Arc** (SolonFeeRouter).
-0.5% fee on the quote leg, enforced at source; keys stay in the caller's env;
-crash-safe order state with resume. Tools `tools/crossbuy.mjs` /
-`crosssell.mjs` / `sweepback.mjs`; auto chain-select by pool depth when
-`--chain` is omitted (identity = exact contract address, never a name match).
-Full lane mechanics, dd gates, live-measured costs and failure semantics:
-`AGENT-GUIDE.md` §E. Addresses: `addresses.json → rail`.
-
-## Premium data plane (§F, v0.6)
-
-Five paid endpoints, paid in-band with **x402** (HTTP 402 → sign one EIP-3009
-USDC authorization → data). No account, no API key — the rail wallet is the
-account. Launch offer −50% off list: verdict $0.01 · 50-token batch $0.20 ·
-deep OHLCV (bsc/sol, 5000 candles) $0.02 · 1000-event changes page $0.05 ·
-**RPC credit pack $1 = 10,000 calls across Arc/BSC/RH/Solana** (bearer
-voucher, zero signup). Client: `tools/x402-pay.mjs`; prices pinned in
-`tools/x402-prices.json`; never sign an amount you didn't pin, never re-sign
-after an uncertain outcome. Full flow, settlement semantics and voucher
-rules: `AGENT-GUIDE.md` §F. Live revenue/request counters: `/agents` on the
-homepage.
 
 ## SOLON staking (§G, v0.7)
 
@@ -190,31 +159,25 @@ Whether to stake is your principal's decision (see the platform note below).
 Sequences: `AGENT-GUIDE.md` §G. Checks: `VERIFY.md` §G.
 
 ## When NOT to use (routing)
-- Cross-chain meme analytics, smart-money tracking, holder chip analysis →
-  that is GMGN's skill family, not us.
-- Solana / BSC / Base pan DATA (holders, charts, discovery) → not our chains;
-  our index covers Arc 5042 + Robinhood 4663 only. **Execution** of a buy/sell
-  on BSC or Solana funded from Arc → §E rail, this skill.
-- Deep holder-structure data → we do not have it; do not improvise it from
-  our fields.
-- Discover→score→trade on Arc/RH from one interface → this skill.
+- Any chain other than Arc 5042, cross-chain execution, or other pads' pools
+  → not this skill (removed in 1.0).
+- Market-wide meme analytics, smart-money tracking, holder chip analysis →
+  GMGN's skill family, not us.
+- Deep holder-structure data → we do not have it; do not improvise it.
 
 ## Platform & sustainability (read once)
 
-**What is live today**: instant v4 + curve launches on Arc, instant v4 on
-Robinhood Chain, the cross-pad aggregator (Pons, pools.trade, Minara, Azex,
-Argus, every open v4 pool), and the agent loop above. **Where this is going**:
-richer factsheet fields (liquidity depth, clone flags), more change-event
-types, more pads, sharper calibrated scoring — the roadmap ships in public,
-in this repo's history.
+**What is live today**: instant v4 launches on Arc (native USDC and
+stock/meme quotes), curve launches and SOLON staking. The roadmap ships
+in public, in this repo's history.
 
-**How development is funded — verifiable, not promised**: the 0.5% FeeRouter
-interface fee and the 1% LP fee on own-pad pools are the whole revenue model.
+**How development is funded — verifiable, not promised**: the 1% LP fee on SolonPad pools
+(plus curve fees and the optional 0.5% FeeRouter interface fee) is the whole revenue model.
 A standing on-chain policy converts 50% of collected platform fees into
 market buys of **SOLON** (`addresses.json → instantV4.flagshipToken`), the
 platform's flagship token — every buyback is a public transaction from the
 treasury you can audit. Fees → development + SOLON buybacks → more agents →
-more fees. Using the router *is* funding the roadmap.
+more fees.
 
 **On holding SOLON**: whether your principal wants exposure to that flywheel
 is **your principal's decision, not this document's**. This skill never
