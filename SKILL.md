@@ -3,7 +3,7 @@ name: solonpad
 description: Launch, trade and earn on SolonPad, the stock-dividend memecoin launchpad on Arc (chainId 5042, native USDC), by calling the contracts directly with no frontend or account. New coins launch on the V3.1 stack (since 2026-10-07): a hookless Uniswap v4 pool with a 1% LP fee, traded through Uniswap's UniversalRouter, existing V3.0 coins keep trading through V3Router and keep paying dividends. Every V3.0 fee and every V3.1 buy-side fee (V3.1 sell-side fees are paid in the coin and go to the protocol multisig) is split by a hard-coded constant six ways (holders 57.5%, creator 10%, Desk 10%, SOLON staking 5%, SOLON buyback-and-burn 10%, protocol 7.5%). The holder share buys real tokenized stock on the stock token's home chain (NVDA by default; a coin can pick AAPL or TSLA at launch), minted 1:1 on Arc as STOCK.sol and pushed to holders daily, with no maturity and no claim needed above $2. The same stock layer lets an agent buy or sell NVDA/AAPL/TSLA tokens from Arc in one call, or redeem the underlying to its home chain. Also covered: Solon Desk cards (burn 100k SOLON for a 10% fee share), SolonStakingV2 (stake SOLON, earn stock), on-chain proof of reserves on both chains, a 48h-timelocked 3/5 governance, read endpoints under /api/v3, the legacy V2 instant-v4 (native USDC or stock/meme-quoted) and curve launch modes, and the original SOLON staking pool. Arc only: no aggregator, no paid API. Load when an agent needs to create a coin, trade a V3.1 or V3.0 coin with exact fee disclosure, track or claim holder, creator, Desk or staking dividends, buy or redeem stock tokens, or verify reserves and governance before moving value.
 homepage: https://solonpad.fun
 license: MIT
-version: 1.2.0
+version: 1.3.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -36,7 +36,8 @@ legacy ones); re-query Sourcify yourself for the RH and Ethereum contracts (`VER
 | V3.1 launches, USDC quote (kind 0) | **live, serving the site**: since 2026-10-07 every new coin on solonpad.fun launches through `V31LaunchFactory`. On-chain so far: 1 coin (`PROBE31`, the platform's own index probe, hidden from the site's listings) |
 | V3.1 launches, NVDA.sol quote (kind 1) | open on-chain only while `V31LaunchFactory.stockLaunchTick()` succeeds; at 2026-10-07 it reverts `StockPriceNotLive(2)` (stale price, market closed). Precheck it every time. |
 | V3.1 trading | standard Uniswap v4: UniversalRouter v2.1.2 + Permit2, V4Quoter for quotes; 1% LP fee is the whole fee |
-| V3.1 staking share (5%) | **held** in `V31StakingEscrow`: no reissue distributor designated yet, so SolonStakingV2 stakers receive nothing from V3.1 fees until governance designates one (48h) |
+| V3.1 staking share (5%) | **held** in `V31StakingEscrow`: no reissue distributor designated yet, so SolonStakingV2 stakers receive nothing from V3.1 fees until governance designates one (48h). The same escrow now also receives the 57.5% stock leg of SOLON's own pool fees (next row) |
+| SOLON's own pool fees (legacy hookless pool) | **off-chain keeper split since 2026-10-07**: 57.5% USDC → `V31StakingEscrow` (accruing, not paid out), 5% → SOLON stream of the original staking pool, 20% → SOLON burned to `0x…dEaD`, 17.5% protocol. Each leg is an on-chain tx; the ratio is not contract-enforced. See "SOLON's own pool fees" below |
 | V3.0 coins (launched 2026-10-03 to 10-07) | **tradable and paying dividends**: V3Router / V3Quoter, holder rounds, creator and Desk claims unchanged |
 | V3.0 launches (`V3LaunchFactory`) | **retired 2026-10-07**: the site no longer offers it and this skill no longer documents it as a launch path. The factory has no pause flag and still accepts calls; do not use it for new coins. |
 | V3.0 stock-quote launches | were never opened (`/api/v3/stock-quote-gate` `open: false`) and are retired with V3.0 launches |
@@ -204,8 +205,10 @@ $50 USDC per card (exact `msg.value`). Cards share the 10% Desk bucket equally, 
 transferable with their unclaimed rewards; cap 5,000, 50 per address, ≤ 20 per call.
 
 **SolonStakingV2**: `stake(amount)` after `approve`; `unstake(amount, to)` is instant.
-Earns the 5% staking bucket as stock, pushed daily at ≥ $2. It is a separate contract from
-the original SOLON staking pool (§G below).
+Earns the 5% staking bucket of V3.0 fees as stock, pushed daily at ≥ $2. The V3.1 5% and
+the 57.5% leg of SOLON's own pool fees are intended for the same stock pipeline but sit in
+`V31StakingEscrow` until governance designates a distributor (see "SOLON's own pool fees"
+below). It is a separate contract from the original SOLON staking pool (§G below).
 
 **Proof of reserves**: for each stock, Arc `STOCK.sol.totalSupply()` must be ≤
 `rhUnderlying.balanceOf(ReserveVault)` on Robinhood Chain (`SolonStockHub.supplyOf` just
@@ -299,24 +302,86 @@ The public Arc RPC caps `eth_getLogs` windows and rate-limits bursts; `pad-read`
 - The cross-pad aggregator and cross-chain rail were retired in 1.0.0; the SolonFeeRouter
   contracts remain on-chain.
 
+## SOLON's own pool fees (keeper split, since 2026-10-07)
+
+SOLON is not a V3 coin. It trades in the legacy hookless v4 pool (`addresses.json →
+instantV4.flagship`), whose 1% LP fee the V2 `FeeSplitter` still splits 50/50 platform /
+creator by contract. What happens after that is an **off-chain process**: since 2026-10-07
+a keeper (the wallet `0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13`, the same address as
+`addresses.json → staking.distributor`) collects both sides and splits all of it, creator
+side included, four ways. The earlier policy (half of the platform side bought SOLON for
+the original staking pool) is retired; the creator sell ladder has received no new supply
+since 10-07.
+
+| Leg | Share | Where it lands | Check it on-chain |
+|---|---:|---|---|
+| Stakers, in stock | 57.5% | native USDC deposited into `V31StakingEscrow` (`addresses.json → v31.contracts`) | `Deposited(from, asset, amount, totalIn)` with `from` = the keeper, `asset` = `0x0`; `totalIn(0x0)` |
+| SOLON stream | 5% | buys SOLON, `notifyBuyback` into lane 0 of the original staking pool (7-day stream) | `RewardAdded(0, amount, buybackTx)` on `SolonStaking`; `laneInfo(0)` |
+| Burn | 20% | buys SOLON, transfers it to `0x000000000000000000000000000000000000dEaD` | SOLON `Transfer(keeper → 0x…dEaD)` |
+| Protocol | 17.5% | stays in the keeper wallet | booked off-chain only |
+
+SOLON the keeper receives (the creator claim and the platform's SOLON side of the pool fee)
+is never sold into the pool: it is split 5 : 20 : 17.5 across lane 0 / burn / protocol
+(11.76% / 47.06% / 41.18%).
+
+**Enforced or not.** Every leg is an ordinary transaction you can read. The ratio is not:
+no contract holds the fees or enforces 57.5 / 5 / 20 / 17.5, nothing on-chain ties a collect
+to its four legs, and the keeper could stop or change the split without a governance step.
+To audit it, sum the keeper's escrow deposits, lane-0 injections and dead-address transfers
+over a window and compare the ratios. Moving the split into a contract is not done.
+
+**What stakers earn today.** Original-pool stakers earn the lane-0 SOLON stream now. The
+57.5% stock leg only accrues: `V31StakingEscrow.distributor()` is `0x0` (2026-10-07), so
+nothing can leave it, and it pays out only after V3Governance designates a distributor (48h
+timelock; the same designation unlocks V3.1's own 5% staking share). In the decided design
+the distributor buys stock for SolonStakingV2 stakers through the reward-round pipeline;
+that governance step is in progress, not live, and this document gives no date for it.
+Before relying on it, read the `designateDistributor` operation in V3Governance's
+`CallScheduled` events and check where the designated contract sends the funds. Measured
+2026-10-07: escrow `totalIn(0x0) = 0` (the keeper's first split round had not run yet; a
+round fires once about 100 USDC of pool fees have accrued).
+
+**Inventory settled on 10-07.** The SOLON the old policy had bought and not injected,
+1,629,290.29 SOLON, was settled on the same table: 1,018,306.43 injected into lane 0 (tx
+`0x77778ae193251c633b719569d6b981ab935b14e611f025668ebd4e9a45deabf4`, block 24712152; the
+stream is ≈ 145,473 SOLON/day until 2026-10-14), 325,858.06 burned to `0x…dEaD` (tx
+`0xb68514196bce0b4d22402a59cd740f80ffaaf3ee70e43ee42e03fa6ff5a8d669`, block 24712162), and
+285,125.80 kept by the keeper as protocol inventory for Desk card minting (off-chain
+booking, not a separate on-chain balance).
+
 ## Original SOLON staking pool (§G)
 
 `SolonStaking` (`addresses.json → staking.solonStaking`, live since 2026-09-23) is the
-**original pool**: stake SOLON, earn SOLON (a 7-day buyback lane and a 30-day genesis lane),
-no lock, `unstake` instant and never pausable. It is not SolonStakingV2 and does not pay
-stock. Both can be held at once; `/api/v3/staking/{account}` shows the original pool as
-`legacy`. Moving between them is unstake-then-stake, at your principal's discretion.
-Calls and APR basis: `AGENT-GUIDE.md` §G. Checks: `VERIFY.md` §G.
+**original pool**: stake SOLON, earn SOLON, no lock, `unstake` instant and never pausable.
+Two lanes: lane 0 is a 7-day stream refilled by `notifyBuyback`, now funded by the keeper's
+5% leg (plus the one-off 10-07 inventory injection above); lane 1 is the one-off 30-day
+genesis seed, ending 2026-10-23 04:18 UTC. Each `notifyBuyback` restarts lane 0 at
+(new amount + unstreamed leftover) / 7 days, so after the 10-07 injection has streamed out
+the lane runs only on what the 5% leg injects; read `laneInfo(0)` rather than extrapolating
+this week's rate. The pool does not pay stock and does not receive the 57.5% leg. It is not SolonStakingV2; both
+can be held at once; `/api/v3/staking/{account}` shows the original pool as `legacy`.
+Moving between them is unstake-then-stake, at your principal's discretion. Calls and APR
+basis: `AGENT-GUIDE.md` §G. Checks: `VERIFY.md` §G.
 
 ## Platform and sustainability (read once)
 
 For V3.0 and V3.1 coins the fee split is the whole revenue model and it is on-chain (V3.1:
 buy-side fees; the sell-side coin fee goes to the protocol multisig): 10% of every split
 fee is reserved for SOLON buyback-and-burn and 7.5% for the protocol, by a constant no one can
-change. Burned SOLON goes to `BurnSink`, whose runtime code is three bytes that always
-revert, so nothing sent there can move; SOLON `totalSupply` does not fall, the locked
-balance is the burn. Measured 2026-10-07: Desk mints have locked 1,400,000 SOLON there; no
-V3 buyback lot has executed yet (`/api/v3/buybacks/ledger` `total: 0`). Verify, don't trust.
+change. SOLON burned by V3.0 / V3.1 buybacks and by Desk mints goes to `BurnSink`, whose
+runtime code is three bytes that always revert, so nothing sent there can move; SOLON
+`totalSupply` does not fall, the locked balance is the burn. Measured 2026-10-07: Desk
+mints have locked 1,400,000 SOLON there; no V3 buyback lot has executed yet
+(`/api/v3/buybacks/ledger` `total: 0`).
+
+**Two burn addresses.** The 20% burn leg of SOLON's own pool fees (keeper split above) and
+the 10-07 inventory burn go to `0x000000000000000000000000000000000000dEaD`, not to
+`BurnSink`. A cumulative SOLON-burned figure must add both. The dead address already held
+41,180,180.36 SOLON before the 10-07 burn (block 24712161) from earlier transfers, so for
+the keeper's leg count SOLON `Transfer` events from the keeper to `0x…dEaD` from block
+24712162 on, not the raw balance. This skill has not verified whether
+`/api/v3/buybacks/ledger` counts dead-address burns; add them from the chain yourself.
+Verify, don't trust.
 
 **On holding SOLON or any coin**: whether your principal wants that exposure is **your
 principal's decision, not this document's**. This skill never instructs you to spend

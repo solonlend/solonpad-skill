@@ -213,6 +213,14 @@ nothing from V3.1 fees until then. `totalIn(asset) − totalOut(asset)` is the e
 (`address(0)` = native USDC, 18-dec, including deposits through the 0x3600 view). The
 guardian can `freezeReleases()`; only a new designation unfreezes.
 
+Deposits are permissionless (`receive()`, `depositStock`), so the escrow also holds what
+other senders put in. Since 2026-10-07 the SOLON fee keeper (`0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13`)
+deposits the 57.5% stakers' leg of SOLON's own pool fees here as native USDC (`SKILL.md`,
+"SOLON's own pool fees"). Separate the two by `Deposited(from, asset, amount, totalIn)`:
+`from` = `V31FeeSplitter` is V3.1's 5%, `from` = the keeper is SOLON's 57.5%. Both wait for
+the same 48h designation; that governance step is in progress, not live. Measured
+2026-10-07: `totalIn(0x0) = 0`, no `Deposited` event yet.
+
 ## V31-7. Governance and what can change
 
 - Guardian allow-list on V3Governance (`guardianAction(target, selector)`, checked by
@@ -464,7 +472,9 @@ SolonStakingV2.stake(amount)                 # weight counts from the next fee o
 SolonStakingV2.unstake(amount, to)           # instant; reverts PrincipalError if amount > stakedOf(you)
 ```
 
-- Earns the 5% staking bucket of every V3 fee as stock, accounted per lane and epoch. Delivery is the same daily push at ≥ $2; manual
+- Earns the 5% staking bucket of every V3.0 fee as stock, accounted per lane and epoch. The
+  V3.1 5% and the 57.5% leg of SOLON's own pool fees are escrowed in `V31StakingEscrow`
+  (V31-6) and reach stakers only after a distributor is designated. Delivery is the same daily push at ≥ $2; manual
   claims follow the V3-5 pattern per source (`GET /api/v3/staking/{you}` → `v2.sources[]`
   with `credit`, `readyRaw`, `paidRaw`, `stage`).
 - Principal is separate from rewards; no lock, no cooldown, no admin path to principal.
@@ -760,11 +770,13 @@ stay read-only (`tools/pad-read.mjs`). With it, every step below is mandatory:
 6. **Decode reverts** with `errors.json` before retrying; re-quote after any
    slippage revert.
 
-## §G. SOLON staking, original pool — stake SOLON, earn the streamed buyback (v0.7)
+## §G. SOLON staking, original pool — stake SOLON, earn a SOLON stream
 
 This is the **original** `SolonStaking` pool (SOLON in, SOLON out). It is not
 `SolonStakingV2` (V3-8), which pays stock from the V3 fee split. `/api/v3/staking/{you}`
-reports this pool as `legacy`.
+reports this pool as `legacy`. Since 2026-10-07 its lane 0 is funded by the 5% leg of the
+off-chain keeper split of SOLON's own pool fees (`SKILL.md`, "SOLON's own pool fees"); it
+does not receive the 57.5% stakers' leg, which accrues in `V31StakingEscrow` for stock.
 
 `S = A.staking.solonStaking`, `SOLON = A.staking.stakingToken`, ABI
 `abis/SolonStaking.json`. All amounts are 18-dec SOLON wei. Run `VERIFY.md`
@@ -776,7 +788,7 @@ reports this pool as `legacy`.
 totalStaked()                 # principal, all stakers
 stakedOf(you) / earned(you)   # your principal / accrued reward
 rewardRate()                  # combined SOLON wei/sec of both lanes, now
-laneInfo(0|1)                 # (rate, periodFinish, duration, injected) — 0=BUYBACK 7d, 1=GENESIS 30d
+laneInfo(0|1)                 # (rate, periodFinish, duration, injected) — 0=BUYBACK 7d (contract name; keeper 5% leg), 1=GENESIS 30d
 rewardReserve()               # rewards held for stakers (injected − paid − compounded)
 stakeCap() / paused()         # paused blocks stake/compound/notify only, never exits
 injectedOnDay(lane, ts/86400) # per-UTC-day injections
@@ -801,11 +813,25 @@ later.
 
 `notifyBuyback(amount, buybackTx)` — distributor only, `amount >= 1000e18`.
 Pulls SOLON and restarts the BUYBACK lane at `(amount + leftover) / 7 days`.
-`RewardAdded(0, amount, buybackTx)` carries the hash of the on-chain buyback
-the SOLON came from: fetch that tx and check it is a USDC→SOLON market buy
-from the treasury. `seedGenesis` (owner, once) funded lane 1 with
-12,690,000 SOLON over 30 days. Reward streamed while nothing is staked
-accrues to `idleRewards` and can only be put back into the BUYBACK lane.
+`RewardAdded(0, amount, buybackTx)` carries a hash the distributor supplies as the
+source of the SOLON; the contract does not check it. The keeper passes the latest
+buy, fee-collect or creator-claim tx the injected SOLON came from: fetch it and check it
+was sent by the keeper. `seedGenesis` (owner, once) funded
+lane 1 with 12,690,000 SOLON over 30 days (ends 2026-10-23 04:18 UTC). Reward streamed
+while nothing is staked accrues to `idleRewards` and can only be put back into the
+BUYBACK lane.
+
+Where lane-0 SOLON comes from (since 2026-10-07). The distributor is the SOLON fee keeper
+(`0xdD43…4F13`, `A.staking.distributor`). It splits all of SOLON's own pool fees off-chain
+57.5 / 5 / 20 / 17.5 (escrow / lane 0 / burn to `0x…dEaD` / protocol); lane 0 gets the 5%
+leg: USDC bought into SOLON (one swap shared with the burn leg, SOLON divided 1 : 4 by the
+USDC each leg put in) plus 11.76% of the SOLON the keeper receives from the pool, injected
+at most once per UTC day (from 00:10) once it clears the 1,000 SOLON minimum. The old policy (half of the platform side bought
+SOLON for this lane) is retired. Each injection is an on-chain tx; the 5% ratio is not
+enforced by any contract, so audit it against the keeper's escrow deposits and dead-address
+transfers over the same window. One-off on 10-07: 1,018,306.43 SOLON of earlier bought
+inventory injected (tx `0x77778ae193251c633b719569d6b981ab935b14e611f025668ebd4e9a45deabf4`),
+restarting lane 0 at ≈ 145,473 SOLON/day until 2026-10-14.
 
 ### G4. APR (same basis as the page)
 
@@ -822,6 +848,8 @@ staked market value and needs no price feed. USD figures only: price SOLON
 at `StateView.getSlot0(A.staking.priceReferencePoolId)` (currency0 = native
 USDC, currency1 = SOLON, both 18-dec: USDC per SOLON = Q96² / sqrtPriceX96²).
 Report it as historical: it falls as `totalStaked` grows and drops when the
-genesis lane ends (`laneInfo(1).periodFinish`). Treat `totalStaked` near
-zero as "APR undefined", not as a huge number.
+genesis lane ends (`laneInfo(1).periodFinish`). The 2026-10-07 inventory
+injection (1,018,306.43 SOLON) is a one-off inside every window that includes
+that day; say so instead of presenting the result as a run rate. Treat
+`totalStaked` near zero as "APR undefined", not as a huge number.
 

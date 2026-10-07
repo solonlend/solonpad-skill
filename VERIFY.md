@@ -6,8 +6,8 @@
 cd tools && npm i && node verify.mjs
 ```
 
-It covers 1–6, 9, 9b, §G 1–3 and §V3-1 to §V3-4 (26 checks at v1.1; §G 4 is printed for you to compare with your amount). Last full run 2026-10-07: all green. Manual-only items remain:
-provenance diffs (7, 8), 10–11 and §G 5 (source/bytecode review).
+It covers 1–6, 9, 9b, §G 1–3, §V3-1 to §V3-4 and the V3.1 checks (33 checks at v1.3; §G 4 is printed for you to compare with your amount). Last full run 2026-10-07: 33/33 green. Manual-only items remain:
+provenance diffs (7, 8), 10–11, §G 5 (source/bytecode review) and §S (the SOLON fee keeper's legs).
 
 Never trust `addresses.json` blindly (repo could be stale or tampered). Each check is one
 `eth_call` against `chain.rpc`. Abort on any mismatch.
@@ -125,7 +125,8 @@ trust the chain, distrust the endpoint, stop trading through it until they agree
 
 1. `S.solon()` == `A.staking.stakingToken` == `A.instantV4.flagship.token`.
 2. `S.owner()` and `S.distributor()` match `addresses.json`; if not, find out
-   why before sending value (both are mutable state).
+   why before sending value (both are mutable state). The distributor is also
+   the SOLON fee keeper (§S below).
 3. `SOLON.balanceOf(S) >= S.totalStaked() + S.rewardReserve()` — principal
    and committed rewards are fully backed.
 4. `S.stakeCap() - S.totalStaked() >= amount`, `S.paused() == false`.
@@ -133,4 +134,35 @@ trust the chain, distrust the endpoint, stop trading through it until they agree
    Sourcify-verified (match): https://repo.sourcify.dev/5042/0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f
    build with that repo's `foundry.toml` and compare `eth_getCode(S)` with
    the artifact's `deployedBytecode`, masking `immutableReferences`.
+
+## §S. SOLON's own pool fees: the keeper split (not scripted)
+
+Since 2026-10-07 an off-chain keeper `K = 0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13`
+splits SOLON's own pool fees 57.5 / 5 / 20 / 17.5 (escrow / lane 0 / burn / protocol,
+`SKILL.md` "SOLON's own pool fees"). No contract enforces that ratio. What you can check is
+each leg, then compare the legs with each other:
+
+```bash
+SOLON=0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0; S=0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f
+E=0x1efabB43f156102D4Cbd215cf5EA4972C4C6b6e8; K=0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13; D=0x000000000000000000000000000000000000dEaD
+# 57.5%: native USDC into V31StakingEscrow, from the keeper (page the range: < 10,000 blocks per call)
+cast logs --address $E 'Deposited(address indexed from, address indexed asset, uint256 amount, uint256 totalIn)' $K 0x0000000000000000000000000000000000000000 --from-block <b> --to-block <b+9999> --rpc-url $ARC
+cast call $E 'distributor()(address)' --rpc-url $ARC        # 0x0 until governance designates one (48h); nothing can leave before
+# 5%: lane-0 injections into the original pool
+cast logs --address $S 'RewardAdded(uint8 indexed lane, uint256 amount, bytes32 buybackTx)' 0 --from-block <b> --to-block <b+9999> --rpc-url $ARC
+cast call $S 'laneInfo(uint8)(uint256,uint256,uint256,uint256)' 0 --rpc-url $ARC   # rate, periodFinish, duration, injected
+# 20%: SOLON burned to the dead address by the keeper
+cast logs --address $SOLON 'Transfer(address indexed from, address indexed to, uint256 value)' $K $D --from-block <b> --to-block <b+9999> --rpc-url $ARC
+```
+
+The 17.5% protocol leg stays in `K` and is booked off-chain only. The SOLON burn legs go to
+`0x…dEaD`, not `BurnSink`: total SOLON burned = dead-address burns + `BurnSink` balance.
+The dead address held 41,180,180.36 SOLON before the keeper's first burn (block 24712161),
+so count the keeper's `Transfer` events rather than reading the balance.
+
+10-07 inventory settlement, reproduce by hand (both from `K`, status 1):
+`cast receipt 0x77778ae193251c633b719569d6b981ab935b14e611f025668ebd4e9a45deabf4 --rpc-url $ARC`
+→ `RewardAdded(0, 1,018,306.43 SOLON)`, block 24712152;
+`cast receipt 0xb68514196bce0b4d22402a59cd740f80ffaaf3ee70e43ee42e03fa6ff5a8d669 --rpc-url $ARC`
+→ `Transfer(K → 0x…dEaD, 325,858.06 SOLON)`, block 24712162. Checked 2026-10-07.
 

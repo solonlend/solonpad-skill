@@ -53,8 +53,8 @@ test('no retired surface is documented or shipped', () => {
   assert.deepEqual(readdirSync(new URL('tools/', root)).filter((f) => f.endsWith('.mjs')).sort(), ['pad-read.mjs', 'verify.mjs']);
 });
 
-test('SKILL.md frontmatter is Arc-only v1.2.0', () => {
+test('SKILL.md frontmatter is Arc-only v1.3.0', () => {
   const fm = read('SKILL.md').split('---')[1];
-  assert.match(fm, /^version: 1\.2\.0$/m);
+  assert.match(fm, /^version: 1\.3\.0$/m);
   assert.doesNotMatch(fm, /Robinhood|x402|Solana|BSC|aggregator (AND|and one)/);
 });
