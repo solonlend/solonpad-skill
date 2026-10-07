@@ -1,0 +1,754 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "c",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "ledger",
+      "type": "address",
+      "internalType": "contract V3FeeLedger"
+     },
+     {
+      "name": "hook",
+      "type": "address",
+      "internalType": "contract V3QuoteFeeHook"
+     },
+     {
+      "name": "strategy",
+      "type": "address",
+      "internalType": "contract V3LaunchStrategy"
+     },
+     {
+      "name": "positions",
+      "type": "address",
+      "internalType": "contract IPositionManager"
+     },
+     {
+      "name": "locker",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "rights",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "defaultRewardAsset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "modules",
+      "type": "address[4]",
+      "internalType": "address[4]"
+     },
+     {
+      "name": "priceOracle",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "stockStatus",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "readiness",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "systemCustodians",
+      "type": "address[]",
+      "internalType": "address[]"
+     }
+    ],
+    "internalType": "struct V3LaunchFactory.Components"
+   },
+   {
+    "name": "quotes",
+    "type": "tuple[]",
+    "components": [
+     {
+      "name": "kind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "asset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "assetId",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "underlying",
+      "type": "address",
+      "internalType": "address"
+     }
+    ],
+    "internalType": "struct V3LaunchFactory.QuoteConfig[]"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "InvalidLaunch",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidQuote",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "LaunchPayoutChosen",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "choiceId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "LaunchState",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "state",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum V3LaunchFactory.State"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "StockFeeConverterConfigured",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "converter",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "approvedQuote",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "assetSchedule",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "configureAssetSchedule",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "schedule",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configurePayoutChoice",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "registry",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configureRewardInfrastructure",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "controller",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "payout",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "rounds",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "assetId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "version",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "pricePolicy",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configureStockFeeConverter",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "converter",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "declareRewardEpoch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "epoch",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "assetId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "version",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "pricePolicy",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "epochPolicies",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "epoch",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "assetId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "version",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "pricePolicy",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "hasLaunched",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "infrastructureConfigurator",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "launch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "name",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "symbol",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "metadataHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "creator",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "q",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "kind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "asset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "assetId",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "underlying",
+      "type": "address",
+      "internalType": "address"
+     }
+    ],
+    "internalType": "struct V3LaunchFactory.QuoteConfig"
+   },
+   {
+    "name": "payoutChoiceId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "r",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "token",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "poolId",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "positionId",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "initialTick",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "lower",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "upper",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "liquidity",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "dust",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "state",
+      "type": "uint8",
+      "internalType": "enum V3LaunchFactory.State"
+     },
+     {
+      "name": "metadataHash",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct V3LaunchFactory.Launch"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "launches",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "positionId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "initialTick",
+    "type": "int24",
+    "internalType": "int24"
+   },
+   {
+    "name": "lower",
+    "type": "int24",
+    "internalType": "int24"
+   },
+   {
+    "name": "upper",
+    "type": "int24",
+    "internalType": "int24"
+   },
+   {
+    "name": "liquidity",
+    "type": "uint128",
+    "internalType": "uint128"
+   },
+   {
+    "name": "dust",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "state",
+    "type": "uint8",
+    "internalType": "enum V3LaunchFactory.State"
+   },
+   {
+    "name": "metadataHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "payoutChoice",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "registerLegacyPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "quote",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "holderSink",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "creatorRights",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "price",
+    "type": "uint160",
+    "internalType": "uint160"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "pool",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "rewardInfrastructure",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "controller",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "payout",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "rounds",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "assetId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "adapterVersion",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "pricePolicy",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "scheduleLegacyPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "action",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "stockFeeConverter",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "tokenCodePart1",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "tokenCodePart2",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "usedSalt",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "whitelistLegacyToken",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ }
+]

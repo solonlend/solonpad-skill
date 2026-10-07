@@ -1,12 +1,12 @@
 // verify.mjs — runs the scriptable checks of VERIFY.md against Arc mainnet.
 // Read-only: no keys, no transactions, no SolonPad API — chain reads only.
 // Exit 0 = all green, 1 = any red.
-//   cd tools && npm i && node verify.mjs
-import { createPublicClient, http, parseAbi } from 'viem';
+//   cd tools && npm i && node verify.mjs      (ARC_RPC / RH_RPC override the public RPCs)
+import { createPublicClient, http, parseAbi, keccak256 } from 'viem';
 import { readFileSync } from 'node:fs';
 
 const A = JSON.parse(readFileSync(new URL('../addresses.json', import.meta.url)));
-const client = createPublicClient({ transport: http(A.chain.rpc, { retryCount: 5, retryDelay: 400 }) });
+const client = createPublicClient({ transport: http(process.env.ARC_RPC || A.chain.rpc, { retryCount: 5, retryDelay: 400 }) });
 const results = [];
 const check = (name, ok, detail = '') => { results.push([name, ok, detail]); console.log(`${ok ? ' OK ' : 'FAIL'}  ${name}${detail ? ' — ' + detail : ''}`); };
 const eq = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
@@ -72,6 +72,71 @@ check('§G2 staking owner/distributor match addresses.json', eq(owner, S.owner) 
 const held = await client.readContract({ address: S.stakingToken, abi: erc20, functionName: 'balanceOf', args: [S.solonStaking] });
 check('§G3 staking fully backed', held >= totalStaked + rewardReserve, `balance ${held / 10n ** 18n} >= staked ${totalStaked / 10n ** 18n} + reserve ${rewardReserve / 10n ** 18n} SOLON`);
 console.log(`info  §G4 paused ${paused}, cap headroom ${(stakeCap - totalStaked) / 10n ** 18n} SOLON (check against your amount)`);
+
+// ---- V3 (stock-dividend launchpad, live since 2026-10-03) — VERIFY.md §V3 ----
+const V3 = A.v3;
+const pause = (ms) => new Promise(r => setTimeout(r, ms));
+const arc = createPublicClient({ transport: http(process.env.ARC_RPC || A.chain.rpc, { retryCount: 6, retryDelay: 1500 }) });
+const rh = createPublicClient({ transport: http(process.env.RH_RPC || V3.robinhood.rpc, { retryCount: 6, retryDelay: 1500 }) });
+
+// V3-1. every deployed contract's runtime code equals the pinned codehash (Sourcify-verified builds)
+const names = Object.keys(V3.contractsByDeployName);
+const badCode = [];
+for (const k of names) {
+  const code = await arc.getCode({ address: V3.contractsByDeployName[k] });
+  if (!code || keccak256(code) !== V3.codehashes[k]) badCode.push(k);
+  await pause(150);
+}
+check('V3 runtime codehashes match the pin', badCode.length === 0, badCode.length ? 'mismatch: ' + badCode.join(', ') : `${names.length}/${names.length} contracts`);
+
+// V3-2. six-way split: a pinned lot's FeeCredited allocation and the pool's registered beneficiaries
+const L = V3.launch.V3FeeLedger;
+const lotBlock = 23992449n; // SMOKE lot 1: 0.1 USDC fee
+const feeLogs = await arc.getLogs({ address: L, fromBlock: lotBlock, toBlock: lotBlock,
+  event: parseAbi(['event FeeCredited(bytes32 indexed poolId, uint256 indexed lotId, address indexed quote, uint256 amount, uint256[6] allocated)'])[0] });
+const lot = feeLogs[0]?.args;
+const bps = V3.constants.feeSplitBps.map(BigInt);
+const splitOk = !!lot && lot.allocated.every((x, i) => x * 10000n === lot.amount * bps[i]);
+check('V3 fee split = [5750,1000,1000,500,1000,750] on a real lot', splitOk, lot ? `amount ${lot.amount}, allocated ${lot.allocated.join('/')}` : 'pinned FeeCredited log not found');
+if (lot) {
+  const info = await arc.readContract({ address: L, abi: parseAbi(['function poolInfo(bytes32) view returns ((address quote, uint8 settlementKind, address hook, address[6] beneficiaries))']), functionName: 'poolInfo', args: [lot.poolId] });
+  const B = V3.feeBeneficiaries;
+  const want = [lot.poolId && (await arc.readContract({ address: V3.launch.V3LaunchFactory, abi: parseAbi(['function launches(bytes32) view returns (address,bytes32,uint256,int24,int24,int24,uint128,uint256,uint8,bytes32)']), functionName: 'launches', args: [lot.poolId] }))[0], B['1_creator'], B['2_desk'], B['3_staking'], B['4_buybackBurn'], B['5_protocol']];
+  const benOk = want.every((w, i) => info.beneficiaries[i].toLowerCase() === w.toLowerCase())
+    && info.hook.toLowerCase() === V3.launch.V3QuoteFeeHook.toLowerCase();
+  check('V3 pool beneficiaries = coin/creatorNFT/desk/staking/buyback/protocol', benOk, info.beneficiaries.join(','));
+}
+
+// V3-3. governance: 48h timelock, 3/5 proposer, guardian, bootstrap closed, ownership wired
+const G = V3.governance;
+const govAbi = parseAbi(['function getMinDelay() view returns (uint256)', 'function hasRole(bytes32,address) view returns (bool)', 'function bootstrapClosed() view returns (bool)']);
+const safeAbi = parseAbi(['function getThreshold() view returns (uint256)', 'function getOwners() view returns (address[])']);
+const PROPOSER = keccak256(new TextEncoder().encode('PROPOSER_ROLE'));
+const GUARDIAN = keccak256(new TextEncoder().encode('GUARDIAN_ROLE'));
+const [delay, proposer, closed, thr, owners, gthr, gowners, grole] = [
+  await arc.readContract({ address: G.V3Governance, abi: govAbi, functionName: 'getMinDelay' }),
+  await arc.readContract({ address: G.V3Governance, abi: govAbi, functionName: 'hasRole', args: [PROPOSER, G.multisig] }),
+  await arc.readContract({ address: G.V3Governance, abi: govAbi, functionName: 'bootstrapClosed' }),
+  await arc.readContract({ address: G.multisig, abi: safeAbi, functionName: 'getThreshold' }),
+  await arc.readContract({ address: G.multisig, abi: safeAbi, functionName: 'getOwners' }),
+  await arc.readContract({ address: G.guardian, abi: safeAbi, functionName: 'getThreshold' }),
+  await arc.readContract({ address: G.guardian, abi: safeAbi, functionName: 'getOwners' }),
+  await arc.readContract({ address: G.V3Governance, abi: govAbi, functionName: 'hasRole', args: [GUARDIAN, G.guardian] }),
+];
+check('V3 timelock >= 48h, multisig 3/5 proposer, guardian 2/3, bootstrap closed', delay >= 172800n && proposer && closed && thr === 3n && owners.length === 5 && grole && gthr === 2n && gowners.length === 3,
+  `minDelay ${delay}s, proposer ${proposer}, multisig ${thr}/${owners.length}, guardian ${gthr}/${gowners.length} role ${grole}, bootstrapClosed ${closed}`);
+const hubOwner = await arc.readContract({ address: V3.stockLayer.SolonStockHub, abi: parseAbi(['function owner() view returns (address)']), functionName: 'owner' });
+const deskGov = await arc.readContract({ address: V3.desk.DeskNFT, abi: parseAbi(['function governance() view returns (address)']), functionName: 'governance' });
+check('V3 hub owner and Desk governance = V3Governance', hubOwner.toLowerCase() === G.V3Governance.toLowerCase() && deskGov.toLowerCase() === G.V3Governance.toLowerCase(), `hub.owner ${hubOwner}, desk.governance ${deskGov}`);
+
+// V3-4. proof of reserves: Arc STOCK.sol supply == hub.supplyOf(rh) <= RH ReserveVault balance
+const erc = parseAbi(['function totalSupply() view returns (uint256)', 'function balanceOf(address) view returns (uint256)']);
+for (const [ticker, s] of Object.entries(V3.stockLayer.stocks).filter(([k]) => !k.startsWith('_'))) {
+  const supply = await arc.readContract({ address: s.arc, abi: erc, functionName: 'totalSupply' });
+  const hubSupply = await arc.readContract({ address: V3.stockLayer.SolonStockHub, abi: parseAbi(['function supplyOf(address) view returns (uint256)']), functionName: 'supplyOf', args: [s.rh] });
+  const held = await rh.readContract({ address: s.rh, abi: erc, functionName: 'balanceOf', args: [V3.robinhood.ReserveVault] });
+  check(`V3 reserve ${ticker}: RH vault >= Arc supply`, held >= supply, `arc ${supply}, hub ${hubSupply}, rh vault ${held}`);
+}
 
 const failed = results.filter(([, ok]) => !ok).length;
 console.log(`\n${results.length - failed}/${results.length} checks green${failed ? ` — ${failed} FAILED: do not move value` : ' — safe to proceed'}`);

@@ -1,5 +1,14 @@
 # solonpad-skill
 
+## What changed in 1.1
+
+V3, the stock-dividend launchpad (live on Arc since 2026-10-03): every V3 coin's 1% trade
+fee is split six ways by an immutable constant and the holder share is paid out in
+tokenized stock. New: V3 sections in `SKILL.md` / `AGENT-GUIDE.md` (§V3-0 to §V3-11) /
+`VERIFY.md` (§V3), `addresses.json → v3` (every V3 contract and its runtime codehash),
+`abis/v3/` (18 Sourcify-verified ABIs), 200 more `errors.json` selectors, V3 checks in
+`verify.mjs` and V3 / reserves modes in `pad-read.mjs`.
+
 ## What changed in 1.0
 
 Arc only: removed Robinhood Chain launches, the cross-pad aggregator, the Solon Rail
@@ -33,5 +42,5 @@ node pad-read.mjs   # recent launches
 Engine provenance: source-matched to Pons V2 (Robinhood Chain, Sourcify exact_match) —
 see `addresses.json → provenance`.
 
-Not available to persons or entities in the United States, China, or sanctioned
+Not available to persons or entities in the United States, China, Japan, or sanctioned
 jurisdictions.

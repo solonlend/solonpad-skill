@@ -1,0 +1,1346 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "multisig",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "guardian",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "bootstrapper_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "bootstrapDeadline_",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "AccessControlBadConfirmation",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AccessControlUnauthorizedAccount",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "neededRole",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "BootstrapUnavailable",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "DelayBelowFloor",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "delay",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "FailedInnerCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidRole",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotTightenOnly",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ]
+ },
+ {
+  "name": "ProtectedOperation",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "TimelockInsufficientDelay",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "delay",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minDelay",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "TimelockInvalidOperationLength",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "targets",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "payloads",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "values",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "TimelockUnauthorizedCaller",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "caller",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "TimelockUnexecutedPredecessor",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "predecessorId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "TimelockUnexpectedOperationState",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "operationId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "expectedStates",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "BootstrapCalled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "indexed": true,
+    "internalType": "bytes4"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "BootstrapClosed",
+  "type": "event",
+  "inputs": [],
+  "anonymous": false
+ },
+ {
+  "name": "BootstrapCreated",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "deployed",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CallExecuted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "index",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "target",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "indexed": false,
+    "internalType": "bytes"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CallSalt",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CallScheduled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "index",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "target",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "indexed": false,
+    "internalType": "bytes"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "delay",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Cancelled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GuardianActionSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "indexed": true,
+    "internalType": "bytes4"
+   },
+   {
+    "name": "allowed",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GuardianCalled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "indexed": true,
+    "internalType": "bytes4"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MinDelayChange",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "oldDuration",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "newDuration",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoleAdminChanged",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "previousAdminRole",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "newAdminRole",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoleGranted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sender",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoleRevoked",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sender",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CANCELLER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "DEFAULT_ADMIN_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "EXECUTOR_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "GUARDIAN_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MAX_BOOTSTRAP_WINDOW",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MIN_DELAY",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "PROPOSER_ROLE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "bootstrapCall",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "ret",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "bootstrapClosed",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "bootstrapCreate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "initCode",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "deployed",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "bootstrapDeadline",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "bootstrapper",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "cancel",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "closeBootstrap",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "execute",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "payload",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "executeBatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "targets",
+    "type": "address[]",
+    "internalType": "address[]"
+   },
+   {
+    "name": "values",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "payloads",
+    "type": "bytes[]",
+    "internalType": "bytes[]"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "getMinDelay",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getOperationState",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "enum TimelockController.OperationState"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getRoleAdmin",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getTimestamp",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "grantRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "guardianAction",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "guardianCall",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "ret",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "hasRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "hashOperation",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "hashOperationBatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "targets",
+    "type": "address[]",
+    "internalType": "address[]"
+   },
+   {
+    "name": "values",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "payloads",
+    "type": "bytes[]",
+    "internalType": "bytes[]"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "isOperation",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isOperationDone",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isOperationPending",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isOperationReady",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "onERC1155BatchReceived",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "onERC1155Received",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "onERC721Received",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "protectedOperation",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "renounceRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "callerConfirmation",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "revokeRole",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "role",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "schedule",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "value",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "delay",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "scheduleBatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "targets",
+    "type": "address[]",
+    "internalType": "address[]"
+   },
+   {
+    "name": "values",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   },
+   {
+    "name": "payloads",
+    "type": "bytes[]",
+    "internalType": "bytes[]"
+   },
+   {
+    "name": "predecessor",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "delay",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setGuardianAction",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "target",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   },
+   {
+    "name": "allowed",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "supportsInterface",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "interfaceId",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "updateDelay",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newDelay",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]

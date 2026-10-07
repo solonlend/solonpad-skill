@@ -11,7 +11,8 @@ const docs = ['SKILL.md', 'AGENT-GUIDE.md', 'README.md', 'VERIFY.md'];
 
 test('every JSON file parses', () => {
   json('addresses.json'); json('errors.json'); json('tools/package.json');
-  for (const f of readdirSync(new URL('abis/', root))) json(`abis/${f}`);
+  for (const f of readdirSync(new URL('abis/', root)).filter((f) => f.endsWith('.json'))) json(`abis/${f}`);
+  for (const f of readdirSync(new URL('abis/v3/', root))) json(`abis/v3/${f}`);
 });
 
 test('addresses.json is Arc-only and every address is well-formed', () => {
@@ -52,8 +53,8 @@ test('no retired surface is documented or shipped', () => {
   assert.deepEqual(readdirSync(new URL('tools/', root)).filter((f) => f.endsWith('.mjs')).sort(), ['pad-read.mjs', 'verify.mjs']);
 });
 
-test('SKILL.md frontmatter is Arc-only v1.0.0', () => {
+test('SKILL.md frontmatter is Arc-only v1.1.0', () => {
   const fm = read('SKILL.md').split('---')[1];
-  assert.match(fm, /^version: 1\.0\.0$/m);
+  assert.match(fm, /^version: 1\.1\.0$/m);
   assert.doesNotMatch(fm, /Robinhood|x402|Solana|BSC|aggregator (AND|and one)/);
 });

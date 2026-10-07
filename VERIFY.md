@@ -6,7 +6,7 @@
 cd tools && npm i && node verify.mjs
 ```
 
-It covers 1–6, 9, 9b and §G 1–3 (18 checks at v1.0; §G 4 is printed for you to compare with your amount). Manual-only items remain:
+It covers 1–6, 9, 9b, §G 1–3 and §V3-1 to §V3-4 (26 checks at v1.1; §G 4 is printed for you to compare with your amount). Last full run 2026-10-07: all green. Manual-only items remain:
 provenance diffs (7, 8), 10–11 and §G 5 (source/bytecode review).
 
 Never trust `addresses.json` blindly (repo could be stale or tampered). Each check is one
@@ -52,7 +52,76 @@ Never trust `addresses.json` blindly (repo could be stale or tampered). Each che
 11. **Vault claim gating**: only the beneficiary NFT owner can claim; `collectFees`
    pays the caller nothing.
 
-## §G. Staking checks (before staking)
+## §V3. Stock-dividend launchpad checks (before any V3 value-moving tx)
+
+`V3 = addresses.json → v3`. `$ARC = https://rpc.mainnet.arc.io`,
+`$RH = https://rpc.mainnet.chain.robinhood.com/rpc`. Every `cast` line below is read-only.
+`verify.mjs` runs V3-1 to V3-4 for you; the commands let you reproduce any of them by hand.
+
+**V3-1. Code is what was verified.**
+- Sourcify: every address in `V3.contractsByDeployName` (52 on Arc), `V3.robinhood` (6 on
+  chain 4663) and `V3.ethereum` (1 on chain 1) returned `"match": "match"` on 2026-10-07:
+  `curl -s https://sourcify.dev/server/v2/contract/5042/0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10`
+  (the factory). The Arc explorer page links the same verified source.
+- Runtime code: `keccak256(eth_getCode(addr)) == V3.codehashes[name]` for all 52 Arc
+  contracts. By hand (this RPC has no `eth_getProof`, so hash the code yourself):
+  `cast keccak $(cast code 0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10 --rpc-url $ARC)`
+  → `0x51af9093…6340e4`.
+- BurnSink: `cast code 0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B --rpc-url $ARC` → `0x5f80fd`
+  (PUSH0 DUP1 REVERT: no function exists, nothing can leave).
+
+**V3-2. The six-way split is the constant.** There is no getter: the split is a literal
+in `V3FeeLedger._credit` (Sourcify source `src/v3/V3FeeLedger.sol` line 238,
+`[uint256(5750), 1000, 1000, 500, 1000, 750]`). Confirm it on a real lot:
+```bash
+cast logs --from-block 23992449 --to-block 23992449 --address 0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088 \
+  'FeeCredited(bytes32 indexed poolId, uint256 indexed lotId, address indexed quote, uint256 amount, uint256[6] allocated)' --rpc-url $ARC
+# amount 1e17 (0.1 USDC) → allocated 5.75e16 / 1e16 / 1e16 / 5e15 / 1e16 / 7.5e15
+cast call 0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088 'poolInfo(bytes32)((address,uint8,address,address[6]))' \
+  0xf1ff2754da155633e39be10a76f1467536153aeabae4a1def1e8ca4ed1781bc7 --rpc-url $ARC
+# beneficiaries: [coin, CreatorRightsNFT, DeskRewards, SolonStakingV2, BuybackBurnExecutor, ProtocolVault]
+```
+For any coin you trade, read `poolInfo(poolId)` and compare with `V3.feeBeneficiaries`.
+
+**V3-3. Governance: 48h timelock behind a 3/5 Safe.**
+```bash
+G=0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf; M=0x8798245d1606712828731a238e5414eefBbbB59C
+cast call $G 'getMinDelay()(uint256)' --rpc-url $ARC                                   # 172800
+cast call $G 'hasRole(bytes32,address)(bool)' $(cast keccak PROPOSER_ROLE) $M --rpc-url $ARC   # true
+cast call $G 'bootstrapClosed()(bool)' --rpc-url $ARC                                  # true
+cast call $M 'getThreshold()(uint256)' --rpc-url $ARC                                  # 3 (of 5 owners: getOwners())
+cast call 0x9E8D7502A702d195631937aCb69bf30FfAd3786c 'owner()(address)' --rpc-url $ARC  # = $G (SolonStockHub)
+cast call 0x02C83604Ba74a952f931Ab3D77C1Efe31935793D 'governance()(address)' --rpc-url $ARC  # = $G (DeskNFT)
+```
+`MIN_DELAY` is a constant and `updateDelay` refuses anything below it. The guardian Safe
+`0x544e…29E4` (2/3) holds GUARDIAN and CANCELLER only. Before a large position, list
+pending operations: `GET /api/v3/events?contract=V3Governance&event=CallScheduled` (or
+`cast logs` on `$G`) and read what each one would change.
+
+**V3-4. Reserves are 1:1 on two chains.** For each listed stock (NVDA shown):
+```bash
+cast call 0x2312290792Cf429605D09A42Fa43dAB810486c18 'totalSupply()(uint256)' --rpc-url $ARC          # NVDA.sol on Arc
+cast call 0x9E8D7502A702d195631937aCb69bf30FfAd3786c 'supplyOf(address)(uint256)' 0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC --rpc-url $ARC
+cast call 0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC 'balanceOf(address)(uint256)' 0x3504aA69ca9C5A5Bc3dA312a6c761e9633251cFc --rpc-url $RH   # RH ReserveVault
+```
+Pass: the third is at least the first. (The second is the hub's own view and simply
+returns the first; it only shows the hub reads the token you think it does.) 2026-10-07: 3.769168 /
+3.769168 / 4.400128 NVDA. `node tools/pad-read.mjs --reserves` prints all three stocks.
+
+**V3-5. Before each trade (not scripted).**
+- Simulate it: `V3Quoter.quote` for coins, `POST /api/v3/stocks/quote` plus your own
+  RH-pool check for stock orders. Never sign a `minOut` of 0.
+- `GET /api/v3/oracle/prices`: `Stale` means US markets are closed and stock orders fill at
+  the Robinhood Chain pool price; size accordingly.
+- `GET /api/v3/config` → `paused` empty, and `limits` cover your order.
+
+**V3-6. Read API spot-check.** The API is convenience, the chain is truth. Once per
+session: run one `verify[].cmd` from `/api/v3/stocks/reserves/assets` and compare; compare
+one coin's `/api/launches` price with `StateView.getSlot0(poolId)`; check the envelope's
+`asOfBlock` is within ~240 blocks of `eth_blockNumber` (`stale: false`). A mismatch means:
+trust the chain, distrust the endpoint, stop trading through it until they agree.
+
+## §G. Original SOLON staking pool checks (before staking there)
 
 1. `S.solon()` == `A.staking.stakingToken` == `A.instantV4.flagship.token`.
 2. `S.owner()` and `S.distributor()` match `addresses.json`; if not, find out

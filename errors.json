@@ -29,14 +29,18 @@
  "0x3a81d6fc": {
   "sig": "AlreadyRegistered()",
   "contracts": [
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "V3LPLocker",
+   "V3QuoteFeeHook"
   ]
  },
  "0xa741a045": {
   "sig": "AlreadySet()",
   "contracts": [
    "PonsV2LaunchFactory",
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "ChainlinkStockSource",
+   "RestrictedVenue"
   ]
  },
  "0x25fbd8be": {
@@ -76,7 +80,8 @@
  "0x0bba69fb": {
   "sig": "BadValue()",
   "contracts": [
-   "PoFRouter"
+   "PoFRouter",
+   "RelayFundingRoute"
   ]
  },
  "0x8c54e309": {
@@ -153,7 +158,7 @@
    "IPoolManager",
    "PoolManager"
   ],
-  "hint": "v4 accounting: the swap left an unsettled delta — usually wrong direction or wrong currency in the pool key."
+  "hint": "v4 accounting: the swap left an unsettled delta \u2014 usually wrong direction or wrong currency in the pool key."
  },
  "0x4e222a24": {
   "sig": "CurveFeeTooHigh()",
@@ -180,7 +185,7 @@
    "IPositionManager",
    "PositionManager"
   ],
-  "hint": "Your tx deadline elapsed before inclusion — rebuild with a fresh deadline."
+  "hint": "Your tx deadline elapsed before inclusion \u2014 rebuild with a fresh deadline."
  },
  "0x0d89438e": {
   "sig": "DelegateCallNotAllowed()",
@@ -252,7 +257,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0xe450d38c": {
@@ -262,7 +269,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0xe602df05": {
@@ -272,7 +281,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0xec442f05": {
@@ -282,7 +293,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0x96c6fd1e": {
@@ -292,7 +305,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0x94280d62": {
@@ -302,7 +317,9 @@
    "ERC20Burnable",
    "MockUSD",
    "PonsV2LauncherToken",
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "SolonStockToken",
+   "V3RewardToken"
   ]
  },
  "0xf27f64e4": {
@@ -314,49 +331,65 @@
  "0x64283d7b": {
   "sig": "ERC721IncorrectOwner(address,uint256,address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x177e802f": {
   "sig": "ERC721InsufficientApproval(address,uint256)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0xa9fbf51f": {
   "sig": "ERC721InvalidApprover(address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x5b08ba18": {
   "sig": "ERC721InvalidOperator(address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x89c62b64": {
   "sig": "ERC721InvalidOwner(address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x64a0ae92": {
   "sig": "ERC721InvalidReceiver(address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x73c6ac6e": {
   "sig": "ERC721InvalidSender(address)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x7e273289": {
   "sig": "ERC721NonexistentToken(uint256)",
   "contracts": [
-   "draft-IERC6093"
+   "draft-IERC6093",
+   "CreatorRightsNFT",
+   "DeskNFT"
   ]
  },
  "0x24d35a26": {
@@ -450,7 +483,7 @@
   "contracts": [
    "Hooks"
   ],
-  "hint": "The pool's hook reverted your swap — treat the pan as display-only unless the hook family is listed open."
+  "hint": "The pool's hook reverted your swap \u2014 treat the pan as display-only unless the hook family is listed open."
  },
  "0xfa0b71d6": {
   "sig": "HookDeltaExceedsSwapAmount()",
@@ -462,7 +495,8 @@
   "sig": "HookNotImplemented()",
   "contracts": [
    "BaseHook",
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "V3QuoteFeeHook"
   ],
   "hint": "You called a hook entrypoint this hook does not support; external routing may be closed for this pool family."
  },
@@ -628,7 +662,8 @@
  "0xc256622b": {
   "sig": "InvalidPoolKey()",
   "contracts": [
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "V3QuoteFeeHook"
   ]
  },
  "0x00bfc921": {
@@ -751,7 +786,7 @@
    "IPoolManager",
    "PoolManager"
   ],
-  "hint": "Reentrant v4 call pattern — route through a router (PoolSwapTest/FeeRouter), not raw PoolManager calls."
+  "hint": "Reentrant v4 call pattern \u2014 route through a router (PoolSwapTest/FeeRouter), not raw PoolManager calls."
  },
  "0x31e30ad0": {
   "sig": "MaximumAmountExceeded(uint128,uint128)",
@@ -786,7 +821,7 @@
    "PonsV2BondingCurve",
    "PonsV2MemeHook"
   ],
-  "hint": "Curve/hook path: pass minOut >= 1 even when expecting dust — zero reverts (sweepFees pitfall)."
+  "hint": "Curve/hook path: pass minOut >= 1 even when expecting dust \u2014 zero reverts (sweepFees pitfall)."
  },
  "0xeee66814": {
   "sig": "MintAmountOverflow()",
@@ -821,7 +856,7 @@
   "contracts": [
    "SolonFeeRouter"
   ],
-  "hint": "SolonFeeRouter: msg.value must equal the input for native-quoted trades and be 0 for ERC20-quoted ones — you used the wrong quote path."
+  "hint": "SolonFeeRouter: msg.value must equal the input for native-quoted trades and be 0 for ERC20-quoted ones \u2014 you used the wrong quote path."
  },
  "0xa0c968e7": {
   "sig": "NativeSendFailed()",
@@ -941,7 +976,9 @@
    "PonsV2GraduationExecutor",
    "PonsV2LaunchDeployer",
    "PonsV2LaunchLocker",
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "LaunchPayoutChoice",
+   "V3QuoteFeeHook"
   ]
  },
  "0x8d42130c": {
@@ -963,7 +1000,11 @@
   "contracts": [
    "PoFVault",
    "RadianExecutor",
-   "WallTreasury"
+   "WallTreasury",
+   "CanonicalGate",
+   "ReserveVault",
+   "SolonStockHub",
+   "StockPoolVault"
   ]
  },
  "0xea9eaa96": {
@@ -982,7 +1023,11 @@
   "sig": "NotOwner()",
   "contracts": [
    "RadianExecutor",
-   "RadianLaunchRouter"
+   "RadianLaunchRouter",
+   "CapacityController",
+   "ChainlinkStockSource",
+   "SolonStockOracle",
+   "StockPoolVault"
   ]
  },
  "0xae18210a": {
@@ -996,7 +1041,8 @@
    "PonsV2MemeHook",
    "PoolInitializer_v4",
    "PositionManager",
-   "SafeCallback"
+   "SafeCallback",
+   "V3QuoteFeeHook"
   ]
  },
  "0x20fdc658": {
@@ -1067,7 +1113,14 @@
    "PonsV2LaunchLocker",
    "PonsV2MemeHook",
    "RadianStaking",
-   "RadianTreasury"
+   "RadianTreasury",
+   "CanonicalGate",
+   "EthereumBridger",
+   "StockPriceSender",
+   "ReserveVault",
+   "RestrictedVenue",
+   "SolonStockHub",
+   "RelayedStockSource"
   ]
  },
  "0x118cdaa7": {
@@ -1080,7 +1133,14 @@
    "PonsV2LaunchLocker",
    "PonsV2MemeHook",
    "RadianStaking",
-   "RadianTreasury"
+   "RadianTreasury",
+   "CanonicalGate",
+   "EthereumBridger",
+   "StockPriceSender",
+   "ReserveVault",
+   "RestrictedVenue",
+   "SolonStockHub",
+   "RelayedStockSource"
   ]
  },
  "0x2fab92ca": {
@@ -1199,7 +1259,42 @@
    "PonsV2FeeEscrow",
    "PonsV2LaunchFactory",
    "PonsV2MemeHook",
-   "ReentrancyGuard"
+   "ReentrancyGuard",
+   "BuybackBurnExecutor",
+   "BuybackVault",
+   "CanonicalGate",
+   "CreatorRightsNFT",
+   "DeskNFT",
+   "DeskRewards",
+   "EthereumBridger",
+   "EligibilityRegistry",
+   "FixedV4BuybackRoute",
+   "OpsVault",
+   "ProtocolDeskVault",
+   "ProtocolVault",
+   "ReserveVault",
+   "RelayFundingRoute",
+   "RewardDistributor",
+   "RewardPayoutVault",
+   "RewardRoundManager",
+   "RewardVault",
+   "SolonStakingV2",
+   "SolonStockAdapter",
+   "SolonStockHub",
+   "StockFeeConverter",
+   "SolonStockSellRoute",
+   "StockPoolVault",
+   "V2FeeConverter",
+   "V2FeeIngress",
+   "FixedV4FeeSellRoute",
+   "V2PlatformRouter",
+   "V3FeeLedger",
+   "V3LaunchFactory",
+   "V3LaunchStrategy",
+   "V3MultiHopRouter",
+   "V3Quoter",
+   "V3RewardToken",
+   "V3Router"
   ]
  },
  "0xf0c49d44": {
@@ -1264,7 +1359,37 @@
    "SafeERC20",
    "SolonFeeRouter",
    "WallStaking",
-   "WallTreasury"
+   "WallTreasury",
+   "BuybackBurnExecutor",
+   "BuybackVault",
+   "CanonicalGate",
+   "CreatorRightsNFT",
+   "DeskNFT",
+   "DeskRewards",
+   "EthereumBridger",
+   "FixedV4BuybackRoute",
+   "ProtocolDeskVault",
+   "StockPriceSender",
+   "ReserveVault",
+   "RestrictedVenue",
+   "RelayFundingRoute",
+   "RewardPayoutVault",
+   "RewardVault",
+   "SolonStakingV2",
+   "SolonStockAdapter",
+   "SolonStockHub",
+   "StockFeeConverter",
+   "SolonStockSellRoute",
+   "StockPoolVault",
+   "V2FeeConverter",
+   "V2FeeIngress",
+   "FixedV4FeeSellRoute",
+   "V2PlatformRouter",
+   "V3FeeLedger",
+   "V3LaunchStrategy",
+   "V3MultiHopRouter",
+   "V3RewardToken",
+   "V3Router"
   ]
  },
  "0x5a9165ff": {
@@ -1400,7 +1525,9 @@
   "sig": "TransferFailed()",
   "contracts": [
    "PonsV2BondingCurve",
-   "PonsV2FeeEscrow"
+   "PonsV2FeeEscrow",
+   "SolonStockHub",
+   "StockPoolVault"
   ]
  },
  "0x82b42900": {
@@ -1409,7 +1536,14 @@
    "ERC721Permit_v4",
    "IERC721Permit_v4",
    "IPositionManager",
-   "PositionManager"
+   "PositionManager",
+   "CreatorRightsNFT",
+   "EligibilityController",
+   "SolonStockAdapter",
+   "V3FeeLedger",
+   "V3LPLocker",
+   "V3LaunchStrategy",
+   "V3RewardToken"
   ]
  },
  "0x30d21641": {
@@ -1429,8 +1563,12 @@
  "0xf7139e33": {
   "sig": "UnknownPool()",
   "contracts": [
-   "PonsV2MemeHook"
-  ]
+   "PonsV2MemeHook",
+   "V3MultiHopRouter",
+   "V3QuoteFeeHook",
+   "V3Router"
+  ],
+  "hint": "V3Router: not a registered V3 pool. Key must be {sorted(quote, coin), fee 0, tickSpacing 100, hooks = V3QuoteFeeHook}. Take it from the coin launch, not a guess."
  },
  "0x8698bf37": {
   "sig": "UnknownToken()",
@@ -1524,7 +1662,10 @@
    "PonsV2LaunchFactory",
    "PonsV2LaunchLocker",
    "PonsV2LauncherToken",
-   "PonsV2MemeHook"
+   "PonsV2MemeHook",
+   "CanonicalGate",
+   "ReserveVault",
+   "SolonStockHub"
   ]
  },
  "0x1f2a2005": {
@@ -1533,7 +1674,1304 @@
    "PonsV2BondingCurve",
    "PonsV2GraduationGuard",
    "PonsV2GraduationMath",
-   "PonsV2LaunchFactory"
+   "PonsV2LaunchFactory",
+   "CapacityController",
+   "ReserveVault",
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub: usdcIn / sharesIn is zero."
+ },
+ "0x6697b232": {
+  "sig": "AccessControlBadConfirmation()",
+  "contracts": [
+   "V3Governance"
   ]
+ },
+ "0xe2517d3f": {
+  "sig": "AccessControlUnauthorizedAccount(address,bytes32)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x682a9065": {
+  "sig": "AlreadyBound()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x731b0670": {
+  "sig": "AlreadyChosen(address)",
+  "contracts": [
+   "LaunchPayoutChoice"
+  ]
+ },
+ "0x19cd4595": {
+  "sig": "AlreadyListed(address)",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x9049e70c": {
+  "sig": "AlreadyReconciled(bytes32)",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x87b34a06": {
+  "sig": "AlreadyReserved()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0xd4a75cf0": {
+  "sig": "AlreadySent()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x4ff64a9f": {
+  "sig": "AmountError()",
+  "contracts": [
+   "SolonStakingV2"
+  ],
+  "hint": "SolonStakingV2.stake: amount is 0."
+ },
+ "0x0590fb9f": {
+  "sig": "AmountOverflow()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x97bf34da": {
+  "sig": "AssetLimit()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x0abddc32": {
+  "sig": "BadCheckpoint(uint256,uint64)",
+  "contracts": [
+   "CanonicalGate"
+  ]
+ },
+ "0x3b393548": {
+  "sig": "BadChoice(uint256)",
+  "contracts": [
+   "LaunchPayoutChoice"
+  ]
+ },
+ "0xb0171a5d": {
+  "sig": "BadFeed()",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0xc90071ef": {
+  "sig": "BadLane()",
+  "contracts": [
+   "OrderScheduler"
+  ]
+ },
+ "0x2111a9e0": {
+  "sig": "BadLimits()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x52dcb78f": {
+  "sig": "BadMessageType(uint8,uint8)",
+  "contracts": [
+   "CanonicalGate",
+   "EthereumBridger",
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x326dcea4": {
+  "sig": "BadMigration(bytes32)",
+  "contracts": [
+   "SolonStockHub (HubSettlement library)"
+  ]
+ },
+ "0x98c2c368": {
+  "sig": "BadOrder()",
+  "contracts": [
+   "SolonStockSellRoute"
+  ]
+ },
+ "0x019af637": {
+  "sig": "BadParams()",
+  "contracts": [
+   "SolonStockOracle"
+  ]
+ },
+ "0x7ca55c77": {
+  "sig": "BadProof()",
+  "contracts": [
+   "CanonicalGate"
+  ]
+ },
+ "0xf3fb463d": {
+  "sig": "BadQuote()",
+  "contracts": [
+   "RelayFundingRoute",
+   "StockPoolVault"
+  ]
+ },
+ "0x9aab2bb0": {
+  "sig": "BadRange()",
+  "contracts": [
+   "StockPoolVault"
+  ]
+ },
+ "0xca73fa83": {
+  "sig": "BadRewardOrder()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x74d75a44": {
+  "sig": "BadRound()",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0xa896fdcd": {
+  "sig": "BasketFrozenError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xe3319a72": {
+  "sig": "BelowMinOrder()",
+  "contracts": [
+   "CapacityController",
+   "SolonStockHub"
+  ],
+  "hint": "CapacityController: the order principal is below minOrderUsd ($20 at launch). With the 25 bps buy fee, usdcIn must be at least $20.06."
+ },
+ "0xab4d0c70": {
+  "sig": "BeneficiaryConsentError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x4c27066a": {
+  "sig": "BeneficiaryError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x9bf32580": {
+  "sig": "BootstrapUnavailable()",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0xfa755f9d": {
+  "sig": "BudgetUnfundedError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xeb326a94": {
+  "sig": "CarryPageError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x8dd067e9": {
+  "sig": "CheckpointCarryFirstError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x101603cc": {
+  "sig": "ClockOverflow()",
+  "contracts": [
+   "StakingRewardSourceFactory",
+   "V3RewardToken"
+  ]
+ },
+ "0x6a4e85b0": {
+  "sig": "ConfiguratorError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xb8070641": {
+  "sig": "ConfiguredError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x5827cf2b": {
+  "sig": "ConsentExpiredError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x1ab7da6b": {
+  "sig": "DeadlineExpired()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ],
+  "hint": "V3Router/V3MultiHopRouter: request.deadline is in the past. Rebuild the request with a fresh deadline (now + 60-300 s)."
+ },
+ "0x12d25822": {
+  "sig": "DelayBelowFloor(uint256)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x79cacff1": {
+  "sig": "DepositFailed()",
+  "contracts": [
+   "RelayFundingRoute"
+  ]
+ },
+ "0xf645eedf": {
+  "sig": "ECDSAInvalidSignature()",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0xfce698f7": {
+  "sig": "ECDSAInvalidSignatureLength(uint256)",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0xd78bce0c": {
+  "sig": "ECDSAInvalidSignatureS(bytes32)",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0x62791302": {
+  "sig": "ERC2612ExpiredSignature(uint256)",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0x4b800e46": {
+  "sig": "ERC2612InvalidSigner(address,address)",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0xf3b873b3": {
+  "sig": "EligibilityError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x26397a77": {
+  "sig": "EmptyBudgetError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xd93c0665": {
+  "sig": "EnforcedPause()",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ],
+  "hint": "Paused contract. On SolonStockHub buys stop while paused; sells and claims never pause."
+ },
+ "0xd2ece8d3": {
+  "sig": "ExceedsEntitlement(uint256,uint256)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x8dfc202b": {
+  "sig": "ExpectedPause()",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x1425ea42": {
+  "sig": "FailedInnerCall()",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0xcd4e6167": {
+  "sig": "FeeTooHigh()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x79a4fef3": {
+  "sig": "FeedDecimals()",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0x26ed0ad5": {
+  "sig": "FundingAmountError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x0ab6a80b": {
+  "sig": "GateAlreadySet()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0xad833e43": {
+  "sig": "InexactInput()",
+  "contracts": [
+   "V3Router"
+  ]
+ },
+ "0x7fc92fd7": {
+  "sig": "InexactOutput()",
+  "contracts": [
+   "V3Router"
+  ]
+ },
+ "0x957ccd2c": {
+  "sig": "InexactResult()",
+  "contracts": [
+   "SolonStockAdapter"
+  ]
+ },
+ "0x51dd3741": {
+  "sig": "InsufficientFloat(uint256,uint256)",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x35311aaf": {
+  "sig": "InsufficientUsdc(uint256,uint256)",
+  "contracts": [
+   "CanonicalGate",
+   "EthereumBridger"
+  ]
+ },
+ "0x7040b58c": {
+  "sig": "InsufficientValue(uint256,uint256)",
+  "contracts": [
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub.requestBuy: msg.value < usdcIn. Send usdcIn + reserve (1 USDC route reserve + quoteOrder(underlying)); the unused reserve is refunded."
+ },
+ "0x752d88c0": {
+  "sig": "InvalidAccountNonce(address,uint256)",
+  "contracts": [
+   "SolonStockToken"
+  ]
+ },
+ "0xc52a9bd3": {
+  "sig": "InvalidConfiguration()",
+  "contracts": [
+   "V3RewardToken"
+  ]
+ },
+ "0xb5863604": {
+  "sig": "InvalidDelegate()",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x0b54ac26": {
+  "sig": "InvalidDelta()",
+  "contracts": [
+   "V3Router"
+  ]
+ },
+ "0xce62d641": {
+  "sig": "InvalidDependency()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ]
+ },
+ "0x0fbdec0a": {
+  "sig": "InvalidEndpointCall()",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x5e09c143": {
+  "sig": "InvalidInitialPosition()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0xf92ee8a9": {
+  "sig": "InvalidInitialization()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x6de3e846": {
+  "sig": "InvalidLaunch()",
+  "contracts": [
+   "V3LaunchFactory"
+  ],
+  "hint": "V3LaunchFactory: msg.sender must equal the creator argument; the (creator, salt) pair was already used; or the factory readiness gate (paid Desk + Ops funds) is not met."
+ },
+ "0xa8a6f5b1": {
+  "sig": "InvalidLegacyPool()",
+  "contracts": [
+   "V3LaunchFactory (V3LegacyPools library)"
+  ]
+ },
+ "0xaf610693": {
+  "sig": "InvalidOrder()",
+  "contracts": [
+   "SolonStockAdapter"
+  ]
+ },
+ "0x59f700d3": {
+  "sig": "InvalidPayoutChoice()",
+  "contracts": [
+   "V3LaunchFactory (V3RewardWiring library)"
+  ],
+  "hint": "V3LaunchFactory: payoutChoiceId is not an enabled LaunchPayoutChoice id (read /api/v3/payout-choices), or nonzero on a stock-quote launch."
+ },
+ "0x2083cd40": {
+  "sig": "InvalidPool()",
+  "contracts": [
+   "CreatorRightsNFT",
+   "V3FeeLedger"
+  ]
+ },
+ "0xce7e065e": {
+  "sig": "InvalidPosition()",
+  "contracts": [
+   "V3LPLocker"
+  ]
+ },
+ "0xf8618030": {
+  "sig": "InvalidQuote()",
+  "contracts": [
+   "SolonStockAdapter",
+   "V3LaunchFactory",
+   "V3LaunchStrategy"
+  ],
+  "hint": "V3LaunchFactory: a kind-0 QuoteConfig must be all zeros; a kind-1 (stock-quote) config must equal the factory's approvedQuote record, the stock market must be open and the oracle must give an executable price. Stock-quote launches are gated closed (/api/v3/stock-quote-gate open=false): use kind 0 (USDC)."
+ },
+ "0xc0098aac": {
+  "sig": "InvalidReceipt()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x5118d095": {
+  "sig": "InvalidRegistration()",
+  "contracts": [
+   "V3LPLocker"
+  ]
+ },
+ "0x41abc801": {
+  "sig": "InvalidRequest()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ],
+  "hint": "V3Router: zero amount, maxIn = 0, recipient = 0x0 or the router itself, or an int128 overflow."
+ },
+ "0xd954416a": {
+  "sig": "InvalidRole()",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x84e505d2": {
+  "sig": "InvalidRoute()",
+  "contracts": [
+   "StockAdapterRegistry"
+  ]
+ },
+ "0x466d7fef": {
+  "sig": "InvalidRouter()",
+  "contracts": [
+   "V3Quoter"
+  ]
+ },
+ "0xdba16ce8": {
+  "sig": "InvalidSchedule()",
+  "contracts": [
+   "EligibilityController"
+  ]
+ },
+ "0xb3512b0c": {
+  "sig": "InvalidShortString()",
+  "contracts": [
+   "CreatorRightsNFT",
+   "DeskNFT",
+   "EligibilityRegistry",
+   "SolonStockToken"
+  ]
+ },
+ "0x11157667": {
+  "sig": "InvalidSwap()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x24e01238": {
+  "sig": "InvalidTokenCode()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x4e54ecfe": {
+  "sig": "LedgerClaimError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x85051147": {
+  "sig": "LedgerDeltaError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x92f0ed5d": {
+  "sig": "LedgerError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x5373352a": {
+  "sig": "LzTokenUnavailable()",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0xa2abf1b6": {
+  "sig": "MessageTooShort(uint256)",
+  "contracts": [
+   "CanonicalGate",
+   "EthereumBridger"
+  ]
+ },
+ "0x0322f3eb": {
+  "sig": "MigrationIsClosed()",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x11322a9c": {
+  "sig": "MintLimitExceeded(address,uint256,uint256)",
+  "contracts": [
+   "SolonStockHub (HubSettlement library)"
+  ]
+ },
+ "0xee99f4ab": {
+  "sig": "MintsAreHalted()",
+  "contracts": [
+   "SolonStockHub (HubSettlement library)"
+  ],
+  "hint": "SolonStockHub: new mints halted (guardian). Buys refused; sells and redeems still work."
+ },
+ "0xc083962c": {
+  "sig": "NativeDeltaError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x8520d710": {
+  "sig": "NativeRefundFailed()",
+  "contracts": [
+   "V3Quoter",
+   "V3Router"
+  ]
+ },
+ "0xda52ba9e": {
+  "sig": "NativeValueMismatch()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ],
+  "hint": "V3Router: native-USDC input needs msg.value >= the budget (maxIn for exact-out, |amountSpecified| for exact-in); ERC-20 input (selling the coin, stock quote) needs msg.value = 0."
+ },
+ "0x985be8d5": {
+  "sig": "NestedSwap()",
+  "contracts": [
+   "V3QuoteFeeHook"
+  ]
+ },
+ "0x782387ad": {
+  "sig": "NoFeed(address)",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0x1e90e61f": {
+  "sig": "NoObservation(address)",
+  "contracts": [
+   "RelayedStockSource"
+  ]
+ },
+ "0xf6ff4fb7": {
+  "sig": "NoPeer(uint32)",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x6127dd09": {
+  "sig": "NoSuchOrder(uint256)",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0xf5d625ee": {
+  "sig": "NonPositive()",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0xca917b0f": {
+  "sig": "NotBridgerAlias(address)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x16c618d8": {
+  "sig": "NotCaller()",
+  "contracts": [
+   "RelayFundingRoute"
+  ]
+ },
+ "0x80c3e8ff": {
+  "sig": "NotClaimable(uint256,uint256)",
+  "contracts": [
+   "SolonStockHub (HubSettlement library)"
+  ]
+ },
+ "0x181df19d": {
+  "sig": "NotConverter()",
+  "contracts": [
+   "SolonStockSellRoute"
+  ]
+ },
+ "0x9f704120": {
+  "sig": "NotEnoughNative(uint256)",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0xc32d1d76": {
+  "sig": "NotExecutor()",
+  "contracts": [
+   "RelayFundingRoute"
+  ]
+ },
+ "0x1bee0d5a": {
+  "sig": "NotFinalized()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x51ccb177": {
+  "sig": "NotFloatRecipient()",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x8c7f5c42": {
+  "sig": "NotFromBridger(bytes32)",
+  "contracts": [
+   "CanonicalGate"
+  ]
+ },
+ "0x9dea4acb": {
+  "sig": "NotFromGate(bytes32)",
+  "contracts": [
+   "EthereumBridger"
+  ]
+ },
+ "0xb877e518": {
+  "sig": "NotFromVault(address)",
+  "contracts": [
+   "EthereumBridger"
+  ]
+ },
+ "0xb56f932c": {
+  "sig": "NotGovernance()",
+  "contracts": [
+   "LaunchPayoutChoice"
+  ]
+ },
+ "0xef6d0f02": {
+  "sig": "NotGuardian()",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub",
+   "SolonStockOracle"
+  ]
+ },
+ "0x0fd901ef": {
+  "sig": "NotGuardianOrOwner()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x9de97418": {
+  "sig": "NotHub()",
+  "contracts": [
+   "CanonicalGate",
+   "CapacityController",
+   "OrderScheduler",
+   "SolonStockSellRoute",
+   "SolonStockToken"
+  ]
+ },
+ "0x5d35c429": {
+  "sig": "NotListed(address)",
+  "contracts": [
+   "LaunchPayoutChoice",
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0x48bf96e9": {
+  "sig": "NotListedHere(address)",
+  "contracts": [
+   "SolonStockHub (HubSettlement library)"
+  ]
+ },
+ "0xfde5ed88": {
+  "sig": "NotNext()",
+  "contracts": [
+   "OrderScheduler"
+  ]
+ },
+ "0x32ea82ab": {
+  "sig": "NotOutbox(address)",
+  "contracts": [
+   "EthereumBridger"
+  ]
+ },
+ "0x7f7441bf": {
+  "sig": "NotOwnerOfGuard()",
+  "contracts": [
+   "ReserveVault",
+   "SolonStockHub"
+  ]
+ },
+ "0xb40c733e": {
+  "sig": "NotReceiver()",
+  "contracts": [
+   "StockPriceSender"
+  ]
+ },
+ "0x81fdcd7e": {
+  "sig": "NotReserved()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x798c29c5": {
+  "sig": "NotRewardAdapter()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0xe391fe17": {
+  "sig": "NotRewardManager()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x5dd65654": {
+  "sig": "NotRoute()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x41cbcfda": {
+  "sig": "NotScheduler()",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x1d46cb05": {
+  "sig": "NotSettled(bytes32)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0xfb5297bf": {
+  "sig": "NotTightenOnly(address,bytes4)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x62df0545": {
+  "sig": "NotVault()",
+  "contracts": [
+   "RestrictedVenue"
+  ]
+ },
+ "0x7e55d93d": {
+  "sig": "NotWaiting(bytes32)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x3715f556": {
+  "sig": "NotYours(uint256)",
+  "contracts": [
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub: only the order owner may cancel / pick the canonical destination."
+ },
+ "0x4cd534f7": {
+  "sig": "NothingToCheckpoint()",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x637c1772": {
+  "sig": "NothingToForward()",
+  "contracts": [
+   "EthereumBridger"
+  ]
+ },
+ "0xd342318e": {
+  "sig": "NothingToReturn(bytes32)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x0a1d7f9c": {
+  "sig": "NothingToSend()",
+  "contracts": [
+   "StockPriceSender"
+  ]
+ },
+ "0xb76b2a28": {
+  "sig": "NothingToSkim()",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x91ac5e4f": {
+  "sig": "OnlyEndpoint(address)",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x2f18d8eb": {
+  "sig": "OnlyLower()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0xc0b2335a": {
+  "sig": "OnlyManager()",
+  "contracts": [
+   "StockPoolVault"
+  ]
+ },
+ "0xc26bebcc": {
+  "sig": "OnlyPeer(uint32,bytes32)",
+  "contracts": [
+   "StockPriceSender",
+   "ReserveVault",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x14d4a4e8": {
+  "sig": "OnlySelf()",
+  "contracts": [
+   "ReserveVault",
+   "V3MultiHopRouter",
+   "V3Router"
+  ]
+ },
+ "0xf09263d6": {
+  "sig": "PageTooLarge()",
+  "contracts": [
+   "V3RewardToken"
+  ]
+ },
+ "0xd39cf377": {
+  "sig": "PartialFillUnsupported()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3QuoteFeeHook",
+   "V3Router"
+  ],
+  "hint": "V3Router: V3 pools are full-fill only. The pool could not fill the whole amountSpecified (thin liquidity or a sqrtPriceLimitX96 hit). Reduce size or pass sqrtPriceLimitX96 = 0."
+ },
+ "0x94e8dec3": {
+  "sig": "PriceDeviation()",
+  "contracts": [
+   "StockPoolVault"
+  ]
+ },
+ "0x83f6ea76": {
+  "sig": "PriceNotLive(address,uint8)",
+  "contracts": [
+   "SolonStockOracle"
+  ]
+ },
+ "0xce546d4b": {
+  "sig": "PrincipalDeltaError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xe0b248ee": {
+  "sig": "PrincipalError()",
+  "contracts": [
+   "SolonStakingV2"
+  ],
+  "hint": "SolonStakingV2.unstake: amount is 0, above stakedOf(you), or to = 0x0."
+ },
+ "0x8253b4a5": {
+  "sig": "ProtectedOperation(bytes32)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x1101e912": {
+  "sig": "ProtocolConfigurationError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x9baaf37a": {
+  "sig": "ProtocolFundingError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xa75013b5": {
+  "sig": "ProtocolNotifyError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x3240e5c5": {
+  "sig": "PublicLimit()",
+  "contracts": [
+   "CapacityController"
+  ],
+  "hint": "CapacityController: the public lane outstanding cap is full. Wait for in-flight orders to settle."
+ },
+ "0xd241c517": {
+  "sig": "RailMismatch()",
+  "contracts": [
+   "RestrictedVenue"
+  ]
+ },
+ "0x1998a685": {
+  "sig": "RawSourcePageError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xe39ffce0": {
+  "sig": "ReceiveFailed()",
+  "contracts": [
+   "CanonicalGate",
+   "EthereumBridger"
+  ]
+ },
+ "0xf7c28e7c": {
+  "sig": "RegistryError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x0f153eec": {
+  "sig": "RewardConfigurationError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xab04139b": {
+  "sig": "RunLimit()",
+  "contracts": [
+   "CapacityController",
+   "SolonStockHub"
+  ],
+  "hint": "CapacityController: a single order principal is above the per-order cap (lRun: $250 at launch). Split the order, or re-read /api/v3/config data.limits.singleUsd."
+ },
+ "0xcf0b5995": {
+  "sig": "SealStateError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xd5e2090b": {
+  "sig": "SettlementMismatch()",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x02efa268": {
+  "sig": "SimulationFailure(bytes)",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ]
+ },
+ "0x22647d49": {
+  "sig": "SimulationResult(int256,uint256)",
+  "contracts": [
+   "V3Router"
+  ]
+ },
+ "0xdeb13018": {
+  "sig": "SimulationResult(uint256,uint256,uint256)",
+  "contracts": [
+   "V3MultiHopRouter"
+  ]
+ },
+ "0x7dd37f70": {
+  "sig": "Slippage()",
+  "contracts": [
+   "StockPoolVault"
+  ]
+ },
+ "0x8199f5f3": {
+  "sig": "SlippageExceeded()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ],
+  "hint": "V3Router: net output < minOut or total input > maxIn. Re-quote with V3Quoter.quote at the current block and rebuild; do not just widen minOut."
+ },
+ "0x271fefe7": {
+  "sig": "SourceCoverageError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xf29a27b7": {
+  "sig": "SourceError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x23f9212a": {
+  "sig": "SourceFundingError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x9a440d65": {
+  "sig": "StageDeltaError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x19abf40e": {
+  "sig": "StalePrice()",
+  "contracts": [
+   "ChainlinkStockSource"
+  ]
+ },
+ "0x0166dc30": {
+  "sig": "StockDeltaError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xb1536b02": {
+  "sig": "StockDisabled(address)",
+  "contracts": [
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub: this listing is disabled by governance. Do not retry."
+ },
+ "0xb3525ed4": {
+  "sig": "StockFundingError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x305a27a9": {
+  "sig": "StringTooLong(string)",
+  "contracts": [
+   "CreatorRightsNFT",
+   "DeskNFT",
+   "EligibilityRegistry",
+   "SolonStockToken"
+  ]
+ },
+ "0x54336609": {
+  "sig": "TimelockInsufficientDelay(uint256,uint256)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0xffb03211": {
+  "sig": "TimelockInvalidOperationLength(uint256,uint256,uint256)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0xe2850c59": {
+  "sig": "TimelockUnauthorizedCaller(address)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x90a9a618": {
+  "sig": "TimelockUnexecutedPredecessor(bytes32)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x5ead8eb5": {
+  "sig": "TimelockUnexpectedOperationState(bytes32,bytes32)",
+  "contracts": [
+   "V3Governance"
+  ]
+ },
+ "0x774ae17d": {
+  "sig": "Timelocked()",
+  "contracts": [
+   "CanonicalGate",
+   "CapacityController",
+   "StockPriceSender",
+   "ReserveVault",
+   "RestrictedVenue",
+   "SolonStockHub",
+   "RelayedStockSource"
+  ]
+ },
+ "0x45936d77": {
+  "sig": "TooEarly(uint256,uint64)",
+  "contracts": [
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub: cancel before CANCEL_AFTER (1800 s) or escalate before ESCALATE_AFTER (21600 s) from the relevant start. The second arg is the unlock time."
+ },
+ "0xd65ac61e": {
+  "sig": "TooMany()",
+  "contracts": [
+   "StockPriceSender"
+  ]
+ },
+ "0x3fa4853d": {
+  "sig": "TotalLimit()",
+  "contracts": [
+   "CapacityController"
+  ],
+  "hint": "CapacityController: total outstanding cap is full. Wait."
+ },
+ "0xf5c6c81a": {
+  "sig": "UnauthorizedCallback()",
+  "contracts": [
+   "V3MultiHopRouter",
+   "V3Router"
+  ]
+ },
+ "0xeb681d2b": {
+  "sig": "UnexpectedSimulationSuccess()",
+  "contracts": [
+   "V3Quoter"
+  ]
+ },
+ "0xad61e2ba": {
+  "sig": "UnknownAsset(address)",
+  "contracts": [
+   "SolonStockOracle"
+  ]
+ },
+ "0x4404ac98": {
+  "sig": "UnknownRef(bytes32)",
+  "contracts": [
+   "EthereumBridger"
+  ]
+ },
+ "0xbad83dc1": {
+  "sig": "UnreviewedLimit()",
+  "contracts": [
+   "CapacityController"
+  ]
+ },
+ "0x25e67e42": {
+  "sig": "UnsealedEpochError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x09c6954c": {
+  "sig": "UnsupportedStock(address)",
+  "contracts": [
+   "RestrictedVenue"
+  ]
+ },
+ "0x5c33dfd7": {
+  "sig": "V2BudgetError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0x847e32cb": {
+  "sig": "V2ConfigurationError()",
+  "contracts": [
+   "SolonStakingV2"
+  ]
+ },
+ "0xd601967c": {
+  "sig": "VenueUnsupported(address)",
+  "contracts": [
+   "ReserveVault"
+  ]
+ },
+ "0x6a41e0a6": {
+  "sig": "WrongKind(uint256)",
+  "contracts": [
+   "SolonStockHub"
+  ]
+ },
+ "0x4bdc597b": {
+  "sig": "WrongSource(uint32)",
+  "contracts": [
+   "RelayedStockSource"
+  ]
+ },
+ "0xbc33195f": {
+  "sig": "WrongSource(uint32,bytes32)",
+  "contracts": [
+   "CanonicalGate",
+   "EthereumBridger",
+   "SolonStockHub"
+  ]
+ },
+ "0xa5d15e1f": {
+  "sig": "WrongStatus(uint256,uint8)",
+  "contracts": [
+   "SolonStockHub"
+  ],
+  "hint": "SolonStockHub: the order is not in the state this call needs. Read getOrder(id) or /api/v3/orders/{id} first."
  }
 }

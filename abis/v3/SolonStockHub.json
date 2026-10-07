@@ -1,0 +1,3399 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "endpoint",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "treasury_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "feeBps_",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "owner_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "opsVault_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "floatRecipients",
+    "type": "address[2]",
+    "internalType": "address[2]"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "AlreadyListed",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "AlreadyReconciled",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "ref",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "BadMessageType",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "got",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "want",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ]
+ },
+ {
+  "name": "BadRewardOrder",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "BelowMinOrder",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "EnforcedPause",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ExpectedPause",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "FeeTooHigh",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "GateAlreadySet",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InsufficientFloat",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "available",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "need",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "InsufficientValue",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "got",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "need",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "InvalidDelegate",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidEndpointCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "LzTokenUnavailable",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NoPeer",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ]
+ },
+ {
+  "name": "NoSuchOrder",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "NotEnoughNative",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "msgValue",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "NotFloatRecipient",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotGuardian",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotGuardianOrOwner",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotKeeper",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotListed",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "NotOwnerOfGuard",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotRewardAdapter",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotRoute",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotScheduler",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotYours",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "OnlyEndpoint",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "addr",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "OnlyPeer",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "sender",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "OwnableInvalidOwner",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "owner",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "OwnableUnauthorizedAccount",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "RunLimit",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "SafeERC20FailedOperation",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "StockDisabled",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "Timelocked",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "TooEarly",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "at",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ]
+ },
+ {
+  "name": "TransferFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "WrongKind",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "WrongSource",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "sender",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "name": "WrongStatus",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "status",
+    "type": "uint8",
+    "internalType": "enum HubSettlement.Status"
+   }
+  ]
+ },
+ {
+  "name": "ZeroAddress",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ZeroAmount",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AwaitingReturn",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "status",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum HubSettlement.Status"
+   },
+   {
+    "name": "expected",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "BuyFilled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "user",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sharesOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "canonical",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "BuyRequested",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "user",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "usdcIn",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "fee",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "minSharesOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CancelRequested",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CapacitySet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "capacity",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "scheduler",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Claimable",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "ClaimableVoided",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "evidence",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Claimed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Dispatched",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "guid",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Disputed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FeesClaimed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FeesSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "buyFeeBps",
+    "type": "uint16",
+    "indexed": false,
+    "internalType": "uint16"
+   },
+   {
+    "name": "sellFeeBps",
+    "type": "uint16",
+    "indexed": false,
+    "internalType": "uint16"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FloatEnabled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "enabled",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FloatFunded",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "from",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FloatWithdrawn",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GateSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "gate",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "GuardianSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "guardian",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "KeeperSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "keeper",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Launched",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "route",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "principal",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "routeFee",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "transferId",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MintFloorSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "floor",
+    "type": "uint128",
+    "indexed": false,
+    "internalType": "uint128"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MintLimitSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "bps",
+    "type": "uint16",
+    "indexed": false,
+    "internalType": "uint16"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MintsHalted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "why",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MintsResumed",
+  "type": "event",
+  "inputs": [],
+  "anonymous": false
+ },
+ {
+  "name": "MultiplierVersionSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "version",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OrderCancelled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "reason",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum HubSettlement.Reason"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OrderEscalated",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "mode",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum Messages.DeliverMode"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OrderOptionsSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "options",
+    "type": "bytes",
+    "indexed": false,
+    "internalType": "bytes"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OrderOwed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Orphaned",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "sharesToTreasury",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OwnershipTransferStarted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "previousOwner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "newOwner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "OwnershipTransferred",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "previousOwner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "newOwner",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Paused",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PayLimitSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "floor",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "bps",
+    "type": "uint16",
+    "indexed": false,
+    "internalType": "uint16"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PeerProposed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "indexed": true,
+    "internalType": "uint32"
+   },
+   {
+    "name": "peer",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "eta",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PeerSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "indexed": false,
+    "internalType": "uint32"
+   },
+   {
+    "name": "peer",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Reconciled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "matched",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "ResultIgnored",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "why",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum HubSettlement.Reason"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "ReturnReceived",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "late",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RewardAdapterSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "adapter",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "allowed",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RewardRefundReady",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "opsLeftover",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RouteProposed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "route",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "eta",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RouteSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "route",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "SellFilled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "user",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "usdcOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "fee",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "canonical",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "SellRequested",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "user",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "sharesIn",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "minUsdcOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "StockEnabled",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "enabled",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "StockListed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "ticker",
+    "type": "string",
+    "indexed": false,
+    "internalType": "string"
+   },
+   {
+    "name": "vaultEid",
+    "type": "uint32",
+    "indexed": false,
+    "internalType": "uint32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TradingPausedSet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "paused",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "TreasurySet",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "treasury",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Unpaused",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "account",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "CANCEL_AFTER",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "CONFIG_DELAY",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "ESCALATE_AFTER",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MAX_FEE_BPS",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "acceptOwnership",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "accruedFees",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "allowInitializePath",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "origin",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "srcEid",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "sender",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "nonce",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct Origin"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "available",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "beginFunding",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "orderId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "budget18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minRawOut",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "receiver",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "path",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "cancel",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "cancelReward",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "canonicalRedeem",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "sharesIn",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "mode",
+    "type": "uint8",
+    "internalType": "enum Messages.DeliverMode"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "capacity",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract CapacityController"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "checkStale",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claim",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimFees",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimResult",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "orderId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "status",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "raw",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "refund18",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimableTotal",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "dispatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "endpoint",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract ILayerZeroEndpointV2"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "escalate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "escalateFunds",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "to",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "escrowed",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "executePeer",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "executeRoute",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "fees",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "buyFeeBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "sellFeeBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "mintLimitBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "floatEnabled",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "floatRecipientA",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "floatRecipientB",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "fundFloat",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "fundingReceived",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "orderId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "gate",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract CanonicalGate"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getListing",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "arc",
+      "type": "address",
+      "internalType": "contract SolonStockToken"
+     },
+     {
+      "name": "vaultEid",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "ticker",
+      "type": "string",
+      "internalType": "string"
+     },
+     {
+      "name": "enabled",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "mintFloor",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "route",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "routePath",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "tradingPaused",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "multiplierVersion",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct HubSettlement.Listing"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getOrder",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "user",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "underlying",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "kind",
+      "type": "uint8",
+      "internalType": "enum HubSettlement.Kind"
+     },
+     {
+      "name": "status",
+      "type": "uint8",
+      "internalType": "enum HubSettlement.Status"
+     },
+     {
+      "name": "createdAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "settledAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "amountIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "amountOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "fee",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "rawOut",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "lzSettled",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "orphaned",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "dispatchedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "lane",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "feeBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "cancelRequested",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "disputed",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "advanced",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "outcome",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "route",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "extra",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "held",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "owed",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "custodyRaw",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "refundReady",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "capKey",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "voided",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ],
+    "internalType": "struct HubSettlement.Order"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "guardian",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "haltMints",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "isComposeMsgSender",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "srcEid",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "sender",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "nonce",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct Origin"
+   },
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "_sender",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "keeper",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "launch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "routeData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "listStock",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "ticker",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "vaultEid",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "reserveChainId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "mintFloor",
+    "type": "uint128",
+    "internalType": "uint128"
+   },
+   {
+    "name": "route",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "routePath",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "arc",
+    "type": "address",
+    "internalType": "contract SolonStockToken"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "lowerFees",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "buyFeeBps_",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "sellFeeBps_",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "lzReceive",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "_origin",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "srcEid",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "sender",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "nonce",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct Origin"
+   },
+   {
+    "name": "_guid",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "_message",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "_executor",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "_extraData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "mintAllowance",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "mintsHalted",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "nextNonce",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "nonce",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "oAppVersion",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "senderVersion",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "receiverVersion",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "openOrders",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "orderCount",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "orderOptions",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "ordersOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "user",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "owner",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pause",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "paused",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "payAllowance",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "peers",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "peer",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pendingOwner",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pendingPeer",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "value",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "eta",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pendingRoute",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "value",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "eta",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "proposePeer",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "peer",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "proposeRoute",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "route",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "quoteDispatch",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "quoteOrder",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "receiveReturn",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "ref",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "reconcile",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "r",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "ref",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "underlying",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "outcome",
+      "type": "uint8",
+      "internalType": "enum Messages.Outcome"
+     },
+     {
+      "name": "amountIn",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "amountOut",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "seq",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct Messages.Result"
+   },
+   {
+    "name": "checkpointIndex",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "proof",
+    "type": "bytes32[]",
+    "internalType": "bytes32[]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "reconciled",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "ref",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "renounceOwnership",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "requestBuy",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "usdcIn",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minSharesOut",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "requestCancel",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "orderId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "requestSell",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "sharesIn",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minUsdcOut",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "resumeMints",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "rewardAdapter",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "adapter",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "scheduleInfo",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "pending",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "lane",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "usd",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "scheduler",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract OrderScheduler"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "setCanonicalGate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "gate_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setCapacity",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "capacity_",
+    "type": "address",
+    "internalType": "contract CapacityController"
+   },
+   {
+    "name": "scheduler_",
+    "type": "address",
+    "internalType": "contract OrderScheduler"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setDelegate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "_delegate",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setEnabled",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "enabled",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setFloatEnabled",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "enabled",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setGuardian",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "guardian_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setKeeper",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "keeper_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setMintFloor",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "floor",
+    "type": "uint128",
+    "internalType": "uint128"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setMintLimitBps",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "bps",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setMultiplierVersion",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "version",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setOrderOptions",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "options",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setPayLimit",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "floor",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "bps",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setPeer",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "eid",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "peer",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setRewardAdapter",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "adapter",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "allowed",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTradingPaused",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "paused_",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "setTreasury",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "treasury_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "stockState",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "marketOpen",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "transferable",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "multiplierVersion",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "submitFundedBuy",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "orderId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "subsidize",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "supplyOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "transferOwnership",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "newOwner",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "treasury",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "underlyingOfToken",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "underlyings",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address[]",
+    "internalType": "address[]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "unpause",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "unreconciledCount",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "voidClaimable",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "evidence",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "voidOrder",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "withdrawFloat",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "to",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]

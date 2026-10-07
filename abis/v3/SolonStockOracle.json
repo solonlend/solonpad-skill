@@ -1,0 +1,962 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "owner_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "guardian_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "BadParams",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotGuardian",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotOwner",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "PriceNotLive",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "status",
+    "type": "uint8",
+    "internalType": "enum SolonStockOracle.Status"
+   }
+  ]
+ },
+ {
+  "name": "UnknownAsset",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "AssetConfigured",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "source",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "indexed": false,
+    "components": [
+     {
+      "name": "maxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxMoveBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "confirmBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDepegBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSourceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTwapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Params"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "AssetPaused",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "reasonHash",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "AssetResumed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "ParamsTightened",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "indexed": false,
+    "components": [
+     {
+      "name": "maxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxMoveBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "confirmBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDepegBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSourceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTwapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Params"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PriceAccepted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "price18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "sourceUpdatedAt",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "confirmedJump",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PriceObserved",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "price18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "quoteUsd18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "twapPrice18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "sourceUpdatedAt",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "roundId",
+    "type": "uint80",
+    "indexed": false,
+    "internalType": "uint80"
+   },
+   {
+    "name": "observedAt",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "sourceBlock",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "status",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum SolonStockOracle.Status"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "MAX_AGE_LIMIT",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MAX_DEPEG_LIMIT",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "MAX_MOVE_LIMIT",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint16",
+    "internalType": "uint16"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "assetOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "token",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "source",
+      "type": "address",
+      "internalType": "contract IStockPriceSource"
+     },
+     {
+      "name": "params",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "maxAge",
+        "type": "uint32",
+        "internalType": "uint32"
+       },
+       {
+        "name": "maxMoveBps",
+        "type": "uint16",
+        "internalType": "uint16"
+       },
+       {
+        "name": "confirmBps",
+        "type": "uint16",
+        "internalType": "uint16"
+       },
+       {
+        "name": "maxDepegBps",
+        "type": "uint16",
+        "internalType": "uint16"
+       },
+       {
+        "name": "maxSourceAge",
+        "type": "uint32",
+        "internalType": "uint32"
+       },
+       {
+        "name": "maxTwapBps",
+        "type": "uint16",
+        "internalType": "uint16"
+       }
+      ],
+      "internalType": "struct SolonStockOracle.Params"
+     },
+     {
+      "name": "paused",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Asset"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "candidateOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "price18",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "sourceUpdatedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "updatedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Quote"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "configureAsset",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "source",
+    "type": "address",
+    "internalType": "contract IStockPriceSource"
+   },
+   {
+    "name": "p",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "maxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxMoveBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "confirmBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDepegBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSourceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTwapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Params"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "execPrice",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "observedAt",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getPrice",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "guardian",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "isStale",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "latest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "o",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "price18",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "multiplier",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "quoteUsd18",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "twapPrice18",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "sourceUpdatedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "roundId",
+      "type": "uint80",
+      "internalType": "uint80"
+     },
+     {
+      "name": "observedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "sourceBlock",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct StockObservation"
+   },
+   {
+    "name": "s",
+    "type": "uint8",
+    "internalType": "enum SolonStockOracle.Status"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "multiplierOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "owner",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pause",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "reasonHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "peek",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "price18",
+    "type": "uint128",
+    "internalType": "uint128"
+   },
+   {
+    "name": "updatedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "poke",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "s",
+    "type": "uint8",
+    "internalType": "enum SolonStockOracle.Status"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "priceUSD18",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "price",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "updatedAt",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "quoteOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "price18",
+      "type": "uint128",
+      "internalType": "uint128"
+     },
+     {
+      "name": "sourceUpdatedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "updatedAt",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Quote"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "rawFor",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "usd18",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "resume",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "status",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "s",
+    "type": "uint8",
+    "internalType": "enum SolonStockOracle.Status"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "tighten",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "p",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "maxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxMoveBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "confirmBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxDepegBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "maxSourceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTwapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     }
+    ],
+    "internalType": "struct SolonStockOracle.Params"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "underlyingOf",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "underlying",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "underlyings",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address[]",
+    "internalType": "address[]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "usdFor",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "raw",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ }
+]

@@ -1,0 +1,1014 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "ledger_",
+    "type": "address",
+    "internalType": "contract V3FeeLedger"
+   },
+   {
+    "name": "governance_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "SafeERC20FailedOperation",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "DeskFeeCredit",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "stream",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "source",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "counter",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "remainder",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "RoyaltyAssetAdmitted",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "StockRoyaltyReceived",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "actualRaw",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "directReceipt",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PRECISION",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "ROYALTY",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "SURCHARGE",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "claimable",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "configureNFT",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "nft_",
+    "type": "address",
+    "internalType": "contract DeskNFT"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configureProtocolStaking",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "staking",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configureRounds",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "manager",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "payout_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "schedule_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "configureRoyaltyAssets",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "assets",
+    "type": "address[]",
+    "internalType": "address[]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "credit27",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "delegatedCredit27",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "delegatedFunded",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "deliveryInfo",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "revision",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "depositRoyalty",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "raw",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "entrySource",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "source",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "entrySources",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "feeCustodyMode",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "forwardProtocolDesk",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "fundProtocolDeskBudget",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "governance",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "latestStream",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "ledger",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract V3FeeLedger"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "nextEpochRemainder",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "nft",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract DeskNFT"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "onEligibilityChange",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "view"
+ },
+ {
+  "name": "onFeeCredit",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "source",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "kind",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "paidRaw",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pay",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "id",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "keys",
+    "type": "bytes32[]",
+    "internalType": "bytes32[]"
+   },
+   {
+    "name": "owner",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "total",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "payout",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract RewardPayoutVault"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "protocolStaking",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "purchasedAsset",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "purchasedOutstanding",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "purchasedRaw",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "purchasedSpent",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "rawCustody",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "recordMintSurcharge",
+  "type": "function",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "rounds",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract RewardRoundManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "royaltyAsset",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "royaltyAssetsConfigured",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "schedule",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract RewardAssetSchedule"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "sealDesk",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "budget",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "total",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "sourcePolicy",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "epoch",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "id",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "version",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "price",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "mode",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "streamCreditTotal",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "streamKey",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "source",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "epoch",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "kind",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "streamSealed",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "streams",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "source",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "epoch",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "kind",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "counter",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "rem",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "supply",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "totalCredit27",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "received",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "syncPurchased",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "entryId",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "syncRoyalty",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "raw",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]

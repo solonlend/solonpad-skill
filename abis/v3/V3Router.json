@@ -1,0 +1,611 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "manager_",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   },
+   {
+    "name": "hook_",
+    "type": "address",
+    "internalType": "contract V3QuoteFeeHook"
+   },
+   {
+    "name": "eligibility_",
+    "type": "address",
+    "internalType": "contract IV3TradeEligibility"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "DeadlineExpired",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InexactInput",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InexactOutput",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidDelta",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidDependency",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidRequest",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NativeRefundFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NativeValueMismatch",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "OnlySelf",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "PartialFillUnsupported",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "SafeERC20FailedOperation",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "SimulationFailure",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "reason",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ]
+ },
+ {
+  "name": "SimulationResult",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "int256"
+   },
+   {
+    "name": "hookFee",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "name": "SlippageExceeded",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnauthorizedCallback",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnknownPool",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "eligibility",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IV3TradeEligibility"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "factory",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "hook",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract V3QuoteFeeHook"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "manager",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "msgSender",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "simulate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "request",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "key",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "currency0",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "currency1",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "fee",
+        "type": "uint24",
+        "internalType": "uint24"
+       },
+       {
+        "name": "tickSpacing",
+        "type": "int24",
+        "internalType": "int24"
+       },
+       {
+        "name": "hooks",
+        "type": "address",
+        "internalType": "contract IHooks"
+       }
+      ],
+      "internalType": "struct PoolKey"
+     },
+     {
+      "name": "buy",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "deadline",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct V3Router.SwapRequest"
+   },
+   {
+    "name": "payer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "simulationBody",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "request",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "key",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "currency0",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "currency1",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "fee",
+        "type": "uint24",
+        "internalType": "uint24"
+       },
+       {
+        "name": "tickSpacing",
+        "type": "int24",
+        "internalType": "int24"
+       },
+       {
+        "name": "hooks",
+        "type": "address",
+        "internalType": "contract IHooks"
+       }
+      ],
+      "internalType": "struct PoolKey"
+     },
+     {
+      "name": "buy",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "deadline",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct V3Router.SwapRequest"
+   },
+   {
+    "name": "payer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "fee",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "swap",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "request",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "key",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "currency0",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "currency1",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "fee",
+        "type": "uint24",
+        "internalType": "uint24"
+       },
+       {
+        "name": "tickSpacing",
+        "type": "int24",
+        "internalType": "int24"
+       },
+       {
+        "name": "hooks",
+        "type": "address",
+        "internalType": "contract IHooks"
+       }
+      ],
+      "internalType": "struct PoolKey"
+     },
+     {
+      "name": "buy",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "deadline",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct V3Router.SwapRequest"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "swapRecipient",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "unlockCallback",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "validateRequest",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "request",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "key",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "currency0",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "currency1",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "fee",
+        "type": "uint24",
+        "internalType": "uint24"
+       },
+       {
+        "name": "tickSpacing",
+        "type": "int24",
+        "internalType": "int24"
+       },
+       {
+        "name": "hooks",
+        "type": "address",
+        "internalType": "contract IHooks"
+       }
+      ],
+      "internalType": "struct PoolKey"
+     },
+     {
+      "name": "buy",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "deadline",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct V3Router.SwapRequest"
+   },
+   {
+    "name": "payer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "p",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "quoteAsset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteKind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "zeroForOne",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ],
+    "internalType": "struct V3Router.PoolMetadata"
+   }
+  ],
+  "stateMutability": "view"
+ }
+]

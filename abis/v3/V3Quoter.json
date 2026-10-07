@@ -1,0 +1,191 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "router_",
+    "type": "address",
+    "internalType": "contract V3Router"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "InvalidRouter",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NativeRefundFailed",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnexpectedSimulationSuccess",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "quote",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "request",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "key",
+      "type": "tuple",
+      "components": [
+       {
+        "name": "currency0",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "currency1",
+        "type": "address",
+        "internalType": "Currency"
+       },
+       {
+        "name": "fee",
+        "type": "uint24",
+        "internalType": "uint24"
+       },
+       {
+        "name": "tickSpacing",
+        "type": "int24",
+        "internalType": "int24"
+       },
+       {
+        "name": "hooks",
+        "type": "address",
+        "internalType": "contract IHooks"
+       }
+      ],
+      "internalType": "struct PoolKey"
+     },
+     {
+      "name": "buy",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "recipient",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "deadline",
+      "type": "uint256",
+      "internalType": "uint256"
+     }
+    ],
+    "internalType": "struct V3Router.SwapRequest"
+   },
+   {
+    "name": "payer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "q",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "quoteKind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "quoteAsset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteDecimals",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "grossQuote",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "netQuote",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "hookFee",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "minOut",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "maxIn",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "fullFillOnly",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "poolId",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct V3Quoter.Quote"
+   }
+  ],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "router",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract V3Router"
+   }
+  ],
+  "stateMutability": "view"
+ }
+]

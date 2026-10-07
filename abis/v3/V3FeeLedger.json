@@ -1,0 +1,875 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "factory_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "nativeUsdcView_",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "InvalidPool",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ReentrancyGuardReentrantCall",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "SafeERC20FailedOperation",
+  "type": "error",
+  "inputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "name": "Unauthorized",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "ClaimFailed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "indexed": true,
+    "internalType": "uint8"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "Claimed",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "indexed": true,
+    "internalType": "uint8"
+   },
+   {
+    "name": "recipient",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "DirectStockCredited",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "lotId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "FeeCredited",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "lotId",
+    "type": "uint256",
+    "indexed": true,
+    "internalType": "uint256"
+   },
+   {
+    "name": "quote",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "allocated",
+    "type": "uint256[6]",
+    "indexed": false,
+    "internalType": "uint256[6]"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "PoolRegistered",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "quote",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "settlementKind",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "hook",
+    "type": "address",
+    "indexed": false,
+    "internalType": "address"
+   },
+   {
+    "name": "beneficiaries",
+    "type": "address[6]",
+    "indexed": false,
+    "internalType": "address[6]"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "accrued",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "claim",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimStockLot",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "lotId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimUSDC6",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "amount18",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "claimsManager",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "controlledClaim",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "creditClaims",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "creditNative",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "name": "creditStock",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "enableControlledClaim",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "enableStockLotCustody",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "bucket",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "executePayment",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "asset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "recipient",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "sixDecimals",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "factory",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "legacyHolderPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "legacyHolderSource",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "nativeUsdcView",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "nextLotId",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pendingClaims",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "poolInfo",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "quote",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "settlementKind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "hook",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "beneficiaries",
+      "type": "address[6]",
+      "internalType": "address[6]"
+     }
+    ],
+    "internalType": "struct V3FeeLedger.Pool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "redeemClaims",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "registerLegacyPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "quote",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "hook",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "beneficiaries",
+    "type": "address[6]",
+    "internalType": "address[6]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "registerPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "quote",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "kind",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "hook",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "beneficiaries",
+    "type": "address[6]",
+    "internalType": "address[6]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "remainder",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "reservedClaims",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "roundingReserve",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "reserve",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "stockLotAmount",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "stockLotCustody",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "totalPaid",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "totalReceived",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "unlockCallback",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "data",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]

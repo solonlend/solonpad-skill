@@ -1,0 +1,1318 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "manager_",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   },
+   {
+    "name": "factory_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "ledger_",
+    "type": "address",
+    "internalType": "contract IV3HookFeeLedger"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "AlreadyRegistered",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "AmountOverflow",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "HookNotImplemented",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidInitialPosition",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidInitialization",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidPoolKey",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidReceipt",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidSwap",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "InvalidTokenCode",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NestedSwap",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotFactory",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "NotPoolManager",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "PartialFillUnsupported",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "UnknownPool",
+  "type": "error",
+  "inputs": []
+ },
+ {
+  "name": "QuoteFeeCollected",
+  "type": "event",
+  "inputs": [
+   {
+    "name": "poolId",
+    "type": "bytes32",
+    "indexed": true,
+    "internalType": "PoolId"
+   },
+   {
+    "name": "quoteAsset",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "name": "afterAddLiquidity",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "tickLower",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "tickUpper",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "liquidityDelta",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "salt",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct ModifyLiquidityParams"
+   },
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "feesAccrued",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   },
+   {
+    "name": "",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "afterDonate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "amount0",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount1",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "afterInitialize",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "sqrtPriceX96",
+    "type": "uint160",
+    "internalType": "uint160"
+   },
+   {
+    "name": "tick",
+    "type": "int24",
+    "internalType": "int24"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "afterRemoveLiquidity",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "tickLower",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "tickUpper",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "liquidityDelta",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "salt",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct ModifyLiquidityParams"
+   },
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "feesAccrued",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   },
+   {
+    "name": "",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "afterSwap",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "zeroForOne",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     }
+    ],
+    "internalType": "struct SwapParams"
+   },
+   {
+    "name": "delta",
+    "type": "int256",
+    "internalType": "BalanceDelta"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   },
+   {
+    "name": "",
+    "type": "int128",
+    "internalType": "int128"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "beforeAddLiquidity",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "tickLower",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "tickUpper",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "liquidityDelta",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "salt",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct ModifyLiquidityParams"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "beforeDonate",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "amount0",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "amount1",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "beforeInitialize",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "sqrtPriceX96",
+    "type": "uint160",
+    "internalType": "uint160"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "beforeRemoveLiquidity",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "tickLower",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "tickUpper",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "liquidityDelta",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "salt",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct ModifyLiquidityParams"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "beforeSwap",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "sender",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "params",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "zeroForOne",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "amountSpecified",
+      "type": "int256",
+      "internalType": "int256"
+     },
+     {
+      "name": "sqrtPriceLimitX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     }
+    ],
+    "internalType": "struct SwapParams"
+   },
+   {
+    "name": "hookData",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   },
+   {
+    "name": "",
+    "type": "int256",
+    "internalType": "BeforeSwapDelta"
+   },
+   {
+    "name": "",
+    "type": "uint24",
+    "internalType": "uint24"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "factory",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "getHookPermissions",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "p",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "beforeInitialize",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterInitialize",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "beforeAddLiquidity",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterAddLiquidity",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "beforeRemoveLiquidity",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterRemoveLiquidity",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "beforeSwap",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterSwap",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "beforeDonate",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterDonate",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "beforeSwapReturnDelta",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterSwapReturnDelta",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterAddLiquidityReturnDelta",
+      "type": "bool",
+      "internalType": "bool"
+     },
+     {
+      "name": "afterRemoveLiquidityReturnDelta",
+      "type": "bool",
+      "internalType": "bool"
+     }
+    ],
+    "internalType": "struct Hooks.Permissions"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "name": "initialPositionId",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "PoolId"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "initialized",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "PoolId"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "ledger",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IV3HookFeeLedger"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "legacyPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "PoolId"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "poolManager",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "pools",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "PoolId"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "token",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "quoteAsset",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "quoteKind",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "tokenCodeHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "strategy",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "positionManager",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "initialSqrtPriceX96",
+    "type": "uint160",
+    "internalType": "uint160"
+   },
+   {
+    "name": "initialPositionHash",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "name": "registerLegacyPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "r",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "token",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteAsset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteKind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "tokenCodeHash",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "strategy",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "positionManager",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "initialSqrtPriceX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "initialPositionHash",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct V3QuoteFeeHook.PoolRegistration"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "name": "registerPool",
+  "type": "function",
+  "inputs": [
+   {
+    "name": "key",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "currency0",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "currency1",
+      "type": "address",
+      "internalType": "Currency"
+     },
+     {
+      "name": "fee",
+      "type": "uint24",
+      "internalType": "uint24"
+     },
+     {
+      "name": "tickSpacing",
+      "type": "int24",
+      "internalType": "int24"
+     },
+     {
+      "name": "hooks",
+      "type": "address",
+      "internalType": "contract IHooks"
+     }
+    ],
+    "internalType": "struct PoolKey"
+   },
+   {
+    "name": "r",
+    "type": "tuple",
+    "components": [
+     {
+      "name": "token",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteAsset",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "quoteKind",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "tokenCodeHash",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "strategy",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "positionManager",
+      "type": "address",
+      "internalType": "address"
+     },
+     {
+      "name": "initialSqrtPriceX96",
+      "type": "uint160",
+      "internalType": "uint160"
+     },
+     {
+      "name": "initialPositionHash",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     }
+    ],
+    "internalType": "struct V3QuoteFeeHook.PoolRegistration"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "receive",
+  "stateMutability": "payable"
+ }
+]
