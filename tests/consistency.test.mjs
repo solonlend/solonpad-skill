@@ -55,6 +55,6 @@ test('no retired surface is documented or shipped', () => {
 
 test('SKILL.md frontmatter is Arc-only v1.1.1', () => {
   const fm = read('SKILL.md').split('---')[1];
-  assert.match(fm, /^version: 1\.1\.0$/m);
+  assert.match(fm, /^version: 1\.1\.1$/m);
   assert.doesNotMatch(fm, /Robinhood|x402|Solana|BSC|aggregator (AND|and one)/);
 });
