@@ -311,12 +311,14 @@ Spot-check against the chain once per session: one figure from
   oracle and reward-schedule parameters, Desk mint cap per address, eligibility mode.
 - Watch pending operations: `GET /api/v3/events?contract=V3Governance&event=CallScheduled`.
 
-## V3-11. V3.1: shipping next, not on mainnet
+## V3-11. V3.1: deployed, not yet serving the site
 
 Desk full-cycle hardening (mixed old/new-coin rounds settled per card exactly as in V3.0)
-and related contract changes. None of it is deployed: there are no V3.1 addresses, and
-this skill will pin them in a later version. Until then every live address is in
-`A.v3`; anything else claiming to be SolonPad V3.1 is unverified.
+and related contract changes. The V3.1 contract set is **deployed on Arc mainnet (block
+24316034)** but the site, the indexer and this skill's call sequences still run through
+the V3 factory — there has been no cutover. Until a later skill version pins the V3.1
+addresses, treat `A.v3` as the only live surface; anything else claiming to be SolonPad
+V3.1 is unverified, including coins launched directly on the V3.1 factory.
 
 ---
 

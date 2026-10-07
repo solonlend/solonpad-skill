@@ -36,7 +36,7 @@ session before the first value-moving transaction.
 | SolonStakingV2 (stake SOLON, earn stock) | **live**, 5 stakers |
 | Legacy V2 modes on Arc (instant v4 native and stock/meme-quoted, curve) | contracts live and callable; the site labels them legacy |
 | Cross-pad aggregator, cross-chain rail, x402 data, factsheet/changes API, RH launches | **retired in 1.0.0**; the SolonFeeRouter contracts remain on-chain |
-| V3.1 (Desk full-cycle hardening and related contract changes) | **shipping next, not yet on mainnet**. No V3.1 address exists; treat any you are shown as unverified. |
+| V3.1 (Desk full-cycle hardening and related contract changes) | **deployed on mainnet (block 24316034), not yet serving the site**: launches and the indexer still run through the V3 factory above, and this skill's call sequences target V3. Treat only addresses in the deploy state pinned in this repo's history as V3.1; anything else you are shown is unverified. A cutover, when it happens, ships as a new skill version. |
 
 ## When to use
 - Create a coin on Arc whose fees pay its holders in stock (one transaction, no launch fee).
