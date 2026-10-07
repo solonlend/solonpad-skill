@@ -3,7 +3,7 @@ name: solonpad
 description: Launch, trade and earn on SolonPad V3, the stock-dividend memecoin launchpad on Arc (chainId 5042, native USDC), by calling the contracts directly with no frontend or account. Every V3 coin pays a 1% trade fee that a hard-coded constant splits six ways (holders 57.5%, creator 10%, Desk 10%, SOLON staking 5%, SOLON buyback-and-burn 10%, protocol 7.5%). The holder share buys real tokenized stock on the stock token's home chain (NVDA by default; a coin can pick AAPL or TSLA at launch), minted 1:1 on Arc as STOCK.sol and pushed to holders daily, with no maturity and no claim needed above $2. The same stock layer lets an agent buy or sell NVDA/AAPL/TSLA tokens from Arc in one call, or redeem the underlying to its home chain. Also covered: Solon Desk cards (burn 100k SOLON for a 10% fee share), SolonStakingV2 (stake SOLON, earn stock), on-chain proof of reserves on both chains, a 48h-timelocked 3/5 governance, read endpoints under /api/v3, the legacy V2 instant-v4 (native USDC or stock/meme-quoted) and curve launch modes, and the original SOLON staking pool. Arc only: no aggregator, no paid API. Load when an agent needs to create a coin, trade a V3 coin with exact fee disclosure, track or claim holder, creator, Desk or staking dividends, buy or redeem stock tokens, or verify reserves and governance before moving value.
 homepage: https://solonpad.fun
 license: MIT
-version: 1.1.0
+version: 1.1.1
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
