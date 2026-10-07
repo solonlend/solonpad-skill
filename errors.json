@@ -158,7 +158,7 @@
    "IPoolManager",
    "PoolManager"
   ],
-  "hint": "v4 accounting: the swap left an unsettled delta \u2014 usually wrong direction or wrong currency in the pool key."
+  "hint": "v4 accounting: the swap left an unsettled delta — usually wrong direction or wrong currency in the pool key."
  },
  "0x4e222a24": {
   "sig": "CurveFeeTooHigh()",
@@ -185,7 +185,7 @@
    "IPositionManager",
    "PositionManager"
   ],
-  "hint": "Your tx deadline elapsed before inclusion \u2014 rebuild with a fresh deadline."
+  "hint": "Your tx deadline elapsed before inclusion — rebuild with a fresh deadline."
  },
  "0x0d89438e": {
   "sig": "DelegateCallNotAllowed()",
@@ -333,7 +333,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x177e802f": {
@@ -341,7 +342,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0xa9fbf51f": {
@@ -349,7 +351,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x5b08ba18": {
@@ -357,7 +360,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x89c62b64": {
@@ -365,7 +369,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x64a0ae92": {
@@ -373,7 +378,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x73c6ac6e": {
@@ -381,7 +387,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x7e273289": {
@@ -389,7 +396,8 @@
   "contracts": [
    "draft-IERC6093",
    "CreatorRightsNFT",
-   "DeskNFT"
+   "DeskNFT",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x24d35a26": {
@@ -483,7 +491,7 @@
   "contracts": [
    "Hooks"
   ],
-  "hint": "The pool's hook reverted your swap \u2014 treat the pan as display-only unless the hook family is listed open."
+  "hint": "The pool's hook reverted your swap — treat the pan as display-only unless the hook family is listed open."
  },
  "0xfa0b71d6": {
   "sig": "HookDeltaExceedsSwapAmount()",
@@ -535,7 +543,8 @@
   "sig": "InsufficientBalance()",
   "contracts": [
    "DeltaResolver",
-   "PositionManager"
+   "PositionManager",
+   "V31Token"
   ]
  },
  "0xcf479181": {
@@ -786,7 +795,7 @@
    "IPoolManager",
    "PoolManager"
   ],
-  "hint": "Reentrant v4 call pattern \u2014 route through a router (PoolSwapTest/FeeRouter), not raw PoolManager calls."
+  "hint": "Reentrant v4 call pattern — route through a router (PoolSwapTest/FeeRouter), not raw PoolManager calls."
  },
  "0x31e30ad0": {
   "sig": "MaximumAmountExceeded(uint128,uint128)",
@@ -821,7 +830,7 @@
    "PonsV2BondingCurve",
    "PonsV2MemeHook"
   ],
-  "hint": "Curve/hook path: pass minOut >= 1 even when expecting dust \u2014 zero reverts (sweepFees pitfall)."
+  "hint": "Curve/hook path: pass minOut >= 1 even when expecting dust — zero reverts (sweepFees pitfall)."
  },
  "0xeee66814": {
   "sig": "MintAmountOverflow()",
@@ -856,7 +865,7 @@
   "contracts": [
    "SolonFeeRouter"
   ],
-  "hint": "SolonFeeRouter: msg.value must equal the input for native-quoted trades and be 0 for ERC20-quoted ones \u2014 you used the wrong quote path."
+  "hint": "SolonFeeRouter: msg.value must equal the input for native-quoted trades and be 0 for ERC20-quoted ones — you used the wrong quote path."
  },
  "0xa0c968e7": {
   "sig": "NativeSendFailed()",
@@ -1294,7 +1303,13 @@
    "V3MultiHopRouter",
    "V3Quoter",
    "V3RewardToken",
-   "V3Router"
+   "V3Router",
+   "V31BuybackExecutor",
+   "V31CreatorRightsNFT",
+   "V31FeeSplitter",
+   "V31HolderRewards",
+   "V31LaunchFactory",
+   "V31StakingEscrow"
   ]
  },
  "0xf0c49d44": {
@@ -1389,7 +1404,12 @@
    "V3LaunchStrategy",
    "V3MultiHopRouter",
    "V3RewardToken",
-   "V3Router"
+   "V3Router",
+   "V31BuybackExecutor",
+   "V31CreatorRightsNFT",
+   "V31FeeSplitter",
+   "V31HolderRewards",
+   "V31StakingEscrow"
   ]
  },
  "0x5a9165ff": {
@@ -1543,7 +1563,8 @@
    "V3FeeLedger",
    "V3LPLocker",
    "V3LaunchStrategy",
-   "V3RewardToken"
+   "V3RewardToken",
+   "V31CreatorRightsNFT"
   ]
  },
  "0x30d21641": {
@@ -1602,7 +1623,8 @@
   "sig": "V4TooLittleReceived(uint256,uint256)",
   "contracts": [
    "IV4Router"
-  ]
+  ],
+  "hint": "v4 router slippage: the swap would pay less than your minimum. Re-quote (V4Quoter) at a fresh block; do not just widen the minimum."
  },
  "0xa9b7edf7": {
   "sig": "V4TooLittleReceivedPerHop(uint256,uint256,uint256)",
@@ -1803,7 +1825,8 @@
  "0x019af637": {
   "sig": "BadParams()",
   "contracts": [
-   "SolonStockOracle"
+   "SolonStockOracle",
+   "V31LaunchOracle"
   ]
  },
  "0x7ca55c77": {
@@ -1935,19 +1958,22 @@
  "0xf645eedf": {
   "sig": "ECDSAInvalidSignature()",
   "contracts": [
-   "SolonStockToken"
+   "SolonStockToken",
+   "V31LaunchOracle"
   ]
  },
  "0xfce698f7": {
   "sig": "ECDSAInvalidSignatureLength(uint256)",
   "contracts": [
-   "SolonStockToken"
+   "SolonStockToken",
+   "V31LaunchOracle"
   ]
  },
  "0xd78bce0c": {
   "sig": "ECDSAInvalidSignatureS(bytes32)",
   "contracts": [
-   "SolonStockToken"
+   "SolonStockToken",
+   "V31LaunchOracle"
   ]
  },
  "0x62791302": {
@@ -2122,9 +2148,10 @@
  "0x6de3e846": {
   "sig": "InvalidLaunch()",
   "contracts": [
-   "V3LaunchFactory"
+   "V3LaunchFactory",
+   "V31LaunchFactory"
   ],
-  "hint": "V3LaunchFactory: msg.sender must equal the creator argument; the (creator, salt) pair was already used; or the factory readiness gate (paid Desk + Ops funds) is not met."
+  "hint": "V3LaunchFactory: msg.sender must equal the creator argument; the (creator, salt) pair was already used; or the factory readiness gate (paid Desk + Ops funds) is not met. V31LaunchFactory: kind 1 (quote = NVDA.sol) with msg.value != 0 or payoutChoiceId != 0, a quote other than NVDA.sol, kind 0 with firstBuyStock != 0, a disabled payoutChoiceId, or the first buy returned less than minFirstBuyOut."
  },
  "0xa8a6f5b1": {
   "sig": "InvalidLegacyPool()",
@@ -2149,7 +2176,8 @@
   "sig": "InvalidPool()",
   "contracts": [
    "CreatorRightsNFT",
-   "V3FeeLedger"
+   "V3FeeLedger",
+   "V31CreatorRightsNFT"
   ]
  },
  "0xce7e065e": {
@@ -2217,7 +2245,9 @@
    "CreatorRightsNFT",
    "DeskNFT",
    "EligibilityRegistry",
-   "SolonStockToken"
+   "SolonStockToken",
+   "V31CreatorRightsNFT",
+   "V31LaunchOracle"
   ]
  },
  "0x11157667": {
@@ -2416,7 +2446,9 @@
  "0xb56f932c": {
   "sig": "NotGovernance()",
   "contracts": [
-   "LaunchPayoutChoice"
+   "LaunchPayoutChoice",
+   "V31LaunchOracle",
+   "V31StakingEscrow"
   ]
  },
  "0xef6d0f02": {
@@ -2821,7 +2853,9 @@
    "CreatorRightsNFT",
    "DeskNFT",
    "EligibilityRegistry",
-   "SolonStockToken"
+   "SolonStockToken",
+   "V31CreatorRightsNFT",
+   "V31LaunchOracle"
   ]
  },
  "0x54336609": {
@@ -2973,5 +3007,220 @@
    "SolonStockHub"
   ],
   "hint": "SolonStockHub: the order is not in the state this call needs. Read getOrder(id) or /api/v3/orders/{id} first."
+ },
+ "0x9e87fac8": {
+  "sig": "Paused()",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory: launches are paused (guardian pauseLaunches). Only a 48h timelock resumeLaunches() reopens them; read launchesPaused() before retrying."
+ },
+ "0xb3d0ddd3": {
+  "sig": "PoolPreInitialized()",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory: someone initialized the pool of your predicted token address and both re-derived salts in this block. Retry in a later block or with a new salt."
+ },
+ "0xd392c863": {
+  "sig": "StockMarketClosed(bool,bool)",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory kind 1 (NVDA.sol pair): SolonStockHub.stockState(NVDA.sol) is not (open, transferable). Wait for the market; USDC launches are unaffected."
+ },
+ "0xdd9d8245": {
+  "sig": "StockPriceInvalid(int256)",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory kind 1: the launch oracle answered a non-positive price. Do not launch a NVDA.sol-paired coin until stockLaunchTick() succeeds."
+ },
+ "0xece40b07": {
+  "sig": "StockPriceNotLive(uint8)",
+  "contracts": [
+   "V31LaunchFactory",
+   "V31StockOracleFeed"
+  ],
+  "hint": "V31 kind-1 launch price source not Live: 2 Stale (closed market / old feed), 3 Divergent, 4 Suspect, 5 Paused. Precheck V31LaunchFactory.stockLaunchTick(); USDC launches are unaffected."
+ },
+ "0xd2e5ee7c": {
+  "sig": "StockPriceOutOfRange(uint256)",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory kind 1: the NVDA.sol price maps outside the usable tick range (V31StockTick). Not retryable at this price."
+ },
+ "0xf51f8ee6": {
+  "sig": "StockPriceStale(uint256,uint256)",
+  "contracts": [
+   "V31LaunchFactory"
+  ],
+  "hint": "V31LaunchFactory kind 1: the launch oracle price (updatedAt) is older than freshnessWindow() (900 s). Wait for a fresh price, then re-run stockLaunchTick()."
+ },
+ "0xfdad9787": {
+  "sig": "AnchorStale(uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x145a3a7d": {
+  "sig": "BadPrice(uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x9d2e6df8": {
+  "sig": "BadSigner(address)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0xec7b0afd": {
+  "sig": "ChainlinkStale(uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x09052955": {
+  "sig": "FutureObservation(uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x89294fe4": {
+  "sig": "NoAnchor()",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0xc149905d": {
+  "sig": "NoPrice()",
+  "contracts": [
+   "V31LaunchOracle"
+  ],
+  "hint": "V31LaunchOracle has no usable price round yet: kind-1 launches cannot price. USDC launches are unaffected."
+ },
+ "0xa3051cad": {
+  "sig": "NotNewer(uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x6981b87f": {
+  "sig": "NotSignedMode(address)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x4313ff87": {
+  "sig": "OffAnchor(uint256,uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0x87dd403c": {
+  "sig": "OffPoolTwap(uint256,uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0xe28b7053": {
+  "sig": "OraclePaused()",
+  "contracts": [
+   "V31LaunchOracle"
+  ],
+  "hint": "V31LaunchOracle paused by the guardian: no kind-1 launch can price. USDC launches are unaffected."
+ },
+ "0x3156ea93": {
+  "sig": "PriceTooOld(uint256,uint256)",
+  "contracts": [
+   "V31LaunchOracle"
+  ]
+ },
+ "0xe9a15fcc": {
+  "sig": "BadDistributor()",
+  "contracts": [
+   "V31StakingEscrow"
+  ]
+ },
+ "0xa8cab3d1": {
+  "sig": "Frozen()",
+  "contracts": [
+   "V31StakingEscrow"
+  ],
+  "hint": "V31StakingEscrow: releases are frozen by the guardian until the next 48h designateDistributor. Deposits still arrive."
+ },
+ "0x7e562375": {
+  "sig": "InexactDeposit()",
+  "contracts": [
+   "V31StakingEscrow"
+  ]
+ },
+ "0x38f58734": {
+  "sig": "NoDistributor()",
+  "contracts": [
+   "V31StakingEscrow"
+  ],
+  "hint": "V31StakingEscrow: no reissue distributor has been designated yet, so nothing can leave the escrow (by design)."
+ },
+ "0x385296d5": {
+  "sig": "NotDistributor()",
+  "contracts": [
+   "V31StakingEscrow"
+  ],
+  "hint": "V31StakingEscrow: only the governance-designated distributor may release; nobody else, including governance, can."
+ },
+ "0xc4e5ad09": {
+  "sig": "NoHistory()",
+  "contracts": [
+   "V31StockOracleFeed"
+  ]
+ },
+ "0x13be252b": {
+  "sig": "InsufficientAllowance()",
+  "contracts": [
+   "V31Token"
+  ]
+ },
+ "0xe6c4247b": {
+  "sig": "InvalidAddress()",
+  "contracts": [
+   "V31Token"
+  ]
+ },
+ "0x0c4f57ea": {
+  "sig": "UnfinishedEpoch()",
+  "contracts": [
+   "V31Token"
+  ],
+  "hint": "V31Token: balanceAtEpochEnd/supplyAtEpochEnd only answer finished UTC days (epoch < block.timestamp / 86400)."
+ },
+ "0x5bf6f916": {
+  "sig": "TransactionDeadlinePassed()",
+  "contracts": [
+   "UniversalRouter"
+  ],
+  "hint": "UniversalRouter: the execute() deadline passed. Re-quote and resend with a new deadline."
+ },
+ "0x2c4029e9": {
+  "sig": "ExecutionFailed(uint256,bytes)",
+  "contracts": [
+   "UniversalRouter"
+  ],
+  "hint": "UniversalRouter: command at commandIndex reverted; decode `message` with this file (e.g. V4TooLittleReceived = slippage, re-quote)."
+ },
+ "0x7a5ed734": {
+  "sig": "NotEnoughLiquidity(bytes32)",
+  "contracts": [
+   "V4Quoter"
+  ],
+  "hint": "V4Quoter: the pool cannot fill this exact amount. Reduce size; for a V3.1 coin check the pool key (fee 10000, tickSpacing 100, hooks 0x0)."
+ },
+ "0x6190b2b0": {
+  "sig": "UnexpectedRevertBytes(bytes)",
+  "contracts": [
+   "V4Quoter"
+  ]
  }
 }

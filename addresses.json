@@ -1,5 +1,5 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1) — Arc-only since v1.0; V3 (stock dividends) added in v1.1. Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
+  "_comment": "SolonPad on Arc (Circle's L1) — Arc-only since v1.0; V3 (stock dividends) added in v1.1; V3.1 (hookless launch stack, serving the site's new launches since 2026-10-07) added in v1.2. Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
   "verifiedAt": "2026-10-07",
   "chain": {
     "name": "Arc",
@@ -155,7 +155,7 @@
     "_note": "owner/distributor/stakeCap are mutable state: re-read owner(), distributor(), stakeCap() on-chain."
   },
   "v3": {
-    "_comment": "SolonPad V3 (live on Arc mainnet since 2026-10-03): every coin pays a 1% trade fee split six ways by a hard-coded constant; the holder share buys real tokenized stock on Robinhood Chain, minted 1:1 on Arc as STOCK.sol. Source of truth: Sourcify full match for every address here (checked 2026-10-07) and the runtime codehashes below. VERIFY.md section V3 before sending value.",
+    "_comment": "SolonPad V3.0 (live on Arc mainnet since 2026-10-03; new launches moved to V3.1 on 2026-10-07, see v31): every V3.0 coin pays a 1% trade fee split six ways by a hard-coded constant; the holder share buys real tokenized stock on Robinhood Chain, minted 1:1 on Arc as STOCK.sol. V3.0 coins stay tradable through V3Router and keep receiving dividends. Source of truth: Sourcify match for every address here (checked 2026-10-07) and the runtime codehashes below. VERIFY.md section V3 before sending value.",
     "liveSince": "2026-10-03",
     "chainId": 5042,
     "deployedAtBlock": 23985516,
@@ -428,6 +428,115 @@
       "V3QuoteFeeHook": "0x56071296f4AEc96d61715Bd906a17A05b75628cc",
       "V3Quoter": "0x70eB10bA50BD323D84c3E213B54E16d911658F48",
       "V3Router": "0x0085dC0d8BfF401da29591B746F40D5d3Ec0D98d"
+    }
+  },
+  "v31": {
+    "_comment": "SolonPad V3.1 on Arc mainnet: the launch stack the site uses for every new coin since 2026-10-07. Hookless Uniswap v4 pools (fee 10000 = 1% LP fee, tickSpacing 100, hooks 0x0) in the canonical PoolManager; the LP NFT is held forever by V31FeeSplitter, which splits the collected quote-side fee 57.5/10/10/5/10/7.5. Built from arc-v31 commit 55297b7: every runtime bytecode below equals that build byte for byte with only the immutable slots masked (checked 2026-10-07), and Sourcify reports match (creation and runtime) for all eight. Runs next to V3.0 (section v3), whose contracts it reuses for rewards, Desk, protocol and governance.",
+    "liveSince": "2026-10-07",
+    "chainId": 5042,
+    "deployedAtBlock": 24316034,
+    "sourceCommit": "arc-v31 55297b7 (branch feat/v3.1-design)",
+    "contracts": {
+      "V31LaunchFactory": "0xA3bE3F5bb288aE83Ca22A8B6CddD239A97830CBB",
+      "V31FeeSplitter": "0x985E396A2e7421cFF1A453d9E7B02cc91BCe1D55",
+      "V31HolderRewards": "0x53dcf63ed1629554a68ee7B6848743c658257d55",
+      "V31CreatorRightsNFT": "0x03Ad21B1Cd0c3862f6Dd6a53172b53FDbA9EA269",
+      "V31StakingEscrow": "0x1efabB43f156102D4Cbd215cf5EA4972C4C6b6e8",
+      "V31BuybackExecutor": "0x77E433444757bE6E8Fd713646aCdc7C69372e18F",
+      "V31LaunchOracle": "0x4937e8D7de5dAFC19dD42D5a320a8869D77c7af7",
+      "V31StockOracleFeed": "0x10BE7CE692B6c7b01a3Fb01D3748316cB720C41B",
+      "_note": "V31CreatorRightsNFT is deployed by the V31FeeSplitter constructor. Each coin is a V31Token deployed by the factory with CREATE2: discover coins through V31LaunchFactory TokenLaunched logs (abis/v31/V31Token.json). A coin's runtime code differs per coin (deployer and launchFactory are immutables), so it is not pinned here: check V31LaunchFactory.tokenOfPool(poolId) == coin instead."
+    },
+    "codehashes": {
+      "V31LaunchFactory": "0x6ea1f9b34d95b879546522e118bc59ed0e3ba15779523791b48616d8c9f04486",
+      "V31FeeSplitter": "0x885b0e0162f5775ae43247632883489c73bd601fa499617c068887305744f257",
+      "V31HolderRewards": "0x1c513131eb8203f53cceae90ae4b176559ddb0fd39ccd864dc0ca62519b6192d",
+      "V31CreatorRightsNFT": "0x4f9ae24da3cbd0ede743ff3c32b0a28a0a505e10e58220a15631a36505051827",
+      "V31StakingEscrow": "0xdea89d6a6dc5c669707152cc0f9108a7d226ee95b578c3298d5495f80d36277e",
+      "V31BuybackExecutor": "0xf6a50dd6d6e0a882429716cbb3abf77c86ff164f93fb8f88a5f4761224ac7253",
+      "V31LaunchOracle": "0x16fe7b7673d22034d7cb176cf8767a30592a97a065d2a98e3a8e372c5e7360ee",
+      "V31StockOracleFeed": "0x73ba38995f77deedf321ce0088d8f6fc73dbada2ecce8ee0413e9886abd2b35f",
+      "_note": "keccak256(eth_getCode) at each address in contracts above, measured 2026-10-07 at Arc block ~24697600. All 8 matched."
+    },
+    "wiring": {
+      "_comment": "Immutables read on-chain 2026-10-07 (tools/verify.mjs re-reads every one). V3.0 contracts named here are the ones in section v3.",
+      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
+      "governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
+      "payoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0",
+      "stockQuote": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+      "stockStatus": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
+      "rewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
+      "rewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
+      "desk": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
+      "protocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
+      "treasury": "0x8798245d1606712828731a238e5414eefBbbB59C",
+      "burnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
+      "feeRouter": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
+      "solon": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+      "anchorOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
+      "nativeUsdcView": "0x3600000000000000000000000000000000000000",
+      "_names": "stockQuote = NVDA.sol (V3.0 StockToken); stockStatus = SolonStockHub; payoutChoice = LaunchPayoutChoice; desk = DeskRewards; treasury = the 3/5 protocol multisig (V3.0 governance.multisig); anchorOracle = SolonStockOracle; feeRouter = SolonFeeRouter (the buyback leg only; traders do not route through it)."
+    },
+    "trade": {
+      "_comment": "V3.1 pools have no hook, so V3Router/V3Quoter/V3MultiHopRouter do not serve them. The site trades them through Uniswap's own periphery: UniversalRouter V4_SWAP with Permit2, quotes from V4Quoter.",
+      "universalRouter": "0x8702463e73f74d0b6765aBceb314Ef07aCb92650",
+      "universalRouterVersion": "2.1.2 (Uniswap sdks universal-router-sdk CHAIN_CONFIGS[5042])",
+      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+      "v4Quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
+      "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
+      "poolKey": {
+        "currency0": "sorted(quote, coin) by address; quote = 0x0 (native USDC, always currency0) or NVDA.sol",
+        "fee": 10000,
+        "tickSpacing": 100,
+        "hooks": "0x0000000000000000000000000000000000000000",
+        "_note": "Same shape as the legacy instant v4 native pools (instantV4.poolKey): tell them apart with V31LaunchFactory.tokenOfPool(poolId) == coin."
+      }
+    },
+    "governance": {
+      "_comment": "No owner anywhere in V3.1; the only authority is V3Governance (section v3.governance, 48h timelock). The launch batch executed on-chain.",
+      "rewardSourcePoolId": "0x3857e20ef2b1f5b7505019f1296d7bb7bf1b5ba8620d2c8c6a6fd8e571d2a05d",
+      "rewardSourcePoolIdPreimage": "keccak256(\"SOLON_V31_HOLDERS\") = RewardRoundManager.sourcePool(V31HolderRewards)",
+      "guardianActions": {
+        "_comment": "V3Governance.guardianAction(target, selector) == true for exactly these V3.1 tighten-only selectors (the guardian can stop things; it cannot resume, designate or move funds).",
+        "V31LaunchFactory.pauseLaunches()": "0xe79b502e",
+        "V31StakingEscrow.freezeReleases()": "0x1ba46ecc",
+        "V31LaunchOracle.pause()": "0x8456cb59",
+        "V31LaunchOracle.tighten((uint32,uint32,uint16,uint32,uint16,uint16,uint16,uint16,uint32))": "0x30bb15eb",
+        "V31LaunchOracle.tightenFeedAge(uint32)": "0x03ec33ac"
+      },
+      "notGuardian": {
+        "V31LaunchFactory.resumeLaunches()": "0xd255d203",
+        "V31LaunchOracle.resume()": "0x046f7da2",
+        "V31StakingEscrow.designateDistributor(address)": "0x26f64d0c",
+        "_note": "48h timelock only; verify.mjs checks these read false."
+      }
+    },
+    "constants": {
+      "lpFee": 10000,
+      "tickSpacing": 100,
+      "initialTick": 123800,
+      "usdcRange": [
+        -160100,
+        123800
+      ],
+      "rangeWidth": 283900,
+      "supply": "1000000000e18 fixed (V31Token.SUPPLY)",
+      "feeSplitBps": [
+        5750,
+        1000,
+        1000,
+        500,
+        1000,
+        750
+      ],
+      "feeSplitOrder": "holders, creator, desk, staking, buyback, protocol (V31FeeSplitter._split, no setter)",
+      "feeSplitSource": "arc-v31 55297b7 src/v31/V31FeeSplitter.sol _split",
+      "sellSideFee": "the 1% LP fee is charged in the input currency: on a sell it is paid in the coin, and collect() sends that coin amount to the treasury multisig unsplit; only quote-side fees (buys) are split six ways",
+      "stakingShare": "the 5% staking bucket accrues in V31StakingEscrow until governance designates a reissue distributor (none designated as of 2026-10-07)",
+      "launchOracleFreshnessSeconds": 900,
+      "holderFinalizeWindowSeconds": 1800,
+      "holderSealTimeoutSeconds": 604800
     }
   }
 }

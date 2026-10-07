@@ -1,14 +1,233 @@
 # SolonPad: agent call sequences
 
-**V3 is the default since 2026-10-03** and comes first in this file. The legacy V2 modes
-(instant v4 since 2026-09-16, and the Pons V2 bonding curve) remain callable and follow
-after it. `A = addresses.json`, `V3 = A.v3`. Native USDC amounts are 18-dec `msg.value`
-throughout; every stock token is 18-dec; USDG on Robinhood Chain is 6-dec.
+**V3.1 is the launch stack since 2026-10-07** and comes first in this file. V3.0 (default
+2026-10-03 to 10-07) follows: its coins still trade and pay, its launch call is retired.
+The legacy V2 modes (instant v4 since 2026-09-16, and the Pons V2 bonding curve) remain
+callable and come last. `A = addresses.json`, `V31 = A.v31`, `V3 = A.v3`. Native USDC
+amounts are 18-dec `msg.value` throughout; every stock token is 18-dec; USDG on Robinhood
+Chain is 6-dec.
 
 Every write below is `[FINANCIAL EXECUTION]`: it needs your principal's explicit
 authorization (see Execution rules below). Run `node tools/verify.mjs` first; every check must be green.
 
-# V3: coins that pay their holders in stock
+# V3.1: the current launch stack
+
+Eight contracts, `V31.contracts`, ABIs in `abis/v31/` (plus `V31Token.json` for every coin).
+No owner; V3Governance (48h timelock) is the only authority, the guardian can only stop
+things (V31-7). What it reuses from V3.0: RewardRoundManager / RewardVault /
+RewardPayoutVault / RewardDistributor (kind-0 holder rounds), DeskRewards, ProtocolVault,
+BurnSink, SolonFeeRouter (buyback leg), SolonStockHub (market state), LaunchPayoutChoice.
+
+## V31-0. Discover coins
+
+```
+logs = eth_getLogs({ address: V31.contracts.V31LaunchFactory, fromBlock: V31.deployedAtBlock,
+         topics: [TokenLaunched(address indexed token, address indexed deployer, bytes32 indexed poolId,
+                                address pairToken, address holderSource, uint256 positionId, uint256 payoutChoiceId)] })
+         # pairToken 0x0 = USDC (kind 0), NVDA.sol = kind 1; no metadataHash field
+key  = V31LaunchFactory.poolKeyFor(token, pairToken)   # {sorted, fee 10000, tickSpacing 100, hooks 0x0}
+assert V31LaunchFactory.tokenOfPool(poolId) == token    # the authority: the key shape equals a legacy instant v4 pool
+V31FeeSplitter.launchOf(poolId) → (key, positionId, token, quote, creator /* launcher, not the current right holder */)
+token.logo() / description() / getTokenInfo()           # metadata lives in the token
+```
+
+`node tools/pad-read.mjs --v31` does the paged scan; `pad-read.mjs 0xCoin 25` prints one coin
+with a V4Quoter buy quote. Price: `StateView.getSlot0(poolId)` (same math as V3-0).
+
+## V31-1. Launch a coin (1 tx, no launch fee, optional first buy)
+
+```
+p = LaunchParams {
+  name, symbol, logo, description,
+  socials: { twitter, telegram, discord, website, farcaster },   # strings, may be empty
+  salt,                    # random bytes32; the CREATE2 salt is keccak256(msg.sender, salt)
+  payoutChoiceId,          # kind 0: GET /api/v3/payout-choices (0 = default rotation); kind 1: must be 0
+  minFirstBuyOut,          # coins out floor for the first buy; 0 only when there is no first buy
+  quote,                   # 0x0 = native USDC (kind 0) | V31.wiring.stockQuote = NVDA.sol (kind 1)
+  firstBuyStock }          # kind 1 first buy in NVDA.sol raw; kind 0 must be 0
+
+# kind 0: first buy = msg.value (0 for none)
+r = eth_call V31LaunchFactory.launch(p) {value: firstBuy}      # simulate: r.firstBuyOut
+p.minFirstBuyOut = r.firstBuyOut × (1 − s)
+V31LaunchFactory.launch(p) {value: firstBuy}
+  → Result { token, poolId, positionId, holderSource, firstBuyOut }
+
+# kind 1 (NVDA.sol pair): precheck, approve, msg.value 0
+V31LaunchFactory.stockLaunchTick()             # view; must not revert (see below)
+NVDA.sol.approve(V31LaunchFactory, firstBuyStock)
+V31LaunchFactory.launch(p) {value: 0}
+```
+
+- Supply fixed at 1,000,000,000 × 1e18. The factory mints all of it into one single-sided
+  position (USDC coins: tick range [-160100, 123800], opening tick 123800, ≈ $4.2K FDV;
+  kind 1 opens at the launch oracle's NVDA.sol price for the same USD FDV) and the position
+  NFT goes to `V31FeeSplitter`, which has no decrease, withdraw or owner path. Rounding dust
+  goes to `0xdEaD`.
+- You (the sender) receive the pool's `V31CreatorRightsNFT` (the 10% stream). There is no
+  `creator` argument: the launcher is `msg.sender`.
+- First buy: executed inside the launch through the PoolManager at the full price range,
+  so `minFirstBuyOut` is your only floor (`InvalidLaunch` below it). A USDC coin's opening
+  pool is fixed, so the simulation is exact at that block; a kind-1 coin's opening price can
+  move between simulation and block. Unspent input is refunded. Without a first buy the coin
+  opens with no holder; scanners may flag a pool nobody has sold into.
+- Reverts: `Paused()` (guardian paused launches), `InvalidLaunch()` (kind-1 rules above,
+  disabled payout choice, first buy below floor), `PoolPreInitialized()` (someone
+  initialized your predicted pool and both re-derived salts in this block: retry next block
+  or with a new salt); kind 1 also `StockMarketClosed(open, transferable)`,
+  `StockPriceNotLive(status)` (2 Stale, 3 Divergent, 4 Suspect, 5 Paused),
+  `StockPriceStale(updatedAt, window)`, `StockPriceInvalid(answer)`. On 2026-10-07
+  `stockLaunchTick()` reverted `StockPriceNotLive(2)`; `verify.mjs` prints its current state.
+- Measured: the one mainnet V3.1 launch (`PROBE31`, block 24317117, 5 USDC first buy) used
+  1,799,435 gas.
+
+## V31-2. Trade (Uniswap v4: UniversalRouter v2.1.2 + Permit2)
+
+V3Router / V3Quoter do not serve V3.1 pools (no hook). Use Uniswap's periphery
+(`V31.trade`):
+
+```
+key        = V31LaunchFactory.poolKeyFor(coin, quote)
+zeroForOne = (key.currency0 == input currency)          # buy: input = quote; sell: input = coin
+out        = eth_call V4Quoter.quoteExactInputSingle({poolKey: key, zeroForOne, exactAmount: amountIn, hookData: 0x})[0]
+minOut     = out × (1 − s)                              # never 0
+
+actions = abi.encodePacked(uint8 0x06 SWAP_EXACT_IN_SINGLE, uint8 0x0c SETTLE_ALL, uint8 0x0f TAKE_ALL)
+params  = [ abi.encode(ExactInputSingleParams{ poolKey: key, zeroForOne, amountIn, amountOutMinimum: minOut,
+                                               minHopPriceX36: 0, hookData: 0x }),   # UR >= 2.1.1 layout
+            abi.encode(inputCurrency, amountIn),         # SETTLE_ALL: at most amountIn
+            abi.encode(outputCurrency, minOut) ]         # TAKE_ALL: at least minOut, paid to msg.sender
+v4swap  = abi.encode(actions, params)
+
+# buy with native USDC: commands = 0x10 V4_SWAP, 0x04 SWEEP (returns unspent native value)
+UniversalRouter.execute{value: amountIn}(0x1004, [v4swap, abi.encode(0x0, you, 0)], deadline)
+# sell (or a kind-1 buy paying NVDA.sol): one-time approvals, then V4_SWAP only
+coin.approve(Permit2, amount)                                  # the site approves max; exact is safer
+Permit2.approve(coin, UniversalRouter, uint160 amount, uint48 expiration)
+UniversalRouter.execute(0x10, [v4swap], deadline)
+```
+
+- Fee: the pool's 1% LP fee, in the input currency, is the only fee (no hook, no router fee).
+  `quoteExactInputSingle` already nets it. There is no partial-fill guard: `minOut` is the
+  floor; reverts surface as `ExecutionFailed(commandIndex, message)` with
+  `V4TooLittleReceived` inside (re-quote), `TransactionDeadlinePassed()`,
+  `AllowanceExpired` / `InsufficientAllowance` (Permit2).
+- `TAKE_ALL` pays the caller of `execute`: the recipient is always you.
+- Liquidity is single-sided from launch; anyone can add liquidity to the same pool.
+
+## V31-3. The fee split, and when it happens
+
+```
+V31FeeSplitter.collect(poolId)   # permissionless; pulls the position's LP fees (never principal)
+  quote-side fee q  → holders q×5750/1e4 → V31HolderRewards.fund / fundStock (immediately)
+                      creator q×1000/1e4 → creatorAccrued[poolId]  (claim: V31-4)
+                      desk 1000, staking 500, buyback 1000, protocol rest → pending buckets
+  coin-side fee     → V31FeeSplitter.treasury (protocol 3/5 multisig), whole, not split
+V31FeeSplitter.flush()       # permissionless: native buckets → DeskRewards, V31StakingEscrow, V31BuybackExecutor, ProtocolVault
+V31FeeSplitter.flushStock()  # kind 1: NVDA.sol buckets → DeskRewards.depositRoyalty, escrow, buyback, multisig
+```
+
+| i | Bucket | kind 0 (USDC) destination | kind 1 (NVDA.sol) destination |
+|---|---|---|---|
+| 0 | holders 57.5% | `V31HolderRewards.fund` → shared reward round → stock | `V31HolderRewards.fundStock` → `claimStock` |
+| 1 | creator 10% | rights NFT, USDC | rights NFT, NVDA.sol |
+| 2 | Desk 10% | `DeskRewards` (one royalty stream for all V3.1 coins) | `DeskRewards.depositRoyalty(NVDA.sol)` |
+| 3 | staking 5% | `V31StakingEscrow` (V31-6) | `V31StakingEscrow.depositStock` |
+| 4 | buyback 10% | `V31BuybackExecutor` → SOLON → `BurnSink` | `V31BuybackExecutor.executeStock` (via pool A) |
+| 5 | protocol 7.5% | `ProtocolVault` | protocol multisig (ProtocolVault has no ERC-20 exit) |
+
+A failing destination keeps its bucket pending (`DeliveryDeferred`) without blocking the
+others. Events: `FeesCollected(poolId, quote, quoteAmount, tokenToTreasury)`,
+`FeeSplit(poolId, holders, creator, desk, staking, buyback, protocol)`. Until someone calls
+`collect`, fees sit in the position and no bucket has been credited; the site's keepers
+collect on a threshold and at each UTC day end. As of 2026-10-07 `totalCollected() == 0`:
+no V3.1 fee has been split on mainnet yet.
+
+## V31-4. Creator income (V31CreatorRightsNFT)
+
+```
+id        = V31CreatorRightsNFT.tokenOfPool(poolId)
+owner     = ownerOf(id)                    # the current right holder (not launchOf().creator)
+claimable = claimable(id)                  # collected and unpaid only; uncollected fees are not in it
+V31FeeSplitter.collect(poolId)             # optional separate tx so claimable includes the latest fees
+V31CreatorRightsNFT.claimCreator(id, asset = quoteAsset(id), amountRaw ≤ claimable, payoutMode)
+          # collects again first; payoutMode 0 = native USDC 18-dec (or NVDA.sol raw); 1 = through the
+          # 6-dec 0x3600 view (amount rounded down to 1e12, dust stays claimable). Caller: owner or approved
+          # operator; payment always goes to the owner.
+```
+
+- Returns `false` and emits `CreatorClaimFailed(id, amount)` instead of reverting when
+  delivery fails (debt kept): check the receipt for `CreatorClaimed`.
+- Transfer the NFT (ERC-721) to transfer the right with its unclaimed income. Signed sale:
+  `purchase(Purchase{tokenId, seller, buyer, asset, nonce, deadline, minAccrued,
+  priceNative}, signature)` (EIP-712 domain "Solon Creator Rights" v1 on this contract;
+  `minAccrued` is checked after an automatic collect); the owner voids open orders with
+  `cancelOrders(id)`.
+- Read side: `GET /api/v3/pools/{poolId}/fees` returns `version: "v31"` for these pools.
+
+## V31-5. Holder dividends (V31HolderRewards, one contract for every V3.1 coin)
+
+**Accrual.** The holders' 57.5% of each collected fee is added to the coin's budget for that
+UTC day (`coinBudget(coin, epoch)`, `epoch = floor(ts / 86400)`). The day's budget is split by
+**end-of-day balance** (`V31Token.balanceAtEpochEnd`) over the eligible supply (end-of-day
+supply minus PoolManager, PositionManager, splitter, factory, multisig and 0xdEaD). No
+registration or maturity is needed to earn. A day with no eligible holder rolls to the next.
+
+**Kind 0 (USDC coins): through the shared V3.0 round.**
+1. After the day: anyone `finalize(coins[], epoch)` moves each coin's budget into its cohort's
+   entry (cohort 0 = default rotation; each non-default `payoutChoiceId` gets its own cohort).
+2. From 30 min after the day, the keeper seals `(epoch, cohort)` in RewardRoundManager
+   (`EntrySealed(entryId, source = V31HolderRewards, epoch, cohort, budget18, creditTotal)`);
+   the round buys the payout stock exactly as in V3-5 step 3. An entry not sealed within 7
+   days can be `rescind`ed back to the coins' budgets.
+3. After the seal: anyone `accrue(coin, epoch, accounts[])` writes each account's share;
+   `creditOf(you, epoch, cohort)` sums every V3.1 coin of that cohort you held.
+4. Delivery: the daily push (RewardDistributor) pays registered holders (`register(coin,
+   accounts[])`, permissionless; the keeper registers from Transfer events). Manually:
+
+```
+entryId = EntrySealed log on V3.rewards.RewardRoundManager with source == V31HolderRewards, your epoch and cohort
+V31HolderRewards.accrue(coin, epoch, [you])                       # if accrued(coin, you, epoch) is false
+RewardPayoutVault.stageCredit(V3.rewards.RewardVault, you, [entryId, ...] /* ≤ 20 */, stockToken)
+RewardPayoutVault.claimFor(you, stockToken)                       # caller must be you
+```
+
+`/api/v3/pools/{coin}/rewards/{account}` does not serve V3.1 coins (404 by design): read
+`coinBudget`, `inEntry`, `rewardSealed`, `accrued` and `creditOf` on-chain.
+
+**Kind 1 (NVDA.sol coins): direct.**
+```
+V31HolderRewards.stockOwed(coin, you, epoch)          # finished days only
+V31HolderRewards.claimStock(coin, you, epochs[] /* ≤ 64 */)   # anyone may call; always pays `you`
+```
+
+Not exercised on mainnet yet: as of 2026-10-07 no V3.1 fee has been collected, so no V3.1
+round has sealed and no `claimStock` has paid. The sequence follows the deployed source
+(`55297b7`) and the site's own fork tests, not a live payout.
+
+## V31-6. The 5% staking share is escrowed
+
+`V31StakingEscrow` receives bucket 3. It has one exit: `release(asset, amount)` by the
+distributor that V3Governance designates (48h, `designateDistributor`); none is designated
+(`distributor() == 0x0` on 2026-10-07), so nothing has left and SolonStakingV2 stakers earn
+nothing from V3.1 fees until then. `totalIn(asset) − totalOut(asset)` is the escrowed amount
+(`address(0)` = native USDC, 18-dec, including deposits through the 0x3600 view). The
+guardian can `freezeReleases()`; only a new designation unfreezes.
+
+## V31-7. Governance and what can change
+
+- Guardian allow-list on V3Governance (`guardianAction(target, selector)`, checked by
+  `verify.mjs`): `V31LaunchFactory.pauseLaunches`, `V31StakingEscrow.freezeReleases`,
+  `V31LaunchOracle.pause` / `tighten` / `tightenFeedAge`. Nothing else.
+- 48h timelock only: `resumeLaunches`, launch-oracle `resume` / `setSource` / `setSigner` /
+  `setParams`, escrow `designateDistributor`, buyback `rotateSigner`.
+- Immutable: the split constant, 1% LP fee and tick spacing, supply, the splitter's custody
+  of every launch position, every wiring address in `V31.wiring`.
+- The launch oracle (`V31LaunchOracle`, fed by `V31StockOracleFeed` over SolonStockOracle)
+  only prices kind-1 launches; no settlement path reads it.
+
+---
+
+# V3.0: coins that pay their holders in stock (existing coins)
 
 ## V3-0. Discover coins
 
@@ -31,7 +250,10 @@ USDC, 0x0, is always currency0). `poolId = keccak256(abi.encode(poolKey))`.
 Price: `StateView.getSlot0(poolId)`; with native USDC as currency0, USDC per coin =
 `2^192 / sqrtPriceX96^2` (both 18-dec).
 
-## V3-1. Launch a coin (1 tx, no launch fee)
+## V3-1. Launch a coin (RETIRED 2026-10-07: new coins launch on V3.1, V31-1)
+
+Kept so an agent can read the existing V3.0 launches. Do not launch new coins here: the
+site no longer lists this path. The factory has no pause flag and still accepts calls.
 
 ```
 choices = GET /api/v3/payout-choices      # id 0 = factory default (NVDA), 1 NVDA, 2 AAPL, 3 TSLA; use enabled ones
@@ -311,14 +533,11 @@ Spot-check against the chain once per session: one figure from
   oracle and reward-schedule parameters, Desk mint cap per address, eligibility mode.
 - Watch pending operations: `GET /api/v3/events?contract=V3Governance&event=CallScheduled`.
 
-## V3-11. V3.1: deployed, not yet serving the site
+## V3-11. V3.1 cutover (2026-10-07)
 
-Desk full-cycle hardening (mixed old/new-coin rounds settled per card exactly as in V3.0)
-and related contract changes. The V3.1 contract set is **deployed on Arc mainnet (block
-24316034)** but the site, the indexer and this skill's call sequences still run through
-the V3 factory — there has been no cutover. Until a later skill version pins the V3.1
-addresses, treat `A.v3` as the only live surface; anything else claiming to be SolonPad
-V3.1 is unverified, including coins launched directly on the V3.1 factory.
+New launches moved to V3.1 (the V31 sections at the top). V3.0 coins are unaffected: they
+keep trading through V3Router, their fees keep crediting holders, the creator NFT, Desk,
+SolonStakingV2, buyback and protocol through V3FeeLedger exactly as above.
 
 ---
 
@@ -527,8 +746,9 @@ stay read-only (`tools/pad-read.mjs`). With it, every step below is mandatory:
 
 1. **Verify first**: `tools/verify.mjs` green in this session.
 2. **Estimate**: quote at a pinned block (`pad-read.mjs 0xToken <amount>`,
-   V4Quoter for v4 pools, `eth_call curve.buy` for curves) and list every fee
-   line (LP fee, curve fee, creator/snipe tax) — do not net them silently.
+   V4Quoter for v4 and V3.1 pools, V3Quoter for V3.0 coins, `eth_call curve.buy` for
+   curves) and list every fee line (LP fee, hook fee, curve fee, creator/snipe tax) — do
+   not net them silently.
 3. **minOut** = estimate × (1 − slippage), slippage ≤ 5% unless your principal
    set another. **Never send minOut = 0** (v4: never an unbounded
    `sqrtPriceLimitX96`).

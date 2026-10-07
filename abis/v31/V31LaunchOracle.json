@@ -1,0 +1,1316 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "governance_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "asset_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "anchorOracle_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "poolManager_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "signer_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "initialSource",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "initialMaxFeedAge",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "p",
+    "type": "tuple",
+    "internalType": "struct V31LaunchOracle.Params",
+    "components": [
+     {
+      "name": "maxPriceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxChainlinkAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "twapBandBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "twapWindow",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTickStep",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorBaseBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorSlopeBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorCapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorMaxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     }
+    ]
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "MAX_CLOCK_SKEW",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "MAX_FEED_AGE_LIMIT",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "MAX_PRICE_AGE_LIMIT",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "PRICE_TYPEHASH",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "SAMPLE_TYPEHASH",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "allowedAnchorBps",
+  "inputs": [
+   {
+    "name": "anchorAge",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "anchorOracle",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IV31AnchorOracle"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "asset",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "decimals",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "type": "function",
+  "name": "description",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "string",
+    "internalType": "string"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "type": "function",
+  "name": "eip712Domain",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "fields",
+    "type": "bytes1",
+    "internalType": "bytes1"
+   },
+   {
+    "name": "name",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "version",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "chainId",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "verifyingContract",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "extensions",
+    "type": "uint256[]",
+    "internalType": "uint256[]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "freshnessWindow",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "getRoundData",
+  "inputs": [
+   {
+    "name": "roundId",
+    "type": "uint80",
+    "internalType": "uint80"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint80",
+    "internalType": "uint80"
+   },
+   {
+    "name": "",
+    "type": "int256",
+    "internalType": "int256"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint80",
+    "internalType": "uint80"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "governance",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "guardianTightenOnly",
+  "inputs": [
+   {
+    "name": "selector",
+    "type": "bytes4",
+    "internalType": "bytes4"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "type": "function",
+  "name": "lastSample",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "at",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "tick",
+    "type": "int24",
+    "internalType": "int24"
+   },
+   {
+    "name": "cumulative",
+    "type": "int56",
+    "internalType": "int56"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "latestRoundData",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint80",
+    "internalType": "uint80"
+   },
+   {
+    "name": "",
+    "type": "int256",
+    "internalType": "int256"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "",
+    "type": "uint80",
+    "internalType": "uint80"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "latestRoundId",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint80",
+    "internalType": "uint80"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "maxFeedAge",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "params",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "maxPriceAge",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "maxChainlinkAge",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "twapBandBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "twapWindow",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "maxTickStep",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "anchorBaseBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "anchorSlopeBpsPerHour",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "anchorCapBps",
+    "type": "uint16",
+    "internalType": "uint16"
+   },
+   {
+    "name": "anchorMaxAge",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "pause",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "paused",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "poolAId",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "poolATwap",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "ready",
+    "type": "bool",
+    "internalType": "bool"
+   },
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "meanTick",
+    "type": "int24",
+    "internalType": "int24"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "poolManager",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "contract IPoolManager"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "priceDigest",
+  "inputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "sourceUpdatedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "observedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "relayer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "resume",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "sampleDigest",
+  "inputs": [
+   {
+    "name": "issuedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "relayer",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "samplePoolA",
+  "inputs": [
+   {
+    "name": "issuedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "signature",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool",
+    "internalType": "bool"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "setParams",
+  "inputs": [
+   {
+    "name": "p",
+    "type": "tuple",
+    "internalType": "struct V31LaunchOracle.Params",
+    "components": [
+     {
+      "name": "maxPriceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxChainlinkAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "twapBandBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "twapWindow",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTickStep",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorBaseBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorSlopeBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorCapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorMaxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     }
+    ]
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "setSigner",
+  "inputs": [
+   {
+    "name": "s",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "setSource",
+  "inputs": [
+   {
+    "name": "s",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "maxFeedAge_",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "signer",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "source",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "sourceDecimals",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "submit",
+  "inputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "sourceUpdatedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "observedAt",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "signature",
+    "type": "bytes",
+    "internalType": "bytes"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "roundId",
+    "type": "uint80",
+    "internalType": "uint80"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "tighten",
+  "inputs": [
+   {
+    "name": "p",
+    "type": "tuple",
+    "internalType": "struct V31LaunchOracle.Params",
+    "components": [
+     {
+      "name": "maxPriceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxChainlinkAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "twapBandBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "twapWindow",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTickStep",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorBaseBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorSlopeBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorCapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorMaxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     }
+    ]
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "tightenFeedAge",
+  "inputs": [
+   {
+    "name": "a",
+    "type": "uint32",
+    "internalType": "uint32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "version",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "pure"
+ },
+ {
+  "type": "event",
+  "name": "EIP712DomainChanged",
+  "inputs": [],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "ParamsSet",
+  "inputs": [
+   {
+    "name": "params",
+    "type": "tuple",
+    "indexed": false,
+    "internalType": "struct V31LaunchOracle.Params",
+    "components": [
+     {
+      "name": "maxPriceAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxChainlinkAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "twapBandBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "twapWindow",
+      "type": "uint32",
+      "internalType": "uint32"
+     },
+     {
+      "name": "maxTickStep",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorBaseBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorSlopeBpsPerHour",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorCapBps",
+      "type": "uint16",
+      "internalType": "uint16"
+     },
+     {
+      "name": "anchorMaxAge",
+      "type": "uint32",
+      "internalType": "uint32"
+     }
+    ]
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "Paused",
+  "inputs": [
+   {
+    "name": "paused",
+    "type": "bool",
+    "indexed": false,
+    "internalType": "bool"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "PoolASampled",
+  "inputs": [
+   {
+    "name": "tick",
+    "type": "int24",
+    "indexed": false,
+    "internalType": "int24"
+   },
+   {
+    "name": "spotTick",
+    "type": "int24",
+    "indexed": false,
+    "internalType": "int24"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "PriceSubmitted",
+  "inputs": [
+   {
+    "name": "roundId",
+    "type": "uint80",
+    "indexed": true,
+    "internalType": "uint80"
+   },
+   {
+    "name": "price18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "observedAt",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "sourceUpdatedAt",
+    "type": "uint64",
+    "indexed": false,
+    "internalType": "uint64"
+   },
+   {
+    "name": "anchor18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "allowedAnchorBps",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "twap18",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "SignerSet",
+  "inputs": [
+   {
+    "name": "previous",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "signer",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "SourceSet",
+  "inputs": [
+   {
+    "name": "previous",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "source",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "decimals",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "maxFeedAge",
+    "type": "uint32",
+    "indexed": false,
+    "internalType": "uint32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "error",
+  "name": "AnchorStale",
+  "inputs": [
+   {
+    "name": "age",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "maxAge",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "BadParams",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "BadPrice",
+  "inputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "BadSigner",
+  "inputs": [
+   {
+    "name": "recovered",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "ChainlinkStale",
+  "inputs": [
+   {
+    "name": "age",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "maxAge",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "ECDSAInvalidSignature",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "ECDSAInvalidSignatureLength",
+  "inputs": [
+   {
+    "name": "length",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "ECDSAInvalidSignatureS",
+  "inputs": [
+   {
+    "name": "s",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "FutureObservation",
+  "inputs": [
+   {
+    "name": "observedAt",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "InvalidShortString",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NoAnchor",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NoPrice",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotGovernance",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotNewer",
+  "inputs": [
+   {
+    "name": "observedAt",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "latest",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "NotSignedMode",
+  "inputs": [
+   {
+    "name": "source",
+    "type": "address",
+    "internalType": "address"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "OffAnchor",
+  "inputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "anchor18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "allowedBps",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "OffPoolTwap",
+  "inputs": [
+   {
+    "name": "price18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "twap18",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "bandBps",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "OraclePaused",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "PriceTooOld",
+  "inputs": [
+   {
+    "name": "age",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "maxAge",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ]
+ },
+ {
+  "type": "error",
+  "name": "StringTooLong",
+  "inputs": [
+   {
+    "name": "str",
+    "type": "string",
+    "internalType": "string"
+   }
+  ]
+ }
+]

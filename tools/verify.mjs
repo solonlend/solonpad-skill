@@ -1,4 +1,4 @@
-// verify.mjs — runs the scriptable checks of VERIFY.md against Arc mainnet.
+// verify.mjs — runs the scriptable checks of VERIFY.md against Arc mainnet (legacy, V3.0 and V3.1).
 // Read-only: no keys, no transactions, no SolonPad API — chain reads only.
 // Exit 0 = all green, 1 = any red.
 //   cd tools && npm i && node verify.mjs      (ARC_RPC / RH_RPC override the public RPCs)
@@ -136,6 +136,109 @@ for (const [ticker, s] of Object.entries(V3.stockLayer.stocks).filter(([k]) => !
   const hubSupply = await arc.readContract({ address: V3.stockLayer.SolonStockHub, abi: parseAbi(['function supplyOf(address) view returns (uint256)']), functionName: 'supplyOf', args: [s.rh] });
   const held = await rh.readContract({ address: s.rh, abi: erc, functionName: 'balanceOf', args: [V3.robinhood.ReserveVault] });
   check(`V3 reserve ${ticker}: RH vault >= Arc supply`, held >= supply, `arc ${supply}, hub ${hubSupply}, rh vault ${held}`);
+}
+
+// ---- V3.1 (hookless launch stack, serving new launches since 2026-10-07) — VERIFY.md §V31 ----
+const V31 = A.v31;
+const C31 = V31.contracts;
+const W = V31.wiring;
+const abi31 = (n) => JSON.parse(readFileSync(new URL(`../abis/v31/${n}.json`, import.meta.url)));
+const read31 = async (name, fns) => {
+  const out = {};
+  for (const fn of fns) { out[fn] = await arc.readContract({ address: C31[name], abi: abi31(name), functionName: fn }); await pause(60); }
+  return out;
+};
+const same = (got, want) => Object.entries(want).filter(([k, v]) => !eq(got[k], v)).map(([k, v]) => `${k} ${got[k]} != ${v}`);
+
+// V31-1. runtime codehashes of the eight V3.1 contracts equal the pin (55297b7 build)
+const names31 = Object.keys(C31).filter((k) => !k.startsWith('_'));
+const bad31 = [];
+for (const k of names31) {
+  const code = await arc.getCode({ address: C31[k] });
+  if (!code || keccak256(code) !== V31.codehashes[k]) bad31.push(k);
+  await pause(150);
+}
+check('V3.1 runtime codehashes match the pin', bad31.length === 0, bad31.length ? 'mismatch: ' + bad31.join(', ') : `${names31.length}/${names31.length} contracts`);
+
+// V31-2. factory: immutables and pool constants
+const K = V31.constants;
+const f = await read31('V31LaunchFactory', ['poolManager', 'positionManager', 'governance', 'payoutChoice', 'holders', 'stockQuote', 'launchOracle', 'stockStatus', 'splitter', 'LP_FEE', 'TICK_SPACING', 'INITIAL_TICK', 'LOWER_TICK', 'UPPER_TICK', 'launchesPaused']);
+const fBad = [...same(f, { poolManager: W.poolManager, positionManager: W.positionManager, governance: W.governance, payoutChoice: W.payoutChoice,
+  holders: C31.V31HolderRewards, stockQuote: W.stockQuote, launchOracle: C31.V31LaunchOracle, stockStatus: W.stockStatus, splitter: C31.V31FeeSplitter }),
+  ...(Number(f.LP_FEE) === K.lpFee && Number(f.TICK_SPACING) === K.tickSpacing && Number(f.INITIAL_TICK) === K.initialTick
+    && Number(f.LOWER_TICK) === K.usdcRange[0] && Number(f.UPPER_TICK) === K.usdcRange[1] ? [] : [`pool constants ${f.LP_FEE}/${f.TICK_SPACING}/${f.INITIAL_TICK}/${f.LOWER_TICK}/${f.UPPER_TICK}`])];
+check('V3.1 factory wiring + pool constants (fee 10000, spacing 100, tick 123800, range -160100..123800, no hook)', fBad.length === 0,
+  fBad.length ? fBad.join('; ') : `9 immutables, launchesPaused ${f.launchesPaused}`);
+
+// V31-3. fee splitter: the six destinations and custody wiring
+const s = await read31('V31FeeSplitter', ['positionManager', 'desk', 'staking', 'buyback', 'protocol', 'treasury', 'holders', 'stockAsset', 'factory', 'creatorRights']);
+const sBad = same(s, { positionManager: W.positionManager, desk: W.desk, staking: C31.V31StakingEscrow, buyback: C31.V31BuybackExecutor, protocol: W.protocolVault,
+  treasury: W.treasury, holders: C31.V31HolderRewards, stockAsset: W.stockQuote, factory: C31.V31LaunchFactory, creatorRights: C31.V31CreatorRightsNFT });
+check('V3.1 splitter destinations = HolderRewards/DeskRewards/StakingEscrow/BuybackExecutor/ProtocolVault (+ multisig for coin-side fees)', sBad.length === 0, sBad.length ? sBad.join('; ') : '10 immutables');
+
+// V31-4. the other six contracts point at each other and at the V3.0 pieces they reuse
+const h = await read31('V31HolderRewards', ['rounds', 'schedule', 'stockAsset', 'poolManager', 'positionManager', 'treasury', 'factory', 'splitter']);
+const n = await read31('V31CreatorRightsNFT', ['splitter', 'nativeUsdcView']);
+const e = await read31('V31StakingEscrow', ['governance', 'distributor', 'frozen']);
+const b = await read31('V31BuybackExecutor', ['governance', 'solon', 'feeRouter', 'burnSink', 'stock', 'poolManager']);
+const o = await read31('V31LaunchOracle', ['governance', 'asset', 'anchorOracle', 'poolManager', 'source', 'freshnessWindow', 'paused']);
+const fd = await read31('V31StockOracleFeed', ['oracle', 'asset']);
+const satBad = [
+  ...same(h, { rounds: W.rewardRoundManager, schedule: W.rewardAssetSchedule, stockAsset: W.stockQuote, poolManager: W.poolManager, positionManager: W.positionManager,
+    treasury: W.treasury, factory: C31.V31LaunchFactory, splitter: C31.V31FeeSplitter }).map((x) => 'holders.' + x),
+  ...same(n, { splitter: C31.V31FeeSplitter, nativeUsdcView: W.nativeUsdcView }).map((x) => 'rights.' + x),
+  ...same(e, { governance: W.governance }).map((x) => 'escrow.' + x),
+  ...same(b, { governance: W.governance, solon: W.solon, feeRouter: W.feeRouter, burnSink: W.burnSink, stock: W.stockQuote, poolManager: W.poolManager }).map((x) => 'buyback.' + x),
+  ...same(o, { governance: W.governance, asset: W.stockQuote, anchorOracle: W.anchorOracle, poolManager: W.poolManager }).map((x) => 'oracle.' + x),
+  ...same(fd, { oracle: W.anchorOracle, asset: W.stockQuote }).map((x) => 'feed.' + x),
+  ...(Number(o.freshnessWindow) <= K.launchOracleFreshnessSeconds ? [] : [`oracle.freshnessWindow ${o.freshnessWindow} > ${K.launchOracleFreshnessSeconds}`]),
+];
+check('V3.1 holder rewards / rights NFT / escrow / buyback / launch oracle / feed wiring', satBad.length === 0, satBad.length ? satBad.join('; ')
+  : `${[h, n, e, b, o, fd].reduce((x, r) => x + Object.keys(r).length, 0)} reads; escrow distributor ${e.distributor}, frozen ${e.frozen}; oracle source ${o.source}, paused ${o.paused}`);
+
+// V31-5. the shared holder source is registered once with the V3.0 RewardRoundManager
+const sp = await arc.readContract({ address: W.rewardRoundManager, abi: parseAbi(['function sourcePool(address) view returns (bytes32)']), functionName: 'sourcePool', args: [C31.V31HolderRewards] });
+const spWant = keccak256(new TextEncoder().encode('SOLON_V31_HOLDERS'));
+check('V3.1 RewardRoundManager.sourcePool(V31HolderRewards) = keccak256("SOLON_V31_HOLDERS")', sp === spWant && sp === V31.governance.rewardSourcePoolId, sp);
+
+// V31-6. guardian: exactly the five tighten-only selectors, never resume/designate
+const gaAbi = parseAbi(['function guardianAction(address,bytes4) view returns (bool)']);
+const target = (k) => C31[k.split('.')[0]];
+const gaBad = [];
+for (const [want, set] of [[true, V31.governance.guardianActions], [false, V31.governance.notGuardian]]) {
+  for (const [k, sel] of Object.entries(set).filter(([x]) => !x.startsWith('_'))) {
+    const got = await arc.readContract({ address: G.V3Governance, abi: gaAbi, functionName: 'guardianAction', args: [target(k), sel] });
+    if (got !== want) gaBad.push(`${k} ${got}`);
+    await pause(60);
+  }
+}
+check('V3.1 guardian allow-list: 5 tighten-only selectors on, resume/designate off', gaBad.length === 0, gaBad.length ? gaBad.join('; ') : '5 on, 3 off');
+
+// V31-7. every V3.1 coin so far: its LP position is held by the splitter, the token is a factory V31Token with no owner
+const rights = abi31('V31CreatorRightsNFT');
+const nextId = await arc.readContract({ address: C31.V31CreatorRightsNFT, abi: rights, functionName: 'nextTokenId' });
+const coinBad = [];
+const tokAbi = abi31('V31Token');
+const ids = []; for (let i = nextId - 1n; i >= 1n && ids.length < 25; i--) ids.push(i); // newest 25
+for (const id of ids) {
+  const poolId = await arc.readContract({ address: C31.V31CreatorRightsNFT, abi: rights, functionName: 'poolOf', args: [id] });
+  const coin = await arc.readContract({ address: C31.V31LaunchFactory, abi: abi31('V31LaunchFactory'), functionName: 'tokenOfPool', args: [poolId] });
+  const l = await arc.readContract({ address: C31.V31FeeSplitter, abi: abi31('V31FeeSplitter'), functionName: 'launchOf', args: [poolId] });
+  const lpOwner = await arc.readContract({ address: W.positionManager, abi: parseAbi(['function ownerOf(uint256) view returns (address)']), functionName: 'ownerOf', args: [l.positionId] });
+  const [lf, own, dec] = await Promise.all(['launchFactory', 'owner', 'decimals'].map((fn) => arc.readContract({ address: coin, abi: tokAbi, functionName: fn })));
+  if (!eq(l.token, coin) || !eq(lpOwner, C31.V31FeeSplitter) || !eq(lf, C31.V31LaunchFactory) || !eq(own, '0x0000000000000000000000000000000000000000') || Number(dec) !== 18
+    || Number(l.key.fee) !== K.lpFee || Number(l.key.tickSpacing) !== K.tickSpacing || !eq(l.key.hooks, '0x0000000000000000000000000000000000000000')) coinBad.push(coin);
+  await pause(100);
+}
+check('V3.1 coins: LP NFT held by the splitter, hookless 1% key, factory token with owner() = 0', coinBad.length === 0,
+  coinBad.length ? 'bad: ' + coinBad.join(', ') : `${ids.length} coin(s) checked (${nextId - 1n} launched)`);
+
+// info: can a kind-1 (NVDA.sol-paired) launch price right now?
+try {
+  const [tick, price18] = await arc.readContract({ address: C31.V31LaunchFactory, abi: abi31('V31LaunchFactory'), functionName: 'stockLaunchTick' });
+  console.log(`info  V3.1 kind-1 launch possible now: tick ${tick}, NVDA.sol $${Number(price18) / 1e18}`);
+} catch (err) {
+  console.log(`info  V3.1 kind-1 launch not possible now: stockLaunchTick() reverts ${err.cause?.data?.errorName ?? err.shortMessage}${err.cause?.data?.args ? '(' + err.cause.data.args.join(',') + ')' : ''} (USDC launches unaffected)`);
 }
 
 const failed = results.filter(([, ok]) => !ok).length;
