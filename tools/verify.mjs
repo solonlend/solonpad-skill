@@ -214,6 +214,12 @@ for (const [want, set] of [[true, V31.governance.guardianActions], [false, V31.g
 }
 check('V3.1 guardian allow-list: 5 tighten-only selectors on, resume/designate off', gaBad.length === 0, gaBad.length ? gaBad.join('; ') : '5 on, 3 off');
 
+// V31-6b. the reissue distributor (deployed 2026-10-08): its six immutables point at the live stack. Whether it is
+// designated yet is reported by V31-4 (escrow distributor) — 0x0 until the 48h designate batch executes.
+const ri = await read31('V31StakingReissue', ['governance', 'escrow', 'rounds', 'staking', 'schedule', 'stockAsset']);
+const riBad = same(ri, { governance: W.governance, escrow: C31.V31StakingEscrow, rounds: W.rewardRoundManager, staking: W.solonStakingV2, schedule: W.rewardAssetSchedule, stockAsset: W.stockQuote });
+check('V31StakingReissue immutables = Governance / StakingEscrow / RewardRoundManager / SolonStakingV2 / RewardAssetSchedule / NVDA.sol', riBad.length === 0, riBad.length ? riBad.join('; ') : '6 immutables');
+
 // V31-7. every V3.1 coin so far: its LP position is held by the splitter, the token is a factory V31Token with no owner
 const rights = abi31('V31CreatorRightsNFT');
 const nextId = await arc.readContract({ address: C31.V31CreatorRightsNFT, abi: rights, functionName: 'nextTokenId' });

@@ -1,542 +1,545 @@
 {
-  "_comment": "SolonPad on Arc (Circle's L1) — Arc-only since v1.0; V3 (stock dividends) added in v1.1; V3.1 (hookless launch stack, serving the site's new launches since 2026-10-07) added in v1.2. Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value — do not trust this file blindly.",
-  "verifiedAt": "2026-10-07",
-  "chain": {
-    "name": "Arc",
-    "chainId": 5042,
-    "chainIdHex": "0x13b2",
-    "gasToken": "USDC (native, 18-dec msg.value)",
-    "usdcErc20View": "0x3600000000000000000000000000000000000000",
-    "usdcErc20Decimals": 6,
-    "rpc": "https://rpc.mainnet.arc.io",
-    "explorer": "https://explorer.arc.io",
-    "blockTimeMs": 510
-  },
-  "solonpad": {
-    "launchFactory": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
-    "feeEscrow": "0x83922922776C121671072C9349D8Cc1867D4856f",
-    "memeHook": "0x9d1a376de8525a2cd622b5c2ce99984f8432e044",
-    "buybackVault": "0x6a64c681606845e5ed4e2340c59414b7d1810631",
-    "launchLocker": "0x3e93df005ab38b4d0b1ad197ee161e57a204a5e9",
-    "graduationExecutor": "0xb39af010a671629d976a0ebd776ed0ac7b20667a",
-    "launchDeployer": "0xe70e060f5c5034e65676fece611e1450c5c9b9ef",
-    "deployBlock": 21134269
-  },
-  "uniswapV4Canonical": {
-    "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
-    "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
-    "universalRouter": "0x4fcA4a51Ab4F23A7447b3284fBd7D73289A89Fb1",
-    "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
-    "quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
-    "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
-    "_source": "developers.uniswap.org v4 deployments page, fetched 2026-09-16",
-    "_universalRouterNote": "universalRouter above is UR v2.1.1 (older). Uniswap also lists UR v2.1.2 on Arc: 0x8702463e73f74d0b6765aBceb314Ef07aCb92650 (v3.stockLayer.poolA.universalRouter), which the site uses for pool A."
+ "_comment": "SolonPad on Arc (Circle's L1) \u2014 Arc-only since v1.0; V3 (stock dividends) added in v1.1; V3.1 (hookless launch stack, serving the site's new launches since 2026-10-07) added in v1.2. Machine-readable, pinned. VERIFY every address on-chain (see VERIFY.md) before sending value \u2014 do not trust this file blindly.",
+ "verifiedAt": "2026-10-07",
+ "chain": {
+  "name": "Arc",
+  "chainId": 5042,
+  "chainIdHex": "0x13b2",
+  "gasToken": "USDC (native, 18-dec msg.value)",
+  "usdcErc20View": "0x3600000000000000000000000000000000000000",
+  "usdcErc20Decimals": 6,
+  "rpc": "https://rpc.mainnet.arc.io",
+  "explorer": "https://explorer.arc.io",
+  "blockTimeMs": 510
+ },
+ "solonpad": {
+  "launchFactory": "0xd6b86b9B1bB64b941b21AaA6a0e3A673e8405A3b",
+  "feeEscrow": "0x83922922776C121671072C9349D8Cc1867D4856f",
+  "memeHook": "0x9d1a376de8525a2cd622b5c2ce99984f8432e044",
+  "buybackVault": "0x6a64c681606845e5ed4e2340c59414b7d1810631",
+  "launchLocker": "0x3e93df005ab38b4d0b1ad197ee161e57a204a5e9",
+  "graduationExecutor": "0xb39af010a671629d976a0ebd776ed0ac7b20667a",
+  "launchDeployer": "0xe70e060f5c5034e65676fece611e1450c5c9b9ef",
+  "deployBlock": 21134269
+ },
+ "uniswapV4Canonical": {
+  "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+  "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
+  "universalRouter": "0x4fcA4a51Ab4F23A7447b3284fBd7D73289A89Fb1",
+  "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
+  "quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
+  "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+  "_source": "developers.uniswap.org v4 deployments page, fetched 2026-09-16",
+  "_universalRouterNote": "universalRouter above is UR v2.1.1 (older). Uniswap also lists UR v2.1.2 on Arc: 0x8702463e73f74d0b6765aBceb314Ef07aCb92650 (v3.stockLayer.poolA.universalRouter), which the site uses for pool A."
+ },
+ "economics": {
+  "launchFeeUsdc": 1,
+  "phantomReserveUsdc": 4000,
+  "graduationTargetUsdc": 10000,
+  "curveFeeBps": 100,
+  "tokenSupply": "1000000000e18",
+  "tickSpacing": 200,
+  "_note": "launchFee/phantom/graduation are owner-adjustable on the factory; curveFeeBps and supply are fixed to match the verified Pons V2 upstream."
+ },
+ "provenance": {
+  "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
+  "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit \u2014 reviewed manually, pull-payment only, no admin drain path"
+ },
+ "instantV4": {
+  "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
+  "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
+  "uerc20Factory": "0xF94bFe8D7583C2272527C9A45efa5c07b4a26c22",
+  "instantLaunchStrategy": "0xfA5997445db1E9FB7F7664FD176379B6B26497f0",
+  "feeSplitter": "0xD6B05564ceA990b69ABF10B433279093758e2A54",
+  "beneficiaryVault": "0xC31c8853f6C0CA12421eb36906dB8BFaf89A85bA",
+  "swapRouterPoolSwapTest": "0xC8426731A1AA71943BeEfFf3dcE688C6f4295dDb",
+  "deployBlock": 21158000,
+  "poolKey": {
+   "currency0": "0x0000000000000000000000000000000000000000",
+   "fee": 10000,
+   "tickSpacing": 100,
+   "hooks": "0x0000000000000000000000000000000000000000",
+   "_note": "currency1 = the launched token"
   },
   "economics": {
-    "launchFeeUsdc": 1,
-    "phantomReserveUsdc": 4000,
-    "graduationTargetUsdc": 10000,
-    "curveFeeBps": 100,
-    "tokenSupply": "1000000000e18",
-    "tickSpacing": 200,
-    "_note": "launchFee/phantom/graduation are owner-adjustable on the factory; curveFeeBps and supply are fixed to match the verified Pons V2 upstream."
+   "totalSupply": "1000000000e18 (fixed)",
+   "openingFdvUsd": 4204,
+   "initialTick": 123800,
+   "lpFeeBps": 100,
+   "lpFeeSplit": "50% platform treasury / 50% creator via BeneficiaryVault",
+   "launchFeeUsdc": 0
   },
-  "provenance": {
-    "upstream": "Pons V2 (Robinhood Chain), factory 0x7ed598bcef8bd9edd8c97a195c6d13f40801ec7e, Sourcify exact_match on chain 4663",
-    "diffResult": "13 of 14 src/v2 files whitespace-identical to the verified upstream sources (2026-09-16); PonsV2FeeEscrow is a separately-deployed contract outside the factory compilation unit — reviewed manually, pull-payment only, no admin drain path"
+  "flagship": {
+   "token": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+   "symbol": "SOLON",
+   "poolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77"
   },
-  "instantV4": {
-    "_comment": "v2 DEFAULT mode: tokens are born directly in a Uniswap v4 pool (no curve, no graduation). Engine = official Uniswap Liquidity Launcher (MIT, audited); our instances differ from upstream by exactly two constants (LP_FEE=10000, TICK_SPACING=100). All Sourcify-verified.",
-    "liquidityLauncher": "0x0000FffFBE8efE702c8703aE3477FF5dE3d319C0",
-    "uerc20Factory": "0xF94bFe8D7583C2272527C9A45efa5c07b4a26c22",
-    "instantLaunchStrategy": "0xfA5997445db1E9FB7F7664FD176379B6B26497f0",
-    "feeSplitter": "0xD6B05564ceA990b69ABF10B433279093758e2A54",
-    "beneficiaryVault": "0xC31c8853f6C0CA12421eb36906dB8BFaf89A85bA",
-    "swapRouterPoolSwapTest": "0xC8426731A1AA71943BeEfFf3dcE688C6f4295dDb",
-    "deployBlock": 21158000,
-    "poolKey": {
-      "currency0": "0x0000000000000000000000000000000000000000",
-      "fee": 10000,
-      "tickSpacing": 100,
-      "hooks": "0x0000000000000000000000000000000000000000",
-      "_note": "currency1 = the launched token"
-    },
-    "economics": {
-      "totalSupply": "1000000000e18 (fixed)",
-      "openingFdvUsd": 4204,
-      "initialTick": 123800,
-      "lpFeeBps": 100,
-      "lpFeeSplit": "50% platform treasury / 50% creator via BeneficiaryVault",
-      "launchFeeUsdc": 0
-    },
-    "flagship": {
-      "token": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-      "symbol": "SOLON",
-      "poolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77"
-    },
-    "upstream": {
-      "repo": "github.com/Uniswap/liquidity-launcher",
-      "commit": "dd8769cd45c0e9450e928513ee129b0af74f7f32",
-      "factoryRepo": "github.com/Uniswap/uerc20-factory",
-      "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
-      "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
-    },
-    "quoteInstances": {
-      "_comment": "Instant v4 instances quoted in an 18-dec ERC-20 (tokenized stocks / memes on Arc) instead of native USDC. Same launcher, same 1B supply, LP_FEE 10000, TICK_SPACING 100, hooks 0x0; the strategy exposes quoteToken(). Pool key sorts (token, quote) by address. Read from each instance's own launch receipts on 2026-09-25 — re-verify strategy.quoteToken()/feeSplitter() on-chain (tools/verify.mjs does).",
-      "CRCL": {
-        "quote": "0x2ba0f44BDfC17FbA30edA9cdBeCB908cA45B043B",
-        "strategy": "0xDbb391d680b47E62f1B81ff36c44b6B9FB02D8cC",
-        "splitter": "0xc6A8ae9Bfc3E323f0F6110c33Ec7d74A2529986d",
-        "initialTick": 167700
-      },
-      "TSLA": {
-        "quote": "0x4d1Efa7f5629f89FBDd7950b5eF73403A350Ad59",
-        "strategy": "0x1c6b8fff919844ec9888131754fa90cef1609a1e",
-        "splitter": "0x24b90BE7e407176A8aCE9e89777CB263a36C51f2",
-        "initialTick": 181400
-      },
-      "NVDA": {
-        "quote": "0x6505506540dC99f7366316B10E9CF1A584cbD42a",
-        "strategy": "0xf296508F9853F27C39E05886514A7b509EAf95AB",
-        "splitter": "0xDDb33878f2e39127f4efD995F806d4C418334f24",
-        "initialTick": 177400
-      },
-      "AAPL": {
-        "quote": "0xAC7896A01a4efD2a647Fb1C94a6F1fFef8901488",
-        "strategy": "0xc97882b4f3cb5eb9afb001620f8ad11cedc1d3fb",
-        "splitter": "0xa80Dd5589AF28701035F00278524DBC6efac3D7A",
-        "initialTick": 181700
-      },
-      "SPY": {
-        "quote": "0x0c3282e55885bb1e8341F8C36DA7B16E4F559993",
-        "strategy": "0xe2b51aa086d9146ac39b58c93c4922a654d3e525",
-        "splitter": "0xdb539cf8bcA0D50936215A87Ef4291CF13688deA",
-        "initialTick": 190100
-      },
-      "ARGUS": {
-        "quote": "0xeCe5cA8bf9220718E5727754026757512212cb3c",
-        "strategy": "0x2d95738abc1a872855267ed5405c032232ed704b",
-        "splitter": "0xe5cE4fA81bF7557261Ca82721D43c25780cdD999",
-        "initialTick": 83000
-      },
-      "LONG": {
-        "quote": "0x2164bB17a2D38c1b5170E987b2c0416DF1EFc752",
-        "strategy": "0xedebb25c49db4e8806a3a1776fefcbcca28e19b2",
-        "splitter": "0x8866ab70b2A95C9A4484B7f04f33e5A9f53a76a4",
-        "initialTick": 63700
-      },
-      "DUKE": {
-        "quote": "0x41358Defd0dedc90528b3F1835715E907B686e6a",
-        "strategy": "0x62e0443dc6e844686bedb627493a7a92ca44d41a",
-        "splitter": "0x550baDf26666D20C60d115fE9d52Ca7d25B7B529",
-        "initialTick": 62500
-      }
-    }
+  "upstream": {
+   "repo": "github.com/Uniswap/liquidity-launcher",
+   "commit": "dd8769cd45c0e9450e928513ee129b0af74f7f32",
+   "factoryRepo": "github.com/Uniswap/uerc20-factory",
+   "factoryCommit": "de5bacd215f6aae50e524297c18fcf78b69b6312",
+   "diff": "src/strategies/InstantLaunchStrategy.sol: LP_FEE 2_500->10_000, TICK_SPACING 25->100 (2 lines)"
   },
-  "feeRouter": {
-    "_comment": "Optional stateless trade wrapper on Arc: v4Swap/curveBuy/curveSell with a 0.5% interface fee on the quote leg (minOut net of fee). Not required — own-pool trades can go straight through PoolSwapTest / the curve. ABI: abis/SolonFeeRouter.json.",
-    "address": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
-    "feeBps": 50
+  "quoteInstances": {
+   "_comment": "Instant v4 instances quoted in an 18-dec ERC-20 (tokenized stocks / memes on Arc) instead of native USDC. Same launcher, same 1B supply, LP_FEE 10000, TICK_SPACING 100, hooks 0x0; the strategy exposes quoteToken(). Pool key sorts (token, quote) by address. Read from each instance's own launch receipts on 2026-09-25 \u2014 re-verify strategy.quoteToken()/feeSplitter() on-chain (tools/verify.mjs does).",
+   "CRCL": {
+    "quote": "0x2ba0f44BDfC17FbA30edA9cdBeCB908cA45B043B",
+    "strategy": "0xDbb391d680b47E62f1B81ff36c44b6B9FB02D8cC",
+    "splitter": "0xc6A8ae9Bfc3E323f0F6110c33Ec7d74A2529986d",
+    "initialTick": 167700
+   },
+   "TSLA": {
+    "quote": "0x4d1Efa7f5629f89FBDd7950b5eF73403A350Ad59",
+    "strategy": "0x1c6b8fff919844ec9888131754fa90cef1609a1e",
+    "splitter": "0x24b90BE7e407176A8aCE9e89777CB263a36C51f2",
+    "initialTick": 181400
+   },
+   "NVDA": {
+    "quote": "0x6505506540dC99f7366316B10E9CF1A584cbD42a",
+    "strategy": "0xf296508F9853F27C39E05886514A7b509EAf95AB",
+    "splitter": "0xDDb33878f2e39127f4efD995F806d4C418334f24",
+    "initialTick": 177400
+   },
+   "AAPL": {
+    "quote": "0xAC7896A01a4efD2a647Fb1C94a6F1fFef8901488",
+    "strategy": "0xc97882b4f3cb5eb9afb001620f8ad11cedc1d3fb",
+    "splitter": "0xa80Dd5589AF28701035F00278524DBC6efac3D7A",
+    "initialTick": 181700
+   },
+   "SPY": {
+    "quote": "0x0c3282e55885bb1e8341F8C36DA7B16E4F559993",
+    "strategy": "0xe2b51aa086d9146ac39b58c93c4922a654d3e525",
+    "splitter": "0xdb539cf8bcA0D50936215A87Ef4291CF13688deA",
+    "initialTick": 190100
+   },
+   "ARGUS": {
+    "quote": "0xeCe5cA8bf9220718E5727754026757512212cb3c",
+    "strategy": "0x2d95738abc1a872855267ed5405c032232ed704b",
+    "splitter": "0xe5cE4fA81bF7557261Ca82721D43c25780cdD999",
+    "initialTick": 83000
+   },
+   "LONG": {
+    "quote": "0x2164bB17a2D38c1b5170E987b2c0416DF1EFc752",
+    "strategy": "0xedebb25c49db4e8806a3a1776fefcbcca28e19b2",
+    "splitter": "0x8866ab70b2A95C9A4484B7f04f33e5A9f53a76a4",
+    "initialTick": 63700
+   },
+   "DUKE": {
+    "quote": "0x41358Defd0dedc90528b3F1835715E907B686e6a",
+    "strategy": "0x62e0443dc6e844686bedb627493a7a92ca44d41a",
+    "splitter": "0x550baDf26666D20C60d115fE9d52Ca7d25B7B529",
+    "initialTick": 62500
+   }
+  }
+ },
+ "feeRouter": {
+  "_comment": "Optional stateless trade wrapper on Arc: v4Swap/curveBuy/curveSell with a 0.5% interface fee on the quote leg (minOut net of fee). Not required \u2014 own-pool trades can go straight through PoolSwapTest / the curve. ABI: abis/SolonFeeRouter.json.",
+  "address": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
+  "feeBps": 50
+ },
+ "staking": {
+  "_comment": "SOLON staking on Arc (live 2026-09-23). Stake SOLON, earn SOLON. No lock, no cooldown. Unaudited. ABI: abis/SolonStaking.json. Verify per VERIFY.md \u00a7G.",
+  "solonStaking": "0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f",
+  "stakingToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+  "rewardToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+  "deployBlock": 22289051,
+  "owner": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
+  "distributor": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
+  "lanes": {
+   "0": "BUYBACK (contract name): since 2026-10-07 funded by the 5% leg of the off-chain keeper split of SOLON's own pool fees (SKILL.md, SOLON's own pool fees), injected by the distributor, streamed over 7 days",
+   "1": "GENESIS: one-off 12,690,000 SOLON seeded once by the owner, streamed over 30 days"
+  },
+  "priceReferencePoolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77",
+  "page": "https://solonpad.fun/stake",
+  "_note": "owner/distributor/stakeCap are mutable state: re-read owner(), distributor(), stakeCap() on-chain."
+ },
+ "v3": {
+  "_comment": "SolonPad V3.0 (live on Arc mainnet since 2026-10-03; new launches moved to V3.1 on 2026-10-07, see v31): every V3.0 coin pays a 1% trade fee split six ways by a hard-coded constant; the holder share buys real tokenized stock on Robinhood Chain, minted 1:1 on Arc as STOCK.sol. V3.0 coins stay tradable through V3Router and keep receiving dividends. Source of truth: Sourcify match for every address here (checked 2026-10-07) and the runtime codehashes below. VERIFY.md section V3 before sending value.",
+  "liveSince": "2026-10-03",
+  "chainId": 5042,
+  "deployedAtBlock": 23985516,
+  "deploymentVersion": "chain-5042@9512462 (the indexer envelope reports the same string)",
+  "launch": {
+   "V3LaunchFactory": "0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10",
+   "V3LaunchStrategy": "0x96F5DF5A13D54cD2fc1e2b4847eE2d0F60DF0fCb",
+   "V3QuoteFeeHook": "0x56071296f4AEc96d61715Bd906a17A05b75628cc",
+   "V3FeeLedger": "0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088",
+   "V3LPLocker": "0x09650Be5c4866971aBbD5C9e92AE495A118fD13F",
+   "CreatorRightsNFT": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
+   "LaunchPayoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0"
+  },
+  "trade": {
+   "V3Router": "0x0085dC0d8BfF401da29591B746F40D5d3Ec0D98d",
+   "V3Quoter": "0x70eB10bA50BD323D84c3E213B54E16d911658F48",
+   "V3MultiHopRouter": "0x79921ce37BF624Df9E7e5bEFaDE7F6E46B67A699"
+  },
+  "rewards": {
+   "RewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
+   "RewardBatcher": "0x985cdEE43c500B64b4A749262D26E440AF6Ab748",
+   "RewardVault": "0x38A42d8432FD8df79c26650D6C2B25adA1149f61",
+   "RewardPayoutVault": "0x53ef255aF936C28a6f6EAdE7Bfb3aB3a6eCd58dD",
+   "RewardDistributor": "0x9B68469BBaceD6dC92F5Bb3cfe25e1097d193C9A",
+   "RewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
+   "StockAdapterRegistry": "0x9A89E458F00835e6b8c1C67cCa009E135a47F43d",
+   "SolonStockAdapter": "0x7b5beFdCABBD1D263f18D6Daa03D066581ffc116",
+   "SolonStockAdapter_AAPL": "0xC4657c216E531e19235469423da942eF5e527c15",
+   "SolonStockAdapter_TSLA": "0x1Bfc189de75036c2d2Ca4AE42fF3e92c932bf4a2",
+   "StakingRewardSourceFactory": "0x76FAc7B94d7c6514522840B4Cb3bE2ea6c58dDa5",
+   "_note": "SolonStockAdapter = NVDA. V3RewardToken (each coin) is deployed by the factory per launch: discover via V3LaunchFactory.LaunchState."
+  },
+  "feeBeneficiaries": {
+   "_order": "V3FeeLedger.poolInfo(poolId).beneficiaries, same order as feeSplitBps",
+   "0_holders": "the coin itself (V3RewardToken)",
+   "1_creator": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
+   "2_desk": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
+   "3_staking": "0xd20A87639B5a3e86a815627e468072C3a3276172",
+   "4_buybackBurn": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
+   "5_protocol": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
+   "_stockQuote": "kind-1 (stock-quote) pools route buckets 4 and 5 to StockFeeConverter 0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e for conversion to USDC"
+  },
+  "desk": {
+   "DeskNFT": "0x02C83604Ba74a952f931Ab3D77C1Efe31935793D",
+   "DeskRewards": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
+   "ProtocolDeskVault": "0xec2e2F30D30Cb658860158916FF3a922Ee97A051"
   },
   "staking": {
-    "_comment": "SOLON staking on Arc (live 2026-09-23). Stake SOLON, earn SOLON. No lock, no cooldown. Unaudited. ABI: abis/SolonStaking.json. Verify per VERIFY.md §G.",
-    "solonStaking": "0xB3E0b89b3Ba098D83072dd60c1946CFB3231688f",
-    "stakingToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-    "rewardToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-    "deployBlock": 22289051,
-    "owner": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
-    "distributor": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
-    "lanes": {
-      "0": "BUYBACK (contract name): since 2026-10-07 funded by the 5% leg of the off-chain keeper split of SOLON's own pool fees (SKILL.md, SOLON's own pool fees), injected by the distributor, streamed over 7 days",
-      "1": "GENESIS: one-off 12,690,000 SOLON seeded once by the owner, streamed over 30 days"
-    },
-    "priceReferencePoolId": "0xe4c4b7da3706193e7bf6e7b236156718a5856bc6d6866440661969ae3dcb0a77",
-    "page": "https://solonpad.fun/stake",
-    "_note": "owner/distributor/stakeCap are mutable state: re-read owner(), distributor(), stakeCap() on-chain."
+   "SolonStakingV2": "0xd20A87639B5a3e86a815627e468072C3a3276172",
+   "stakingToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+   "_note": "Distinct from the original SolonStaking pool (staking.solonStaking). Principal exits instantly; rewards are stock tokens."
   },
-  "v3": {
-    "_comment": "SolonPad V3.0 (live on Arc mainnet since 2026-10-03; new launches moved to V3.1 on 2026-10-07, see v31): every V3.0 coin pays a 1% trade fee split six ways by a hard-coded constant; the holder share buys real tokenized stock on Robinhood Chain, minted 1:1 on Arc as STOCK.sol. V3.0 coins stay tradable through V3Router and keep receiving dividends. Source of truth: Sourcify match for every address here (checked 2026-10-07) and the runtime codehashes below. VERIFY.md section V3 before sending value.",
-    "liveSince": "2026-10-03",
-    "chainId": 5042,
-    "deployedAtBlock": 23985516,
-    "deploymentVersion": "chain-5042@9512462 (the indexer envelope reports the same string)",
-    "launch": {
-      "V3LaunchFactory": "0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10",
-      "V3LaunchStrategy": "0x96F5DF5A13D54cD2fc1e2b4847eE2d0F60DF0fCb",
-      "V3QuoteFeeHook": "0x56071296f4AEc96d61715Bd906a17A05b75628cc",
-      "V3FeeLedger": "0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088",
-      "V3LPLocker": "0x09650Be5c4866971aBbD5C9e92AE495A118fD13F",
-      "CreatorRightsNFT": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
-      "LaunchPayoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0"
-    },
-    "trade": {
-      "V3Router": "0x0085dC0d8BfF401da29591B746F40D5d3Ec0D98d",
-      "V3Quoter": "0x70eB10bA50BD323D84c3E213B54E16d911658F48",
-      "V3MultiHopRouter": "0x79921ce37BF624Df9E7e5bEFaDE7F6E46B67A699"
-    },
-    "rewards": {
-      "RewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
-      "RewardBatcher": "0x985cdEE43c500B64b4A749262D26E440AF6Ab748",
-      "RewardVault": "0x38A42d8432FD8df79c26650D6C2B25adA1149f61",
-      "RewardPayoutVault": "0x53ef255aF936C28a6f6EAdE7Bfb3aB3a6eCd58dD",
-      "RewardDistributor": "0x9B68469BBaceD6dC92F5Bb3cfe25e1097d193C9A",
-      "RewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
-      "StockAdapterRegistry": "0x9A89E458F00835e6b8c1C67cCa009E135a47F43d",
-      "SolonStockAdapter": "0x7b5beFdCABBD1D263f18D6Daa03D066581ffc116",
-      "SolonStockAdapter_AAPL": "0xC4657c216E531e19235469423da942eF5e527c15",
-      "SolonStockAdapter_TSLA": "0x1Bfc189de75036c2d2Ca4AE42fF3e92c932bf4a2",
-      "StakingRewardSourceFactory": "0x76FAc7B94d7c6514522840B4Cb3bE2ea6c58dDa5",
-      "_note": "SolonStockAdapter = NVDA. V3RewardToken (each coin) is deployed by the factory per launch: discover via V3LaunchFactory.LaunchState."
-    },
-    "feeBeneficiaries": {
-      "_order": "V3FeeLedger.poolInfo(poolId).beneficiaries, same order as feeSplitBps",
-      "0_holders": "the coin itself (V3RewardToken)",
-      "1_creator": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
-      "2_desk": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
-      "3_staking": "0xd20A87639B5a3e86a815627e468072C3a3276172",
-      "4_buybackBurn": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
-      "5_protocol": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
-      "_stockQuote": "kind-1 (stock-quote) pools route buckets 4 and 5 to StockFeeConverter 0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e for conversion to USDC"
-    },
-    "desk": {
-      "DeskNFT": "0x02C83604Ba74a952f931Ab3D77C1Efe31935793D",
-      "DeskRewards": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
-      "ProtocolDeskVault": "0xec2e2F30D30Cb658860158916FF3a922Ee97A051"
-    },
-    "staking": {
-      "SolonStakingV2": "0xd20A87639B5a3e86a815627e468072C3a3276172",
-      "stakingToken": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-      "_note": "Distinct from the original SolonStaking pool (staking.solonStaking). Principal exits instantly; rewards are stock tokens."
-    },
-    "buyback": {
-      "BuybackBurnExecutor": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
-      "BuybackVault": "0x8F5abE9f9616b3cC4e86d86548E5063b97Bf982c",
-      "BurnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
-      "FixedV4BuybackRoute": "0x093D4a2c9C4DDC8D29CA24A99313A0cB34C57b33",
-      "_note": "BurnSink runtime code is 0x5f80fd (PUSH0 DUP1 REVERT): no function exists, SOLON sent there cannot move."
-    },
-    "protocol": {
-      "ProtocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
-      "OpsVault": "0x0A0a192DB331a3bc5Da4dCF62f91214229e26477",
-      "StockFeeConverter": "0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e",
-      "StockFeeSellRoute": "0x97dFb4337b93B589a4b783a87424f6d51caf8294"
-    },
-    "v2Bridge": {
-      "V2PlatformRouter": "0x1490F4eFD1a22c82F3DeE1cEe1f1D13675e934D2",
-      "V2FeeIngress": "0x332cc2E07A80c57601617CD65dFe1CffF97c6551",
-      "V2FeeConverter": "0x92FCDd59420964BcdC0FD99067e4e604fc46e198",
-      "V2FeeSellRoute": "0x75f72f72Cb570c3Dbd5B3beBE3D9D8078014616D"
-    },
-    "eligibility": {
-      "EligibilityController": "0x2c9Dd95D4a06154A011d5A2C3fc3D33CAa46E355",
-      "EligibilityRegistry": "0xF29C57341B3750Adc50dA62FF76c01F0AEf1F82d",
-      "mode": "B (Disabled): no on-chain identity checks. Geographic restriction is enforced by the website and terms only."
-    },
-    "stockLayer": {
-      "SolonStockHub": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
-      "OrderScheduler": "0x13abEa7Cd4a7EbB0A1b378225b42B6a37e4c5818",
-      "CapacityController": "0xCa6430bafB0fd871B3586ED4dc3bF7D684b8F4c5",
-      "CanonicalGate": "0x70AB3b995AFd0313CaA1F35D70a64a6bc8906915",
-      "RelayFundingRoute": "0x6de85f5869BE90cACD5B6cfB0E4E009a8d72E3e0",
-      "SolonStockOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
-      "StockPriceSource": "0xbADA494B74964f9b24DCA02737DAc68825835B7b",
-      "stocks": {
-        "NVDA": {
-          "arc": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
-          "rh": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
-          "symbolArc": "NVDA.sol"
-        },
-        "AAPL": {
-          "arc": "0x785415d2994222533E3A0ECa9FE95Cc41623d9cf",
-          "rh": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
-          "symbolArc": "AAPL.sol"
-        },
-        "TSLA": {
-          "arc": "0xAF91A1f046d7ab339b7FF71C0f4D9c166eB1f308",
-          "rh": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
-          "symbolArc": "TSLA.sol"
-        },
-        "_note": "All 18 decimals on both chains. Arc token = 1:1 claim on the RH token held by robinhood.ReserveVault. Call hub functions with the RH underlying address."
-      },
-      "poolA": {
-        "_comment": "Arc-native NVDA.sol/USDC Uniswap v4 pool (no hook, 1% LP fee). Thin: read /api/v3/stocks/pool-a for depth before using it.",
-        "StockPoolVault": "0x3A8fEC5ca16aD845d7f9f6002d8Ff4a64F73d3E2",
-        "poolId": "0xc910692bac08336dd6c8ae0f752578171c4576ccb86d26865b207168467a7e7c",
-        "poolKey": {
-          "currency0": "0x0000000000000000000000000000000000000000",
-          "currency1": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
-          "fee": 10000,
-          "tickSpacing": 200,
-          "hooks": "0x0000000000000000000000000000000000000000"
-        },
-        "universalRouter": "0x8702463e73f74d0b6765aBceb314Ef07aCb92650",
-        "universalRouterVersion": "2.1.2 (Uniswap sdks universal-router-sdk CHAIN_CONFIGS[5042])"
-      }
-    },
-    "robinhood": {
-      "chainId": 4663,
-      "rpc": "https://rpc.mainnet.chain.robinhood.com/rpc",
-      "ReserveVault": "0x3504aA69ca9C5A5Bc3dA312a6c761e9633251cFc",
-      "RestrictedVenue": "0xdccCc83e518eeC1A3ff9978Eb2345014b24F85AB",
-      "RelayFundingRoute": "0x10F163619d966cEAB83c47efddd07712145fd596",
-      "ChainlinkStockSource": "0xdA32F89eEA36F94c9DBD1aD4f04440F2d7E54102",
-      "StockPriceSender": "0xD39B9Fa95D28E262ee98a9B23FD0730123048D51",
-      "V3Governance": "0x7505c46BDD74a17c5b8ad514899D5b4C00d705Dc"
-    },
-    "ethereum": {
-      "chainId": 1,
-      "EthereumBridger": "0x7505c46BDD74a17c5b8ad514899D5b4C00d705Dc",
-      "_note": "Canonical exit lane (Circle CCTP + Ethereum -> Robinhood Chain). Same address as the RH governance by CREATE coincidence on different chains."
-    },
-    "governance": {
-      "V3Governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
-      "multisig": "0x8798245d1606712828731a238e5414eefBbbB59C",
-      "multisigThreshold": "3 of 5 (Safe 1.4.1)",
-      "guardian": "0x544ebF74B3C00B5DB21E365B5258a589451529E4",
-      "guardianThreshold": "2 of 3 (Safe)",
-      "minDelaySeconds": 172800,
-      "_note": "OpenZeppelin TimelockController with a 48h floor (MIN_DELAY constant). PROPOSER = multisig only; EXECUTOR open; guardian may cancel ordinary ops and call tighten-only selectors (pause, lower caps). Deployment bootstrap is closed (bootstrapClosed = true). Contracts are owned or governed by V3Governance: re-read owner()/governance() on-chain."
-    },
-    "constants": {
-      "tradeFeeBps": 100,
-      "feeSplitBps": [
-        5750,
-        1000,
-        1000,
-        500,
-        1000,
-        750
-      ],
-      "feeSplitSource": "src/v3/V3FeeLedger.sol line 238, inside _credit; no setter (Sourcify sources)",
-      "supply": "1000000000e18 fixed",
-      "usdcPoolKey": "{currency0: 0x0 (native USDC), currency1: coin, fee: 0, tickSpacing: 100, hooks: V3QuoteFeeHook}",
-      "usdcInitialTick": 123800,
-      "usdcRange": [
-        -160100,
-        123800
-      ],
-      "stockFeeBps": 25,
-      "deskSolonPerCard": "100000e18",
-      "deskMaxSupply": 5000,
-      "rewardCarrySeconds": 604800
-    },
-    "codehashes": {
-      "BurnSink": "0x3c55237b3869f93f3e570793afec9785f20a4ee7cd0a7798a418838c833228e0",
-      "BuybackBurnExecutor": "0xe806ac7264a19e5a6bf46a94bdc15c97f570c3083cd0d50e3f526212c9bd0e25",
-      "BuybackVault": "0xb6b4a43dff087f2ad3fd7ffaff9817a24fd1d34474de77d16df8647ed8b9f494",
-      "CanonicalGate": "0x680f8b4670335181f139d2533f3881b40a272c79fd0fd3d478d3b1d7b919500b",
-      "CapacityController": "0xebeb2d4b82c3eeb2835ad8449af9a0f2019668450106778f47d27c7d2d63ade0",
-      "CreatorRightsNFT": "0x03381308df3138462845365d0082953510c7f86c9da6aec0ff5e202818d37235",
-      "DeskNFT": "0xfaedee3c615fb52bbb1322a472cdb28aafe2e029db0659cf75d94c8a099d266e",
-      "DeskRewards": "0xb219241fc81eaefa8c274b2fa8f0f591222df9889504174d55f406c686572810",
-      "EligibilityController": "0x7c1244c8cab63fea5d7213118cd196c80ad008c3aeb54dc0aa448924c1c38fdc",
-      "EligibilityRegistry": "0xca0c028a372a6a74d7c2690cf372ae66018a319c0aefbb0bbe8e776a662e9267",
-      "FixedV4BuybackRoute": "0x3f4d3c44166c79175c5b908a9d09ee12eb8e56ff7b7bc9f6247aab920c42cb78",
-      "LaunchPayoutChoice": "0x27252e9cf4c53a733133125b3f4f131f31498bb850e78f6621eb91ee6b4649bf",
-      "OpsVault": "0xec8ad6f66ae0ff506fcaf18c70f30a738103548b63d36b5aa86344e0a8a55d8c",
-      "OracleRefTickSigner": "0xb86d5de809187488b691b4f3bee943be30c491e6bf174db7daa038e341f40fe7",
-      "OrderScheduler": "0x58d4eee8cccb5ecd5ae445b33d7dc3d8d1edc00974678c76dec62a22b385ed93",
-      "ProtocolDeskVault": "0xcea76211e46d5e2452401161d9812d32e2c098c75d9330a8dccfdb28cee35a54",
-      "ProtocolVault": "0x15cabe965ec358042e201baf07ba529944f281f13aa024e28d97bc1133b054fb",
-      "RelayFundingRoute": "0xb7c5f3193aefaf7e36ed1078c1d94348b4e269ffb63b50acb976b15c538186de",
-      "RewardAssetSchedule": "0xba938a6d80faab1cc7a223482de0369d4e1d149459bda7dffe2e79fca0e71d29",
-      "RewardBatcher": "0x71e0caaf1d8105c9d00dbd87d777eab99d19a57bb00ecb550617166373804b89",
-      "RewardDistributor": "0x16266163429072e318c9bf89ca26434bdae4bfc0535afbe6c624d7f2a4e8b0d2",
-      "RewardPayoutVault": "0x6fdd1afc556edf6886ff98514fe6f811dcfa290b9cf7e5c91bc647238dcef910",
-      "RewardRoundManager": "0x41badc0604949d67919c831fb328438cf7595c2078615aba7381aae83a413df4",
-      "RewardVault": "0x2fd12c07e7d8e12ef8bf63e5edf01be15139edf2a57512c15b144444c9235013",
-      "SolonStakingV2": "0x002e07272fa82429b503e9a5220772e1731d713a1c58e7a78767ed2971eec920",
-      "SolonStockAdapter": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
-      "SolonStockAdapter_AAPL": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
-      "SolonStockAdapter_TSLA": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
-      "SolonStockHub": "0x2bcaee50fc79575efa51e6cf52327137bf0c40b9b6ed76f78fd85dd12795d645",
-      "SolonStockOracle": "0x925a87ed6a3ac4b8218affb0d59b870692e3cae8990dbc169b5f1aef12a82f74",
-      "StakingRewardSourceFactory": "0x2ce4dc192d83ce2b6e0817ad36a2f3e8f316b912745b3df311bd2902dd1841de",
-      "StockAdapterRegistry": "0x88267eabda42fdc773b77a701dec029dfc16e597cec0db9889e91f7d73c6d16a",
-      "StockFeeConverter": "0x27145c57ea2e2cddf9c610cbd272e081be985366375abbc497445a2e2db9111e",
-      "StockFeeSellRoute": "0x7d6de68a3db039e5521b3dbb6688e1f9f02d945753b500ff504c5877fa444cd2",
-      "StockPoolVault": "0x45a72dd72a5f46b964f56614f3827968dface4f0ddddd05057842e42f7e81123",
-      "StockPriceSource": "0x68de759c021f73c3d0e441c13f78fa8c49888bdf42b3c03a2fdff929f04ac841",
-      "StockToken": "0xb5580499435d71af64ae58fe4c32b0dcac78b05f313d4178472e5b2f68a492a8",
-      "StockToken_AAPL": "0xc2bd57a96c29dfcc510545d224754a288f1000b4d78fc8cae390244ab9e208a1",
-      "StockToken_TSLA": "0x5dd7798b2a4b58b75ce4163ff6db0c2995241437d245eca53104d21863540fc4",
-      "V2FeeConverter": "0x892e2c4c02a25f4dd6d0b088a93e0be1ac44ac13a3aec5f3207b23d590039f86",
-      "V2FeeIngress": "0x6189e37e3cb42b71b73c252185aba4e3a71b9f01835356cbfcbfd9d9a2641c56",
-      "V2FeeSellRoute": "0xd975959f3f28dbd1d39044e25bbff17cfbbc092169fcfad8e0e81f47a57d5e6a",
-      "V2PlatformRouter": "0x073699b9861e014a7f42f5e582356ccbcfdfea76b2f5edf3a19c8f186a0563cb",
-      "V3FeeLedger": "0x23038d3784942070eda6a3c4e7a1bd1b56780ec06f4a230cb9b7a8d576b31a50",
-      "V3Governance": "0x11a2396bd016eded398b4205f14b193a95404047699c6607caa580e07517b743",
-      "V3LPLocker": "0x0e4b49084f283b85a9dbe05c7d11e1940fcc3e18748a93970732a927556c0386",
-      "V3LaunchFactory": "0x51af909387748ffea8f70866425eb7495452e4c752a0b64ec0c0734ddc6340e4",
-      "V3LaunchStrategy": "0xe21d34ad4d9ac101281d20795e7a05b043a8e3ad6c8652c3a275c3aa035e97d0",
-      "V3MultiHopRouter": "0x65bcbbcb39d583cdb51d63c7e2dde2a8a3e3ebd749650a943989d91949695916",
-      "V3QuoteFeeHook": "0xa741ec929ad2e5a22df98071a62871cf6e9b2944fdafbed20213c4be70c69ffd",
-      "V3Quoter": "0xe91b97b569ef7c8c4b6bbff5f334ffe7d292d354e4e3223035ee0b2e5663313c",
-      "V3Router": "0xb1df3f1c9cf659ed76a5348520165c2a4c512d33abdc47163cea8bb9df27cf3a",
-      "_note": "keccak256(eth_getCode) at each address in contracts above (same key names as the deploy state). All 52 matched on 2026-10-07."
-    },
-    "contractsByDeployName": {
-      "BurnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
-      "BuybackBurnExecutor": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
-      "BuybackVault": "0x8F5abE9f9616b3cC4e86d86548E5063b97Bf982c",
-      "CanonicalGate": "0x70AB3b995AFd0313CaA1F35D70a64a6bc8906915",
-      "CapacityController": "0xCa6430bafB0fd871B3586ED4dc3bF7D684b8F4c5",
-      "CreatorRightsNFT": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
-      "DeskNFT": "0x02C83604Ba74a952f931Ab3D77C1Efe31935793D",
-      "DeskRewards": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
-      "EligibilityController": "0x2c9Dd95D4a06154A011d5A2C3fc3D33CAa46E355",
-      "EligibilityRegistry": "0xF29C57341B3750Adc50dA62FF76c01F0AEf1F82d",
-      "FixedV4BuybackRoute": "0x093D4a2c9C4DDC8D29CA24A99313A0cB34C57b33",
-      "LaunchPayoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0",
-      "OpsVault": "0x0A0a192DB331a3bc5Da4dCF62f91214229e26477",
-      "OracleRefTickSigner": "0x5b3eCe4548587bBBd737654FD0E4De82C0366f54",
-      "OrderScheduler": "0x13abEa7Cd4a7EbB0A1b378225b42B6a37e4c5818",
-      "ProtocolDeskVault": "0xec2e2F30D30Cb658860158916FF3a922Ee97A051",
-      "ProtocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
-      "RelayFundingRoute": "0x6de85f5869BE90cACD5B6cfB0E4E009a8d72E3e0",
-      "RewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
-      "RewardBatcher": "0x985cdEE43c500B64b4A749262D26E440AF6Ab748",
-      "RewardDistributor": "0x9B68469BBaceD6dC92F5Bb3cfe25e1097d193C9A",
-      "RewardPayoutVault": "0x53ef255aF936C28a6f6EAdE7Bfb3aB3a6eCd58dD",
-      "RewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
-      "RewardVault": "0x38A42d8432FD8df79c26650D6C2B25adA1149f61",
-      "SolonStakingV2": "0xd20A87639B5a3e86a815627e468072C3a3276172",
-      "SolonStockAdapter": "0x7b5beFdCABBD1D263f18D6Daa03D066581ffc116",
-      "SolonStockAdapter_AAPL": "0xC4657c216E531e19235469423da942eF5e527c15",
-      "SolonStockAdapter_TSLA": "0x1Bfc189de75036c2d2Ca4AE42fF3e92c932bf4a2",
-      "SolonStockHub": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
-      "SolonStockOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
-      "StakingRewardSourceFactory": "0x76FAc7B94d7c6514522840B4Cb3bE2ea6c58dDa5",
-      "StockAdapterRegistry": "0x9A89E458F00835e6b8c1C67cCa009E135a47F43d",
-      "StockFeeConverter": "0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e",
-      "StockFeeSellRoute": "0x97dFb4337b93B589a4b783a87424f6d51caf8294",
-      "StockPoolVault": "0x3A8fEC5ca16aD845d7f9f6002d8Ff4a64F73d3E2",
-      "StockPriceSource": "0xbADA494B74964f9b24DCA02737DAc68825835B7b",
-      "StockToken": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
-      "StockToken_AAPL": "0x785415d2994222533E3A0ECa9FE95Cc41623d9cf",
-      "StockToken_TSLA": "0xAF91A1f046d7ab339b7FF71C0f4D9c166eB1f308",
-      "V2FeeConverter": "0x92FCDd59420964BcdC0FD99067e4e604fc46e198",
-      "V2FeeIngress": "0x332cc2E07A80c57601617CD65dFe1CffF97c6551",
-      "V2FeeSellRoute": "0x75f72f72Cb570c3Dbd5B3beBE3D9D8078014616D",
-      "V2PlatformRouter": "0x1490F4eFD1a22c82F3DeE1cEe1f1D13675e934D2",
-      "V3FeeLedger": "0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088",
-      "V3Governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
-      "V3LPLocker": "0x09650Be5c4866971aBbD5C9e92AE495A118fD13F",
-      "V3LaunchFactory": "0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10",
-      "V3LaunchStrategy": "0x96F5DF5A13D54cD2fc1e2b4847eE2d0F60DF0fCb",
-      "V3MultiHopRouter": "0x79921ce37BF624Df9E7e5bEFaDE7F6E46B67A699",
-      "V3QuoteFeeHook": "0x56071296f4AEc96d61715Bd906a17A05b75628cc",
-      "V3Quoter": "0x70eB10bA50BD323D84c3E213B54E16d911658F48",
-      "V3Router": "0x0085dC0d8BfF401da29591B746F40D5d3Ec0D98d"
-    }
+  "buyback": {
+   "BuybackBurnExecutor": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
+   "BuybackVault": "0x8F5abE9f9616b3cC4e86d86548E5063b97Bf982c",
+   "BurnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
+   "FixedV4BuybackRoute": "0x093D4a2c9C4DDC8D29CA24A99313A0cB34C57b33",
+   "_note": "BurnSink runtime code is 0x5f80fd (PUSH0 DUP1 REVERT): no function exists, SOLON sent there cannot move."
   },
-  "v31": {
-    "_comment": "SolonPad V3.1 on Arc mainnet: the launch stack the site uses for every new coin since 2026-10-07. Hookless Uniswap v4 pools (fee 10000 = 1% LP fee, tickSpacing 100, hooks 0x0) in the canonical PoolManager; the LP NFT is held forever by V31FeeSplitter, which splits the collected quote-side fee 57.5/10/10/5/10/7.5. Built from arc-v31 commit 55297b7: every runtime bytecode below equals that build byte for byte with only the immutable slots masked (checked 2026-10-07), and Sourcify reports match (creation and runtime) for all eight. Runs next to V3.0 (section v3), whose contracts it reuses for rewards, Desk, protocol and governance.",
-    "liveSince": "2026-10-07",
-    "chainId": 5042,
-    "deployedAtBlock": 24316034,
-    "sourceCommit": "arc-v31 55297b7 (branch feat/v3.1-design)",
-    "contracts": {
-      "V31LaunchFactory": "0xA3bE3F5bb288aE83Ca22A8B6CddD239A97830CBB",
-      "V31FeeSplitter": "0x985E396A2e7421cFF1A453d9E7B02cc91BCe1D55",
-      "V31HolderRewards": "0x53dcf63ed1629554a68ee7B6848743c658257d55",
-      "V31CreatorRightsNFT": "0x03Ad21B1Cd0c3862f6Dd6a53172b53FDbA9EA269",
-      "V31StakingEscrow": "0x1efabB43f156102D4Cbd215cf5EA4972C4C6b6e8",
-      "V31BuybackExecutor": "0x77E433444757bE6E8Fd713646aCdc7C69372e18F",
-      "V31LaunchOracle": "0x4937e8D7de5dAFC19dD42D5a320a8869D77c7af7",
-      "V31StockOracleFeed": "0x10BE7CE692B6c7b01a3Fb01D3748316cB720C41B",
-      "_note": "V31CreatorRightsNFT is deployed by the V31FeeSplitter constructor. Each coin is a V31Token deployed by the factory with CREATE2: discover coins through V31LaunchFactory TokenLaunched logs (abis/v31/V31Token.json). A coin's runtime code differs per coin (deployer and launchFactory are immutables), so it is not pinned here: check V31LaunchFactory.tokenOfPool(poolId) == coin instead."
+  "protocol": {
+   "ProtocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
+   "OpsVault": "0x0A0a192DB331a3bc5Da4dCF62f91214229e26477",
+   "StockFeeConverter": "0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e",
+   "StockFeeSellRoute": "0x97dFb4337b93B589a4b783a87424f6d51caf8294"
+  },
+  "v2Bridge": {
+   "V2PlatformRouter": "0x1490F4eFD1a22c82F3DeE1cEe1f1D13675e934D2",
+   "V2FeeIngress": "0x332cc2E07A80c57601617CD65dFe1CffF97c6551",
+   "V2FeeConverter": "0x92FCDd59420964BcdC0FD99067e4e604fc46e198",
+   "V2FeeSellRoute": "0x75f72f72Cb570c3Dbd5B3beBE3D9D8078014616D"
+  },
+  "eligibility": {
+   "EligibilityController": "0x2c9Dd95D4a06154A011d5A2C3fc3D33CAa46E355",
+   "EligibilityRegistry": "0xF29C57341B3750Adc50dA62FF76c01F0AEf1F82d",
+   "mode": "B (Disabled): no on-chain identity checks. Geographic restriction is enforced by the website and terms only."
+  },
+  "stockLayer": {
+   "SolonStockHub": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
+   "OrderScheduler": "0x13abEa7Cd4a7EbB0A1b378225b42B6a37e4c5818",
+   "CapacityController": "0xCa6430bafB0fd871B3586ED4dc3bF7D684b8F4c5",
+   "CanonicalGate": "0x70AB3b995AFd0313CaA1F35D70a64a6bc8906915",
+   "RelayFundingRoute": "0x6de85f5869BE90cACD5B6cfB0E4E009a8d72E3e0",
+   "SolonStockOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
+   "StockPriceSource": "0xbADA494B74964f9b24DCA02737DAc68825835B7b",
+   "stocks": {
+    "NVDA": {
+     "arc": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+     "rh": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+     "symbolArc": "NVDA.sol"
     },
-    "codehashes": {
-      "V31LaunchFactory": "0x6ea1f9b34d95b879546522e118bc59ed0e3ba15779523791b48616d8c9f04486",
-      "V31FeeSplitter": "0x885b0e0162f5775ae43247632883489c73bd601fa499617c068887305744f257",
-      "V31HolderRewards": "0x1c513131eb8203f53cceae90ae4b176559ddb0fd39ccd864dc0ca62519b6192d",
-      "V31CreatorRightsNFT": "0x4f9ae24da3cbd0ede743ff3c32b0a28a0a505e10e58220a15631a36505051827",
-      "V31StakingEscrow": "0xdea89d6a6dc5c669707152cc0f9108a7d226ee95b578c3298d5495f80d36277e",
-      "V31BuybackExecutor": "0xf6a50dd6d6e0a882429716cbb3abf77c86ff164f93fb8f88a5f4761224ac7253",
-      "V31LaunchOracle": "0x16fe7b7673d22034d7cb176cf8767a30592a97a065d2a98e3a8e372c5e7360ee",
-      "V31StockOracleFeed": "0x73ba38995f77deedf321ce0088d8f6fc73dbada2ecce8ee0413e9886abd2b35f",
-      "_note": "keccak256(eth_getCode) at each address in contracts above, measured 2026-10-07 at Arc block ~24697600. All 8 matched."
+    "AAPL": {
+     "arc": "0x785415d2994222533E3A0ECa9FE95Cc41623d9cf",
+     "rh": "0xaF3D76f1834A1d425780943C99Ea8A608f8a93f9",
+     "symbolArc": "AAPL.sol"
     },
-    "wiring": {
-      "_comment": "Immutables read on-chain 2026-10-07 (tools/verify.mjs re-reads every one). V3.0 contracts named here are the ones in section v3.",
-      "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
-      "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
-      "governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
-      "payoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0",
-      "stockQuote": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
-      "stockStatus": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
-      "rewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
-      "rewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
-      "desk": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
-      "protocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
-      "treasury": "0x8798245d1606712828731a238e5414eefBbbB59C",
-      "burnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
-      "feeRouter": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
-      "solon": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
-      "anchorOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
-      "nativeUsdcView": "0x3600000000000000000000000000000000000000",
-      "_names": "stockQuote = NVDA.sol (V3.0 StockToken); stockStatus = SolonStockHub; payoutChoice = LaunchPayoutChoice; desk = DeskRewards; treasury = the 3/5 protocol multisig (V3.0 governance.multisig); anchorOracle = SolonStockOracle; feeRouter = SolonFeeRouter (the buyback leg only; traders do not route through it)."
+    "TSLA": {
+     "arc": "0xAF91A1f046d7ab339b7FF71C0f4D9c166eB1f308",
+     "rh": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+     "symbolArc": "TSLA.sol"
     },
-    "trade": {
-      "_comment": "V3.1 pools have no hook, so V3Router/V3Quoter/V3MultiHopRouter do not serve them. The site trades them through Uniswap's own periphery: UniversalRouter V4_SWAP with Permit2, quotes from V4Quoter.",
-      "universalRouter": "0x8702463e73f74d0b6765aBceb314Ef07aCb92650",
-      "universalRouterVersion": "2.1.2 (Uniswap sdks universal-router-sdk CHAIN_CONFIGS[5042])",
-      "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
-      "v4Quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
-      "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
-      "poolKey": {
-        "currency0": "sorted(quote, coin) by address; quote = 0x0 (native USDC, always currency0) or NVDA.sol",
-        "fee": 10000,
-        "tickSpacing": 100,
-        "hooks": "0x0000000000000000000000000000000000000000",
-        "_note": "Same shape as the legacy instant v4 native pools (instantV4.poolKey): tell them apart with V31LaunchFactory.tokenOfPool(poolId) == coin."
-      }
+    "_note": "All 18 decimals on both chains. Arc token = 1:1 claim on the RH token held by robinhood.ReserveVault. Call hub functions with the RH underlying address."
+   },
+   "poolA": {
+    "_comment": "Arc-native NVDA.sol/USDC Uniswap v4 pool (no hook, 1% LP fee). Thin: read /api/v3/stocks/pool-a for depth before using it.",
+    "StockPoolVault": "0x3A8fEC5ca16aD845d7f9f6002d8Ff4a64F73d3E2",
+    "poolId": "0xc910692bac08336dd6c8ae0f752578171c4576ccb86d26865b207168467a7e7c",
+    "poolKey": {
+     "currency0": "0x0000000000000000000000000000000000000000",
+     "currency1": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+     "fee": 10000,
+     "tickSpacing": 200,
+     "hooks": "0x0000000000000000000000000000000000000000"
     },
-    "governance": {
-      "_comment": "No owner anywhere in V3.1; the only authority is V3Governance (section v3.governance, 48h timelock). The launch batch executed on-chain.",
-      "rewardSourcePoolId": "0x3857e20ef2b1f5b7505019f1296d7bb7bf1b5ba8620d2c8c6a6fd8e571d2a05d",
-      "rewardSourcePoolIdPreimage": "keccak256(\"SOLON_V31_HOLDERS\") = RewardRoundManager.sourcePool(V31HolderRewards)",
-      "guardianActions": {
-        "_comment": "V3Governance.guardianAction(target, selector) == true for exactly these V3.1 tighten-only selectors (the guardian can stop things; it cannot resume, designate or move funds).",
-        "V31LaunchFactory.pauseLaunches()": "0xe79b502e",
-        "V31StakingEscrow.freezeReleases()": "0x1ba46ecc",
-        "V31LaunchOracle.pause()": "0x8456cb59",
-        "V31LaunchOracle.tighten((uint32,uint32,uint16,uint32,uint16,uint16,uint16,uint16,uint32))": "0x30bb15eb",
-        "V31LaunchOracle.tightenFeedAge(uint32)": "0x03ec33ac"
-      },
-      "notGuardian": {
-        "V31LaunchFactory.resumeLaunches()": "0xd255d203",
-        "V31LaunchOracle.resume()": "0x046f7da2",
-        "V31StakingEscrow.designateDistributor(address)": "0x26f64d0c",
-        "_note": "48h timelock only; verify.mjs checks these read false."
-      }
-    },
-    "constants": {
-      "lpFee": 10000,
-      "tickSpacing": 100,
-      "initialTick": 123800,
-      "usdcRange": [
-        -160100,
-        123800
-      ],
-      "rangeWidth": 283900,
-      "supply": "1000000000e18 fixed (V31Token.SUPPLY)",
-      "feeSplitBps": [
-        5750,
-        1000,
-        1000,
-        500,
-        1000,
-        750
-      ],
-      "feeSplitOrder": "holders, creator, desk, staking, buyback, protocol (V31FeeSplitter._split, no setter)",
-      "feeSplitSource": "arc-v31 55297b7 src/v31/V31FeeSplitter.sol _split",
-      "sellSideFee": "the 1% LP fee is charged in the input currency: on a sell it is paid in the coin, and collect() sends that coin amount to the treasury multisig unsplit; only quote-side fees (buys) are split six ways",
-      "stakingShare": "the 5% staking bucket accrues in V31StakingEscrow until governance designates a reissue distributor (none designated as of 2026-10-07)",
-      "launchOracleFreshnessSeconds": 900,
-      "holderFinalizeWindowSeconds": 1800,
-      "holderSealTimeoutSeconds": 604800
-    }
+    "universalRouter": "0x8702463e73f74d0b6765aBceb314Ef07aCb92650",
+    "universalRouterVersion": "2.1.2 (Uniswap sdks universal-router-sdk CHAIN_CONFIGS[5042])"
+   }
+  },
+  "robinhood": {
+   "chainId": 4663,
+   "rpc": "https://rpc.mainnet.chain.robinhood.com/rpc",
+   "ReserveVault": "0x3504aA69ca9C5A5Bc3dA312a6c761e9633251cFc",
+   "RestrictedVenue": "0xdccCc83e518eeC1A3ff9978Eb2345014b24F85AB",
+   "RelayFundingRoute": "0x10F163619d966cEAB83c47efddd07712145fd596",
+   "ChainlinkStockSource": "0xdA32F89eEA36F94c9DBD1aD4f04440F2d7E54102",
+   "StockPriceSender": "0xD39B9Fa95D28E262ee98a9B23FD0730123048D51",
+   "V3Governance": "0x7505c46BDD74a17c5b8ad514899D5b4C00d705Dc"
+  },
+  "ethereum": {
+   "chainId": 1,
+   "EthereumBridger": "0x7505c46BDD74a17c5b8ad514899D5b4C00d705Dc",
+   "_note": "Canonical exit lane (Circle CCTP + Ethereum -> Robinhood Chain). Same address as the RH governance by CREATE coincidence on different chains."
+  },
+  "governance": {
+   "V3Governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
+   "multisig": "0x8798245d1606712828731a238e5414eefBbbB59C",
+   "multisigThreshold": "3 of 5 (Safe 1.4.1)",
+   "guardian": "0x544ebF74B3C00B5DB21E365B5258a589451529E4",
+   "guardianThreshold": "2 of 3 (Safe)",
+   "minDelaySeconds": 172800,
+   "_note": "OpenZeppelin TimelockController with a 48h floor (MIN_DELAY constant). PROPOSER = multisig only; EXECUTOR open; guardian may cancel ordinary ops and call tighten-only selectors (pause, lower caps). Deployment bootstrap is closed (bootstrapClosed = true). Contracts are owned or governed by V3Governance: re-read owner()/governance() on-chain."
+  },
+  "constants": {
+   "tradeFeeBps": 100,
+   "feeSplitBps": [
+    5750,
+    1000,
+    1000,
+    500,
+    1000,
+    750
+   ],
+   "feeSplitSource": "src/v3/V3FeeLedger.sol line 238, inside _credit; no setter (Sourcify sources)",
+   "supply": "1000000000e18 fixed",
+   "usdcPoolKey": "{currency0: 0x0 (native USDC), currency1: coin, fee: 0, tickSpacing: 100, hooks: V3QuoteFeeHook}",
+   "usdcInitialTick": 123800,
+   "usdcRange": [
+    -160100,
+    123800
+   ],
+   "stockFeeBps": 25,
+   "deskSolonPerCard": "100000e18",
+   "deskMaxSupply": 5000,
+   "rewardCarrySeconds": 604800
+  },
+  "codehashes": {
+   "BurnSink": "0x3c55237b3869f93f3e570793afec9785f20a4ee7cd0a7798a418838c833228e0",
+   "BuybackBurnExecutor": "0xe806ac7264a19e5a6bf46a94bdc15c97f570c3083cd0d50e3f526212c9bd0e25",
+   "BuybackVault": "0xb6b4a43dff087f2ad3fd7ffaff9817a24fd1d34474de77d16df8647ed8b9f494",
+   "CanonicalGate": "0x680f8b4670335181f139d2533f3881b40a272c79fd0fd3d478d3b1d7b919500b",
+   "CapacityController": "0xebeb2d4b82c3eeb2835ad8449af9a0f2019668450106778f47d27c7d2d63ade0",
+   "CreatorRightsNFT": "0x03381308df3138462845365d0082953510c7f86c9da6aec0ff5e202818d37235",
+   "DeskNFT": "0xfaedee3c615fb52bbb1322a472cdb28aafe2e029db0659cf75d94c8a099d266e",
+   "DeskRewards": "0xb219241fc81eaefa8c274b2fa8f0f591222df9889504174d55f406c686572810",
+   "EligibilityController": "0x7c1244c8cab63fea5d7213118cd196c80ad008c3aeb54dc0aa448924c1c38fdc",
+   "EligibilityRegistry": "0xca0c028a372a6a74d7c2690cf372ae66018a319c0aefbb0bbe8e776a662e9267",
+   "FixedV4BuybackRoute": "0x3f4d3c44166c79175c5b908a9d09ee12eb8e56ff7b7bc9f6247aab920c42cb78",
+   "LaunchPayoutChoice": "0x27252e9cf4c53a733133125b3f4f131f31498bb850e78f6621eb91ee6b4649bf",
+   "OpsVault": "0xec8ad6f66ae0ff506fcaf18c70f30a738103548b63d36b5aa86344e0a8a55d8c",
+   "OracleRefTickSigner": "0xb86d5de809187488b691b4f3bee943be30c491e6bf174db7daa038e341f40fe7",
+   "OrderScheduler": "0x58d4eee8cccb5ecd5ae445b33d7dc3d8d1edc00974678c76dec62a22b385ed93",
+   "ProtocolDeskVault": "0xcea76211e46d5e2452401161d9812d32e2c098c75d9330a8dccfdb28cee35a54",
+   "ProtocolVault": "0x15cabe965ec358042e201baf07ba529944f281f13aa024e28d97bc1133b054fb",
+   "RelayFundingRoute": "0xb7c5f3193aefaf7e36ed1078c1d94348b4e269ffb63b50acb976b15c538186de",
+   "RewardAssetSchedule": "0xba938a6d80faab1cc7a223482de0369d4e1d149459bda7dffe2e79fca0e71d29",
+   "RewardBatcher": "0x71e0caaf1d8105c9d00dbd87d777eab99d19a57bb00ecb550617166373804b89",
+   "RewardDistributor": "0x16266163429072e318c9bf89ca26434bdae4bfc0535afbe6c624d7f2a4e8b0d2",
+   "RewardPayoutVault": "0x6fdd1afc556edf6886ff98514fe6f811dcfa290b9cf7e5c91bc647238dcef910",
+   "RewardRoundManager": "0x41badc0604949d67919c831fb328438cf7595c2078615aba7381aae83a413df4",
+   "RewardVault": "0x2fd12c07e7d8e12ef8bf63e5edf01be15139edf2a57512c15b144444c9235013",
+   "SolonStakingV2": "0x002e07272fa82429b503e9a5220772e1731d713a1c58e7a78767ed2971eec920",
+   "SolonStockAdapter": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
+   "SolonStockAdapter_AAPL": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
+   "SolonStockAdapter_TSLA": "0x0eec2bb85eea18735bc193d7d4288ec93bd3f2458701f43e4344d039661fb503",
+   "SolonStockHub": "0x2bcaee50fc79575efa51e6cf52327137bf0c40b9b6ed76f78fd85dd12795d645",
+   "SolonStockOracle": "0x925a87ed6a3ac4b8218affb0d59b870692e3cae8990dbc169b5f1aef12a82f74",
+   "StakingRewardSourceFactory": "0x2ce4dc192d83ce2b6e0817ad36a2f3e8f316b912745b3df311bd2902dd1841de",
+   "StockAdapterRegistry": "0x88267eabda42fdc773b77a701dec029dfc16e597cec0db9889e91f7d73c6d16a",
+   "StockFeeConverter": "0x27145c57ea2e2cddf9c610cbd272e081be985366375abbc497445a2e2db9111e",
+   "StockFeeSellRoute": "0x7d6de68a3db039e5521b3dbb6688e1f9f02d945753b500ff504c5877fa444cd2",
+   "StockPoolVault": "0x45a72dd72a5f46b964f56614f3827968dface4f0ddddd05057842e42f7e81123",
+   "StockPriceSource": "0x68de759c021f73c3d0e441c13f78fa8c49888bdf42b3c03a2fdff929f04ac841",
+   "StockToken": "0xb5580499435d71af64ae58fe4c32b0dcac78b05f313d4178472e5b2f68a492a8",
+   "StockToken_AAPL": "0xc2bd57a96c29dfcc510545d224754a288f1000b4d78fc8cae390244ab9e208a1",
+   "StockToken_TSLA": "0x5dd7798b2a4b58b75ce4163ff6db0c2995241437d245eca53104d21863540fc4",
+   "V2FeeConverter": "0x892e2c4c02a25f4dd6d0b088a93e0be1ac44ac13a3aec5f3207b23d590039f86",
+   "V2FeeIngress": "0x6189e37e3cb42b71b73c252185aba4e3a71b9f01835356cbfcbfd9d9a2641c56",
+   "V2FeeSellRoute": "0xd975959f3f28dbd1d39044e25bbff17cfbbc092169fcfad8e0e81f47a57d5e6a",
+   "V2PlatformRouter": "0x073699b9861e014a7f42f5e582356ccbcfdfea76b2f5edf3a19c8f186a0563cb",
+   "V3FeeLedger": "0x23038d3784942070eda6a3c4e7a1bd1b56780ec06f4a230cb9b7a8d576b31a50",
+   "V3Governance": "0x11a2396bd016eded398b4205f14b193a95404047699c6607caa580e07517b743",
+   "V3LPLocker": "0x0e4b49084f283b85a9dbe05c7d11e1940fcc3e18748a93970732a927556c0386",
+   "V3LaunchFactory": "0x51af909387748ffea8f70866425eb7495452e4c752a0b64ec0c0734ddc6340e4",
+   "V3LaunchStrategy": "0xe21d34ad4d9ac101281d20795e7a05b043a8e3ad6c8652c3a275c3aa035e97d0",
+   "V3MultiHopRouter": "0x65bcbbcb39d583cdb51d63c7e2dde2a8a3e3ebd749650a943989d91949695916",
+   "V3QuoteFeeHook": "0xa741ec929ad2e5a22df98071a62871cf6e9b2944fdafbed20213c4be70c69ffd",
+   "V3Quoter": "0xe91b97b569ef7c8c4b6bbff5f334ffe7d292d354e4e3223035ee0b2e5663313c",
+   "V3Router": "0xb1df3f1c9cf659ed76a5348520165c2a4c512d33abdc47163cea8bb9df27cf3a",
+   "_note": "keccak256(eth_getCode) at each address in contracts above (same key names as the deploy state). All 52 matched on 2026-10-07."
+  },
+  "contractsByDeployName": {
+   "BurnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
+   "BuybackBurnExecutor": "0xfE3f4bE4B1f6869721AB68cB3e0eaE160225Db09",
+   "BuybackVault": "0x8F5abE9f9616b3cC4e86d86548E5063b97Bf982c",
+   "CanonicalGate": "0x70AB3b995AFd0313CaA1F35D70a64a6bc8906915",
+   "CapacityController": "0xCa6430bafB0fd871B3586ED4dc3bF7D684b8F4c5",
+   "CreatorRightsNFT": "0xb8fE6aC8E19669eDd06179Ba23509e88Bd394627",
+   "DeskNFT": "0x02C83604Ba74a952f931Ab3D77C1Efe31935793D",
+   "DeskRewards": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
+   "EligibilityController": "0x2c9Dd95D4a06154A011d5A2C3fc3D33CAa46E355",
+   "EligibilityRegistry": "0xF29C57341B3750Adc50dA62FF76c01F0AEf1F82d",
+   "FixedV4BuybackRoute": "0x093D4a2c9C4DDC8D29CA24A99313A0cB34C57b33",
+   "LaunchPayoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0",
+   "OpsVault": "0x0A0a192DB331a3bc5Da4dCF62f91214229e26477",
+   "OracleRefTickSigner": "0x5b3eCe4548587bBBd737654FD0E4De82C0366f54",
+   "OrderScheduler": "0x13abEa7Cd4a7EbB0A1b378225b42B6a37e4c5818",
+   "ProtocolDeskVault": "0xec2e2F30D30Cb658860158916FF3a922Ee97A051",
+   "ProtocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
+   "RelayFundingRoute": "0x6de85f5869BE90cACD5B6cfB0E4E009a8d72E3e0",
+   "RewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
+   "RewardBatcher": "0x985cdEE43c500B64b4A749262D26E440AF6Ab748",
+   "RewardDistributor": "0x9B68469BBaceD6dC92F5Bb3cfe25e1097d193C9A",
+   "RewardPayoutVault": "0x53ef255aF936C28a6f6EAdE7Bfb3aB3a6eCd58dD",
+   "RewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
+   "RewardVault": "0x38A42d8432FD8df79c26650D6C2B25adA1149f61",
+   "SolonStakingV2": "0xd20A87639B5a3e86a815627e468072C3a3276172",
+   "SolonStockAdapter": "0x7b5beFdCABBD1D263f18D6Daa03D066581ffc116",
+   "SolonStockAdapter_AAPL": "0xC4657c216E531e19235469423da942eF5e527c15",
+   "SolonStockAdapter_TSLA": "0x1Bfc189de75036c2d2Ca4AE42fF3e92c932bf4a2",
+   "SolonStockHub": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
+   "SolonStockOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
+   "StakingRewardSourceFactory": "0x76FAc7B94d7c6514522840B4Cb3bE2ea6c58dDa5",
+   "StockAdapterRegistry": "0x9A89E458F00835e6b8c1C67cCa009E135a47F43d",
+   "StockFeeConverter": "0xdf5Ee72DF3e5b4Fb5fA56391BEf23331eeF65d1e",
+   "StockFeeSellRoute": "0x97dFb4337b93B589a4b783a87424f6d51caf8294",
+   "StockPoolVault": "0x3A8fEC5ca16aD845d7f9f6002d8Ff4a64F73d3E2",
+   "StockPriceSource": "0xbADA494B74964f9b24DCA02737DAc68825835B7b",
+   "StockToken": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+   "StockToken_AAPL": "0x785415d2994222533E3A0ECa9FE95Cc41623d9cf",
+   "StockToken_TSLA": "0xAF91A1f046d7ab339b7FF71C0f4D9c166eB1f308",
+   "V2FeeConverter": "0x92FCDd59420964BcdC0FD99067e4e604fc46e198",
+   "V2FeeIngress": "0x332cc2E07A80c57601617CD65dFe1CffF97c6551",
+   "V2FeeSellRoute": "0x75f72f72Cb570c3Dbd5B3beBE3D9D8078014616D",
+   "V2PlatformRouter": "0x1490F4eFD1a22c82F3DeE1cEe1f1D13675e934D2",
+   "V3FeeLedger": "0x70bb736eCBfBACf6bdDfbfeDd7E36D3Dac59e088",
+   "V3Governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
+   "V3LPLocker": "0x09650Be5c4866971aBbD5C9e92AE495A118fD13F",
+   "V3LaunchFactory": "0xDCFBD25f034D51Af797Dd7c5c914F16403B54E10",
+   "V3LaunchStrategy": "0x96F5DF5A13D54cD2fc1e2b4847eE2d0F60DF0fCb",
+   "V3MultiHopRouter": "0x79921ce37BF624Df9E7e5bEFaDE7F6E46B67A699",
+   "V3QuoteFeeHook": "0x56071296f4AEc96d61715Bd906a17A05b75628cc",
+   "V3Quoter": "0x70eB10bA50BD323D84c3E213B54E16d911658F48",
+   "V3Router": "0x0085dC0d8BfF401da29591B746F40D5d3Ec0D98d"
   }
+ },
+ "v31": {
+  "_comment": "SolonPad V3.1 on Arc mainnet: the launch stack the site uses for every new coin since 2026-10-07. Hookless Uniswap v4 pools (fee 10000 = 1% LP fee, tickSpacing 100, hooks 0x0) in the canonical PoolManager; the LP NFT is held forever by V31FeeSplitter, which splits the collected quote-side fee 57.5/10/10/5/10/7.5. Built from arc-v31 commit 55297b7: every runtime bytecode below equals that build byte for byte with only the immutable slots masked (checked 2026-10-07), and Sourcify reports match (creation and runtime) for all eight. V31StakingReissue (the escrow distributor, deployed 2026-10-08 from feat/v31-reissue 20b368c, Sourcify match) is pinned the same way; its registerSource/designateDistributor governance batch is timelocked until 2026-10-10 ~01:32 UTC, so the escrow pays nothing out before then. Runs next to V3.0 (section v3), whose contracts it reuses for rewards, Desk, protocol and governance.",
+  "liveSince": "2026-10-07",
+  "chainId": 5042,
+  "deployedAtBlock": 24316034,
+  "sourceCommit": "arc-v31 55297b7 (branch feat/v3.1-design)",
+  "contracts": {
+   "V31LaunchFactory": "0xA3bE3F5bb288aE83Ca22A8B6CddD239A97830CBB",
+   "V31FeeSplitter": "0x985E396A2e7421cFF1A453d9E7B02cc91BCe1D55",
+   "V31HolderRewards": "0x53dcf63ed1629554a68ee7B6848743c658257d55",
+   "V31CreatorRightsNFT": "0x03Ad21B1Cd0c3862f6Dd6a53172b53FDbA9EA269",
+   "V31StakingEscrow": "0x1efabB43f156102D4Cbd215cf5EA4972C4C6b6e8",
+   "V31BuybackExecutor": "0x77E433444757bE6E8Fd713646aCdc7C69372e18F",
+   "V31LaunchOracle": "0x4937e8D7de5dAFC19dD42D5a320a8869D77c7af7",
+   "V31StockOracleFeed": "0x10BE7CE692B6c7b01a3Fb01D3748316cB720C41B",
+   "_note": "V31CreatorRightsNFT is deployed by the V31FeeSplitter constructor. Each coin is a V31Token deployed by the factory with CREATE2: discover coins through V31LaunchFactory TokenLaunched logs (abis/v31/V31Token.json). A coin's runtime code differs per coin (deployer and launchFactory are immutables), so it is not pinned here: check V31LaunchFactory.tokenOfPool(poolId) == coin instead.",
+   "V31StakingReissue": "0x6135797Dbc3Ab5007Eda39886120614D4f37D818"
+  },
+  "codehashes": {
+   "V31LaunchFactory": "0x6ea1f9b34d95b879546522e118bc59ed0e3ba15779523791b48616d8c9f04486",
+   "V31FeeSplitter": "0x885b0e0162f5775ae43247632883489c73bd601fa499617c068887305744f257",
+   "V31HolderRewards": "0x1c513131eb8203f53cceae90ae4b176559ddb0fd39ccd864dc0ca62519b6192d",
+   "V31CreatorRightsNFT": "0x4f9ae24da3cbd0ede743ff3c32b0a28a0a505e10e58220a15631a36505051827",
+   "V31StakingEscrow": "0xdea89d6a6dc5c669707152cc0f9108a7d226ee95b578c3298d5495f80d36277e",
+   "V31BuybackExecutor": "0xf6a50dd6d6e0a882429716cbb3abf77c86ff164f93fb8f88a5f4761224ac7253",
+   "V31LaunchOracle": "0x16fe7b7673d22034d7cb176cf8767a30592a97a065d2a98e3a8e372c5e7360ee",
+   "V31StockOracleFeed": "0x73ba38995f77deedf321ce0088d8f6fc73dbada2ecce8ee0413e9886abd2b35f",
+   "_note": "keccak256(eth_getCode) at each address in contracts above, measured 2026-10-07 at Arc block ~24697600. All 8 matched.",
+   "V31StakingReissue": "0x041e330dd147ab56785c00dfb0e48de3ae4f5bb3ae6b38661b0c0ac2d1963e37"
+  },
+  "wiring": {
+   "_comment": "Immutables read on-chain 2026-10-07 (tools/verify.mjs re-reads every one). V3.0 contracts named here are the ones in section v3.",
+   "poolManager": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+   "positionManager": "0x6049c9a0e26405C0985f9E3685C87d0aE917f82B",
+   "governance": "0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf",
+   "payoutChoice": "0xfe3b45ebb4db154174A0448E2F259af1578881A0",
+   "stockQuote": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+   "stockStatus": "0x9E8D7502A702d195631937aCb69bf30FfAd3786c",
+   "rewardRoundManager": "0xE5Fadf6E409e0eD9d544bEB53CDAC646b61EfAb6",
+   "rewardAssetSchedule": "0x6206537d024FF083ff8353163E9A681EeD28274a",
+   "desk": "0xA92ae21934504a8c10d917981498Ce71956CD7D9",
+   "protocolVault": "0xF14A184b93a47DE64d0F747C6cCe5d38eB67082D",
+   "treasury": "0x8798245d1606712828731a238e5414eefBbbB59C",
+   "burnSink": "0xA6Fa998dEDd85BD22454d42819c360b2E4FB4c8B",
+   "feeRouter": "0x96Ed755a4E176999A892F0E35b5FFf56D25F5D19",
+   "solon": "0xd36687146385F7Dc84A18FEA3D00319d39D6d1a0",
+   "anchorOracle": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
+   "nativeUsdcView": "0x3600000000000000000000000000000000000000",
+   "_names": "stockQuote = NVDA.sol (V3.0 StockToken); stockStatus = SolonStockHub; payoutChoice = LaunchPayoutChoice; desk = DeskRewards; treasury = the 3/5 protocol multisig (V3.0 governance.multisig); anchorOracle = SolonStockOracle; feeRouter = SolonFeeRouter (the buyback leg only; traders do not route through it).",
+   "solonStakingV2": "0xd20A87639B5a3e86a815627e468072C3a3276172"
+  },
+  "trade": {
+   "_comment": "V3.1 pools have no hook, so V3Router/V3Quoter/V3MultiHopRouter do not serve them. The site trades them through Uniswap's own periphery: UniversalRouter V4_SWAP with Permit2, quotes from V4Quoter.",
+   "universalRouter": "0x8702463e73f74d0b6765aBceb314Ef07aCb92650",
+   "universalRouterVersion": "2.1.2 (Uniswap sdks universal-router-sdk CHAIN_CONFIGS[5042])",
+   "permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3",
+   "v4Quoter": "0x8Dc178eFB8111BB0973Dd9d722ebeFF267c98F94",
+   "stateView": "0xF3334192D15450CdD385c8B70e03f9A6bD9E673b",
+   "poolKey": {
+    "currency0": "sorted(quote, coin) by address; quote = 0x0 (native USDC, always currency0) or NVDA.sol",
+    "fee": 10000,
+    "tickSpacing": 100,
+    "hooks": "0x0000000000000000000000000000000000000000",
+    "_note": "Same shape as the legacy instant v4 native pools (instantV4.poolKey): tell them apart with V31LaunchFactory.tokenOfPool(poolId) == coin."
+   }
+  },
+  "governance": {
+   "_comment": "No owner anywhere in V3.1; the only authority is V3Governance (section v3.governance, 48h timelock). The launch batch executed on-chain.",
+   "rewardSourcePoolId": "0x3857e20ef2b1f5b7505019f1296d7bb7bf1b5ba8620d2c8c6a6fd8e571d2a05d",
+   "rewardSourcePoolIdPreimage": "keccak256(\"SOLON_V31_HOLDERS\") = RewardRoundManager.sourcePool(V31HolderRewards)",
+   "guardianActions": {
+    "_comment": "V3Governance.guardianAction(target, selector) == true for exactly these V3.1 tighten-only selectors (the guardian can stop things; it cannot resume, designate or move funds).",
+    "V31LaunchFactory.pauseLaunches()": "0xe79b502e",
+    "V31StakingEscrow.freezeReleases()": "0x1ba46ecc",
+    "V31LaunchOracle.pause()": "0x8456cb59",
+    "V31LaunchOracle.tighten((uint32,uint32,uint16,uint32,uint16,uint16,uint16,uint16,uint32))": "0x30bb15eb",
+    "V31LaunchOracle.tightenFeedAge(uint32)": "0x03ec33ac"
+   },
+   "notGuardian": {
+    "V31LaunchFactory.resumeLaunches()": "0xd255d203",
+    "V31LaunchOracle.resume()": "0x046f7da2",
+    "V31StakingEscrow.designateDistributor(address)": "0x26f64d0c",
+    "_note": "48h timelock only; verify.mjs checks these read false."
+   }
+  },
+  "constants": {
+   "lpFee": 10000,
+   "tickSpacing": 100,
+   "initialTick": 123800,
+   "usdcRange": [
+    -160100,
+    123800
+   ],
+   "rangeWidth": 283900,
+   "supply": "1000000000e18 fixed (V31Token.SUPPLY)",
+   "feeSplitBps": [
+    5750,
+    1000,
+    1000,
+    500,
+    1000,
+    750
+   ],
+   "feeSplitOrder": "holders, creator, desk, staking, buyback, protocol (V31FeeSplitter._split, no setter)",
+   "feeSplitSource": "arc-v31 55297b7 src/v31/V31FeeSplitter.sol _split",
+   "sellSideFee": "the 1% LP fee is charged in the input currency: on a sell it is paid in the coin, and collect() sends that coin amount to the treasury multisig unsplit; only quote-side fees (buys) are split six ways",
+   "stakingShare": "the 5% staking bucket accrues in V31StakingEscrow until governance designates a reissue distributor (none designated as of 2026-10-07)",
+   "launchOracleFreshnessSeconds": 900,
+   "holderFinalizeWindowSeconds": 1800,
+   "holderSealTimeoutSeconds": 604800
+  }
+ }
 }

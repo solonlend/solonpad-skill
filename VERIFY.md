@@ -166,3 +166,33 @@ so count the keeper's `Transfer` events rather than reading the balance.
 `cast receipt 0xb68514196bce0b4d22402a59cd740f80ffaaf3ee70e43ee42e03fa6ff5a8d669 --rpc-url $ARC`
 → `Transfer(K → 0x…dEaD, 325,858.06 SOLON)`, block 24712162. Checked 2026-10-07.
 
+
+## §R. The reissue distributor (deployed 2026-10-08, designation timelocked)
+
+`V31StakingReissue R = 0x6135797Dbc3Ab5007Eda39886120614D4f37D818` turns the escrow balance
+into stakers' stock rounds once governance designates it. `node verify.mjs` pins its
+codehash and its six immutables. By hand:
+
+```sh
+# six immutables: Governance, StakingEscrow, RewardRoundManager, SolonStakingV2, RewardAssetSchedule, NVDA.sol
+for f in governance escrow rounds staking schedule stockAsset; do cast call $R "$f()(address)" --rpc-url $ARC; done
+
+# the one-shot designate batch (registerSource + designateDistributor + guardian pause whitelist), 48h timelock:
+# timestamp > 1 = scheduled; executable once block.timestamp >= it (schedules to 2026-10-10 ~01:32 UTC)
+OP=0x02ba335fdcc460de802a9e7ba1f61d76748c65054a45693f682b0e6d258c193e
+cast call 0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf 'getTimestamp(bytes32)(uint256)' $OP --rpc-url $ARC
+cast call 0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf 'protectedOperation(bytes32)(bool)' $OP --rpc-url $ARC
+```
+
+After execution these flip, in the same block, and stay:
+`V31StakingEscrow.distributor() == R`, and
+`RewardRoundManager.sourcePool(R) == keccak256("SOLON_V31_STAKING_REISSUE")
+(0x44015e2e4d1a5875cc59350c46423959793aad35d1a6c6718cc219d9ad7777e7)`.
+
+Rounds (after designation; none posted at 1.4.0): `roundInfo(epoch)` for a native round,
+`stockRoundInfo(epoch)` for a stock round. Every root is posted through the same 48h
+timelock. `prove(epoch, account, credit, proof)` is permissionless and write-once;
+`claimStock(epoch, account, credit, proof)` always pays `account`, never the caller, and a
+staker failing `SolonStakingV2.deliveryAllowed` is deferred (`StockClaimDeferred`), to be
+paid by any later call once the gate passes. Native budgets leave the escrow only at
+`RewardRoundManager.seal` time, in exact round-budget amounts. Checked 2026-10-08.

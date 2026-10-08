@@ -1,5 +1,19 @@
 # solonpad-skill
 
+## What changed in 1.4
+
+The escrow distributor exists on-chain. `V31StakingReissue`
+(`0x6135797Dbc3Ab5007Eda39886120614D4f37D818`, Sourcify-verified, ABI in
+`abis/v31/`, codehash and six immutables pinned in `addresses.json` and checked by
+`verify.mjs`) is the contract that will pay the `V31StakingEscrow` balance to
+SolonStakingV2 stakers as stock through governance-posted Merkle rounds. Its designate
+batch (`registerSource` + `designateDistributor` + guardian pause whitelist) is scheduled
+on-chain behind the 48h timelock, executable from 2026-10-10 ~01:32 UTC — `VERIFY.md` §R
+has the cast commands for the pending operation, the claim surface (`prove` /
+`claimStock`, which always pays the account, never the caller) and what flips at
+execution. No round is posted yet; the escrow balance only grows (first keeper split
+round, 2026-10-08: +39.14 USDC). 18 new error selectors land in `errors.json`.
+
 ## What changed in 1.3
 
 SOLON's own pool fees changed on 2026-10-07. The old policy (half of the platform side

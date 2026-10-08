@@ -3,7 +3,7 @@ name: solonpad
 description: Launch, trade and earn on SolonPad, the stock-dividend memecoin launchpad on Arc (chainId 5042, native USDC), by calling the contracts directly with no frontend or account. New coins launch on the V3.1 stack (since 2026-10-07): a hookless Uniswap v4 pool with a 1% LP fee, traded through Uniswap's UniversalRouter, existing V3.0 coins keep trading through V3Router and keep paying dividends. Every V3.0 fee and every V3.1 buy-side fee (V3.1 sell-side fees are paid in the coin and go to the protocol multisig) is split by a hard-coded constant six ways (holders 57.5%, creator 10%, Desk 10%, SOLON staking 5%, SOLON buyback-and-burn 10%, protocol 7.5%). The holder share buys real tokenized stock on the stock token's home chain (NVDA by default; a coin can pick AAPL or TSLA at launch), minted 1:1 on Arc as STOCK.sol and pushed to holders daily, with no maturity and no claim needed above $2. The same stock layer lets an agent buy or sell NVDA/AAPL/TSLA tokens from Arc in one call, or redeem the underlying to its home chain. Also covered: Solon Desk cards (burn 100k SOLON for a 10% fee share), SolonStakingV2 (stake SOLON, earn stock), on-chain proof of reserves on both chains, a 48h-timelocked 3/5 governance, read endpoints under /api/v3, the legacy V2 instant-v4 (native USDC or stock/meme-quoted) and curve launch modes, and the original SOLON staking pool. Arc only: no aggregator, no paid API. Load when an agent needs to create a coin, trade a V3.1 or V3.0 coin with exact fee disclosure, track or claim holder, creator, Desk or staking dividends, buy or redeem stock tokens, or verify reserves and governance before moving value.
 homepage: https://solonpad.fun
 license: MIT
-version: 1.3.0
+version: 1.4.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -36,8 +36,8 @@ legacy ones); re-query Sourcify yourself for the RH and Ethereum contracts (`VER
 | V3.1 launches, USDC quote (kind 0) | **live, serving the site**: since 2026-10-07 every new coin on solonpad.fun launches through `V31LaunchFactory`. On-chain so far: 1 coin (`PROBE31`, the platform's own index probe, hidden from the site's listings) |
 | V3.1 launches, NVDA.sol quote (kind 1) | open on-chain only while `V31LaunchFactory.stockLaunchTick()` succeeds; at 2026-10-07 it reverts `StockPriceNotLive(2)` (stale price, market closed). Precheck it every time. |
 | V3.1 trading | standard Uniswap v4: UniversalRouter v2.1.2 + Permit2, V4Quoter for quotes; 1% LP fee is the whole fee |
-| V3.1 staking share (5%) | **held** in `V31StakingEscrow`: no reissue distributor designated yet, so SolonStakingV2 stakers receive nothing from V3.1 fees until governance designates one (48h). The same escrow now also receives the 57.5% stock leg of SOLON's own pool fees (next row) |
-| SOLON's own pool fees (legacy hookless pool) | **off-chain keeper split since 2026-10-07**: 57.5% USDC → `V31StakingEscrow` (accruing, not paid out), 5% → SOLON stream of the original staking pool, 20% → SOLON burned to `0x…dEaD`, 17.5% protocol. Each leg is an on-chain tx; the ratio is not contract-enforced. See "SOLON's own pool fees" below |
+| V3.1 staking share (5%) | **held** in `V31StakingEscrow`, distributor deployed and designation timelocked: `V31StakingReissue` `0x6135…D818` is live code, and the designate batch executes after 2026-10-10 ~01:32 UTC. Until then stakers receive nothing from this share. The same escrow also receives the 57.5% stock leg of SOLON's own pool fees (next row) |
+| SOLON's own pool fees (legacy hookless pool) | **off-chain keeper split since 2026-10-07**: 57.5% USDC → `V31StakingEscrow` (accruing, not paid out), 5% → SOLON stream of the original staking pool, 20% → SOLON burned to `0x…dEaD`, 17.5% protocol. First split round settled 2026-10-08 (escrow +39.14 USDC, 100,024 SOLON injected, 400,098 SOLON burned). Each leg is an on-chain tx; the ratio is not contract-enforced. See "SOLON's own pool fees" below |
 | V3.0 coins (launched 2026-10-03 to 10-07) | **tradable and paying dividends**: V3Router / V3Quoter, holder rounds, creator and Desk claims unchanged |
 | V3.0 launches (`V3LaunchFactory`) | **retired 2026-10-07**: the site no longer offers it and this skill no longer documents it as a launch path. The factory has no pause flag and still accepts calls; do not use it for new coins. |
 | V3.0 stock-quote launches | were never opened (`/api/v3/stock-quote-gate` `open: false`) and are retired with V3.0 launches |
@@ -331,15 +331,32 @@ To audit it, sum the keeper's escrow deposits, lane-0 injections and dead-addres
 over a window and compare the ratios. Moving the split into a contract is not done.
 
 **What stakers earn today.** Original-pool stakers earn the lane-0 SOLON stream now. The
-57.5% stock leg only accrues: `V31StakingEscrow.distributor()` is `0x0` (2026-10-07), so
-nothing can leave it, and it pays out only after V3Governance designates a distributor (48h
-timelock; the same designation unlocks V3.1's own 5% staking share). In the decided design
-the distributor buys stock for SolonStakingV2 stakers through the reward-round pipeline;
-that governance step is in progress, not live, and this document gives no date for it.
-Before relying on it, read the `designateDistributor` operation in V3Governance's
-`CallScheduled` events and check where the designated contract sends the funds. Measured
-2026-10-07: escrow `totalIn(0x0) = 0` (the keeper's first split round had not run yet; a
-round fires once about 100 USDC of pool fees have accrued).
+57.5% stock leg only accrues: `V31StakingEscrow.distributor()` is still `0x0`, so nothing
+can leave the escrow yet. The distributor is now a deployed, Sourcify-verified contract —
+**`V31StakingReissue` at `0x6135797Dbc3Ab5007Eda39886120614D4f37D818`** (six immutables
+pinned in `addresses.json`, ABI in `abis/v31/V31StakingReissue.json`) — and the one-shot
+governance batch that wires it (RewardRoundManager `registerSource` + escrow
+`designateDistributor` + the guardian pause whitelist) is **scheduled on-chain, executable
+from 2026-10-10 ~01:32 UTC** after the 48h timelock. Verify the pending state yourself:
+
+```sh
+# the scheduled designate batch: timestamp > 1 means scheduled; executable when now >= timestamp
+cast call 0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf 'getTimestamp(bytes32)(uint256)' \
+  0x02ba335fdcc460de802a9e7ba1f61d76748c65054a45693f682b0e6d258c193e --rpc-url $RPC
+# true: during the 48h only the proposer Safe can cancel it (guardian cannot)
+cast call 0xF50875086526FC658D9c125B1D8E64Fa32aE7ddf 'protectedOperation(bytes32)(bool)' \
+  0x02ba335fdcc460de802a9e7ba1f61d76748c65054a45693f682b0e6d258c193e --rpc-url $RPC
+```
+
+After execution, `escrow.distributor()` becomes the reissue address and
+`RewardRoundManager.sourcePool(reissue)` becomes `keccak256("SOLON_V31_STAKING_REISSUE")`.
+Rounds are then governance-posted Merkle roots (every `postRound` goes through the same 48h
+timelock): `prove(epoch, account, credit, proof)` is permissionless and write-once, native
+budgets flow through the V3.0 reward pipeline to stakers as stock, and stock rounds pay via
+`claimStock(epoch, account, credit, proof)` — permissionless, but it always pays `account`,
+never the caller. Until the first round is posted, the escrow balance only grows. Measured
+2026-10-08: escrow `totalIn(0x0) = 39.139848672070813034` USDC — the keeper's first split
+round (settled 2026-10-08 01:02 UTC) deposited the SOLON pool's first 57.5% leg.
 
 **Inventory settled on 10-07.** The SOLON the old policy had bought and not injected,
 1,629,290.29 SOLON, was settled on the same table: 1,018,306.43 injected into lane 0 (tx
