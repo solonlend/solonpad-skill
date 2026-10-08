@@ -1,9 +1,9 @@
 ---
 name: solonpad
-description: Launch, trade and earn on SolonPad, the stock-dividend memecoin launchpad on Arc (chainId 5042, native USDC), by calling the contracts directly with no frontend or account. New coins launch on the V3.1 stack (since 2026-10-07): a hookless Uniswap v4 pool with a 1% LP fee, traded through Uniswap's UniversalRouter, existing V3.0 coins keep trading through V3Router and keep paying dividends. Every V3.0 fee and every V3.1 buy-side fee (V3.1 sell-side fees are paid in the coin and go to the protocol multisig) is split by a hard-coded constant six ways (holders 57.5%, creator 10%, Desk 10%, SOLON staking 5%, SOLON buyback-and-burn 10%, protocol 7.5%). The holder share buys real tokenized stock on the stock token's home chain (NVDA by default; a coin can pick AAPL or TSLA at launch), minted 1:1 on Arc as STOCK.sol and pushed to holders daily, with no maturity and no claim needed above $2. The same stock layer lets an agent buy or sell NVDA/AAPL/TSLA tokens from Arc in one call, or redeem the underlying to its home chain. Also covered: Solon Desk cards (burn 100k SOLON for a 10% fee share), SolonStakingV2 (stake SOLON, earn stock), on-chain proof of reserves on both chains, a 48h-timelocked 3/5 governance, read endpoints under /api/v3, the legacy V2 instant-v4 (native USDC or stock/meme-quoted) and curve launch modes, and the original SOLON staking pool. Arc only: no aggregator, no paid API. Load when an agent needs to create a coin, trade a V3.1 or V3.0 coin with exact fee disclosure, track or claim holder, creator, Desk or staking dividends, buy or redeem stock tokens, or verify reserves and governance before moving value.
+description: Launch, trade and earn on SolonPad, the stock-dividend memecoin launchpad on Arc (chainId 5042, native USDC), by calling the contracts directly with no frontend or account. New coins launch on the V3.1 stack (since 2026-10-07): a hookless Uniswap v4 pool with a 1% LP fee, traded through Uniswap's UniversalRouter, existing V3.0 coins keep trading through V3Router and keep paying dividends. Every V3.0 fee and every V3.1 buy-side fee (V3.1 sell-side fees are paid in the coin and go to the protocol multisig) is split by a hard-coded constant six ways (holders 57.5%, creator 10%, Desk 10%, SOLON staking 5%, SOLON buyback-and-burn 10%, protocol 7.5%). The holder share buys real tokenized stock on the stock token's home chain (NVDA by default; a coin can pick AAPL or TSLA at launch), minted 1:1 on Arc as STOCK.sol and pushed to holders daily, with no maturity and no claim needed above $2. The same stock layer lets an agent buy or sell NVDA/AAPL/TSLA tokens from Arc in one call, or redeem the underlying to its home chain. Since 2026-10-08 the same skill covers SolonLend (/lend): lending on Arc's canonical Morpho — our NVDA.sol-collateral / USDC market (LLTV 62.5%, SolonPad-run oracle), a curated USDC deposit vault (10% performance fee on interest only), and reads for the five pre-existing Arc Morpho markets. Also covered: Solon Desk cards (burn 100k SOLON for a 10% fee share), SolonStakingV2 (stake SOLON, earn stock), on-chain proof of reserves on both chains, a 48h-timelocked 3/5 governance, read endpoints under /api/v3, the legacy V2 instant-v4 (native USDC or stock/meme-quoted) and curve launch modes, and the original SOLON staking pool. Arc only: no aggregator, no paid API. Load when an agent needs to create a coin, trade a V3.1 or V3.0 coin with exact fee disclosure, track or claim holder, creator, Desk or staking dividends, buy or redeem stock tokens, lend or borrow USDC on Arc Morpho through SolonLend, or verify reserves and governance before moving value.
 homepage: https://solonpad.fun
 license: MIT
-version: 1.4.0
+version: 1.5.0
 pin: "Install by pinning a commit hash. This repo is the machine interface; the website is only a pointer to it."
 ---
 
@@ -24,15 +24,17 @@ v31` (8 on Arc) returns Sourcify `match` (checked 2026-10-07 by querying Sourcif
 address), and the runtime codehash of each Arc contract is pinned. The V3.1 runtime code
 also equals the arc-v31 `55297b7` build byte for byte with only immutable slots masked
 (checked 2026-10-07). `node tools/verify.mjs` re-checks the 60 Arc codehashes against the
-pin, plus V3.0 fee split, governance and reserves and V3.1 wiring, holder-source
-registration, guardian allow-list and LP custody, in one read-only run (33 checks with the
-legacy ones); re-query Sourcify yourself for the RH and Ethereum contracts (`VERIFY.md`
+pin, plus V3.0 fee split, governance and reserves, V3.1 wiring, holder-source
+registration, guardian allow-list and LP custody, and the §LEND oracle/market/vault
+checks, in one read-only run (38 checks with the legacy ones, last full run 2026-10-09:
+38/38 green); re-query Sourcify yourself for the RH and Ethereum contracts (`VERIFY.md`
 §V3-1). Run it once per session before the first value-moving transaction.
 
-## What is live (2026-10-07)
+## What is live (2026-10-09)
 
 | Surface | State |
 |---|---|
+| SolonLend (`/lend`): NVDA.sol/USDC market + deposit vault on canonical Morpho | **live since 2026-10-08**: LLTV 62.5%, $300 seed supplied through the vault, borrows 0 at 2026-10-09. See §LEND |
 | V3.1 launches, USDC quote (kind 0) | **live, serving the site**: since 2026-10-07 every new coin on solonpad.fun launches through `V31LaunchFactory`. On-chain so far: 1 coin (`PROBE31`, the platform's own index probe, hidden from the site's listings) |
 | V3.1 launches, NVDA.sol quote (kind 1) | open on-chain only while `V31LaunchFactory.stockLaunchTick()` succeeds; at 2026-10-07 it reverts `StockPriceNotLive(2)` (stale price, market closed). Precheck it every time. |
 | V3.1 trading | standard Uniswap v4: UniversalRouter v2.1.2 + Permit2, V4Quoter for quotes; 1% LP fee is the whole fee |
@@ -57,6 +59,8 @@ legacy ones); re-query Sourcify yourself for the RH and Ethereum contracts (`VER
   a Desk card owner, or a SolonStakingV2 staker.
 - Buy NVDA/AAPL/TSLA tokens from Arc USDC in one call, sell them back, or redeem the
   underlying to an address on Robinhood Chain.
+- Supply USDC to an Arc Morpho market or the SolonLend vault, or borrow USDC against
+  NVDA.sol, with every risk disclosure read first (§LEND).
 - Prove reserves and governance on-chain before trusting any of the above.
 
 ## When NOT to use
@@ -67,8 +71,8 @@ legacy ones); re-query Sourcify yourself for the RH and Ethereum contracts (`VER
 - You need a chain other than Arc, cross-chain execution, or other pads' pools: not this
   skill (removed in 1.0).
 - You expect custody, an API key or a hosted service. There is none.
-- You want leveraged stock lending: that is Solon Lend (`solonlend/skill`), a separate
-  product on Robinhood Chain.
+- You want the leveraged LP farm / CLM vaults on Robinhood Chain: that is the separate
+  `solonlend/skill` repo. Stock-collateral lending on Arc is this skill's §LEND.
 - Cross-chain meme analytics, smart-money tracking, holder chip analysis: GMGN's skill
   family, not us. Our index covers Arc SolonPad launches only.
 
@@ -379,6 +383,80 @@ this week's rate. The pool does not pay stock and does not receive the 57.5% leg
 can be held at once; `/api/v3/staking/{account}` shows the original pool as `legacy`.
 Moving between them is unstake-then-stake, at your principal's discretion. Calls and APR
 basis: `AGENT-GUIDE.md` §G. Checks: `VERIFY.md` §G.
+
+## §LEND. SolonLend: lending on canonical Morpho (live 2026-10-08)
+
+`/lend` on the site is a read front end over the **canonical Morpho Blue singleton on Arc**
+(`addresses.json → lend.morpho`, `owner()` = Morpho DAO) — not a fork, not SolonPad code.
+SolonPad wrote exactly one contract here: `SolonLendOracle` (`lend.oracle`, Sourcify match,
+codehash pinned, ABI `abis/lend/SolonLendOracle.json`), immutable and ownerless:
+`price()` = `SolonStockOracle.peek(NVDA.sol).price18 × 1e6` in Morpho's 1e36 scale
+(collateral raw 18-dec × price / 1e36 = loan raw 6-dec). While the exchange is closed the
+anchor freezes at the last close and this feed passes it through — **no circuit breaker;
+the market's 62.5% LLTV is the whole gap buffer**, so a Monday-open jump beyond 37.5%
+would make liquidations lossy for suppliers. `NoPrice()` (`0xc149905d`) reverts only
+before the anchor's first-ever observation.
+
+**Our market** (`lend.ourMarket`): NVDA.sol collateral / 0x3600 USDC loans, LLTV 62.5%,
+AdaptiveCurveIRM, created at block 24,876,014, seeded $300. Recompute the id as
+`keccak256(abi.encode(loanToken, collateralToken, oracle, irm, lltv))` before using it.
+The **five third-party markets** `/lend` also lists (`lend.thirdPartyMarkets`: PST, sUSDai,
+syrupUSDC, XAUM, nOPAL; LLTV 77–91.5%) live on the same singleton with the same loan
+token; their oracles and listing risk belong to their curators — we present, we don't vouch.
+The page's "vaults" tab likewise shows other curators' USDC Vault V2 vaults; same caveat.
+
+**Reads** (singleton; `parseAbi` shapes):
+```
+market(bytes32 id) → (totalSupplyAssets, totalSupplyShares, totalBorrowAssets, totalBorrowShares, lastUpdate, fee)
+position(bytes32 id, address u) → (supplyShares, uint128 borrowShares, uint128 collateral)
+idToMarketParams(bytes32 id) → (loanToken, collateralToken, oracle, irm, lltv)
+```
+Borrowed assets from shares (Morpho virtual-shares rounding, up):
+`borrowAssets = borrowShares × (totalBorrowAssets + 1) / (totalBorrowShares + 1e6)`.
+**Healthy iff** `collateral × oracle.price() / 1e36 × lltv / 1e18 ≥ borrowAssets`.
+Borrow APR = `AdaptiveCurveIRM.borrowRateView(marketParams, market)` (per-second WAD)
+× 31,536,000; supply APR = borrow APR × utilization × (1 − fee). `fee` was 0 at 2026-10-09;
+the Morpho DAO can set it up to 25% of interest — re-read it.
+
+**Borrow sequence** (all on the singleton, loan amounts 6-dec, collateral 18-dec;
+approve the token to the singleton first — 0x3600 is pulled by ERC-20 `transferFrom`,
+it is the same balance as your native USDC, never budget the two views separately):
+```
+supplyCollateral(marketParams, assets18, you, "")
+borrow(marketParams, assets6, 0, you, you)          # health-checked against the oracle
+repay(marketParams, 0, position.borrowShares, you, "")   # exact-share close, no dust
+withdrawCollateral(marketParams, assets18, you, you)
+```
+Morpho Blue reverts are **plain require strings** ("insufficient collateral",
+"insufficient liquidity", …), not selectors; don't look them up in `errors.json`.
+
+**Lend side**, two doors. Direct: `supply(marketParams, assets6, 0, you, "")` /
+`withdraw(marketParams, assets6, 0, you, you)` on any listed market — you pick the market
+risk yourself. Curated: the SolonLend vault (`lend.vault`, ERC-4626 on 6-dec USDC:
+`deposit/redeem/previewRedeem/maxWithdraw`), which allocates through its pinned adapter
+into our NVDA.sol market; **10% performance fee on interest only** (`performanceFee()` =
+0.1e18), principal never charged. Withdrawals are bounded by idle + deallocatable
+liquidity — if the market is fully borrowed you wait for repayments or liquidations.
+
+**Liquidation** is permissionless: when a position breaks the health check anyone calls
+`liquidate(marketParams, borrower, seizedAssets, 0, "")`. The incentive factor is
+`min(1.15, 1 / (1 − 0.3 × (1 − lltv)))` — ≈ 1.1268 at 62.5% (liquidator takes ~12.7%
+bonus collateral). SolonPad runs a keeper bot on our market (fast polling around exchange
+opens), but nothing depends on it. Shortfall after seizing everything is socialized to
+that market's suppliers — "bad debt" below.
+
+**Read before depositing or borrowing** (the site shows the same three disclosures):
+1. **Suppliers carry bad debt.** If a liquidation under-recovers, Morpho writes the loss
+   down against that market's suppliers, vault depositors included.
+2. **The price source is SolonPad's own oracle** until a third-party Arc stock feed exists
+   (none at 2026-10-08: every Chainlink feed on Arc checked, none is a stock; Pyth not
+   reachable on Arc mainnet). Migration = a **new market** (params are immutable) announced
+   on the site, never an upgrade of this one.
+3. **Vault roles are centralized**: `lend.vault._roles` — owner/curator/allocator/fee
+   recipient are one operator EOA and the vault keeps zero timelocks, so caps, fee (within
+   Vault V2's hard bounds) and adapters can change in one tx with no notice.
+
+Checks before value: `VERIFY.md` §LEND (scripted in `tools/verify.mjs`).
 
 ## Platform and sustainability (read once)
 

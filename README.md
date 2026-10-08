@@ -1,5 +1,19 @@
 # solonpad-skill
 
+## What changed in 1.5
+
+SolonLend (`/lend`, live on mainnet since 2026-10-08): lending on Arc's **canonical
+Morpho** — our NVDA.sol-collateral / 0x3600-USDC market (LLTV 62.5%, created block
+24,876,014) and a curated USDC deposit vault (Morpho Vault V2, 10% performance fee on
+interest only), plus pinned reads for the five pre-existing Arc Morpho markets `/lend`
+lists. The only SolonPad-written contract is `SolonLendOracle` (immutable, ownerless,
+Sourcify match, codehash pinned): NVDA anchor price × 1e6, frozen while the exchange is
+closed — the 62.5% LLTV is the whole weekend-gap buffer, and the docs say exactly that.
+New: `SKILL.md` §LEND (health formula, borrow/repay calldata, liquidation incentive,
+three depositor disclosures), `addresses.json → lend`, `abis/lend/`, `VERIFY.md` §LEND
+with four scripted checks in `verify.mjs` (oracle pin + anchor consistency, market id
+recomputation, vault/adapter factory provenance, vault economics).
+
 ## What changed in 1.4
 
 The escrow distributor exists on-chain. `V31StakingReissue`

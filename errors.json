@@ -3102,9 +3102,10 @@
  "0xc149905d": {
   "sig": "NoPrice()",
   "contracts": [
-   "V31LaunchOracle"
+   "V31LaunchOracle",
+   "SolonLendOracle"
   ],
-  "hint": "V31LaunchOracle has no usable price round yet: kind-1 launches cannot price. USDC launches are unaffected."
+  "hint": "V31LaunchOracle: no usable price round yet, kind-1 launches cannot price (USDC launches unaffected). SolonLendOracle: the stock anchor has no accepted observation (never happens after first observation; the anchor freezes at the last close instead)."
  },
  "0xa3051cad": {
   "sig": "NotNewer(uint256,uint256)",

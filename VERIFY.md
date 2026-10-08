@@ -6,8 +6,10 @@
 cd tools && npm i && node verify.mjs
 ```
 
-It covers 1–6, 9, 9b, §G 1–3, §V3-1 to §V3-4 and the V3.1 checks (33 checks at v1.3; §G 4 is printed for you to compare with your amount). Last full run 2026-10-07: 33/33 green. Manual-only items remain:
-provenance diffs (7, 8), 10–11, §G 5 (source/bytecode review) and §S (the SOLON fee keeper's legs).
+It covers 1–6, 9, 9b, §G 1–3, §V3-1 to §V3-4, the V3.1 checks and §LEND 1–4 (§G 4 is
+printed for you to compare with your amount). Last full run 2026-10-09: 38/38 green.
+Manual-only items remain: provenance diffs (7, 8), 10–11, §G 5 (source/bytecode review),
+§S (the SOLON fee keeper's legs) and the §LEND judgment calls at the end of that section.
 
 Never trust `addresses.json` blindly (repo could be stale or tampered). Each check is one
 `eth_call` against `chain.rpc`. Abort on any mismatch.
@@ -196,3 +198,37 @@ timelock. `prove(epoch, account, credit, proof)` is permissionless and write-onc
 staker failing `SolonStakingV2.deliveryAllowed` is deferred (`StockClaimDeferred`), to be
 paid by any later call once the gate passes. Native budgets leave the escrow only at
 `RewardRoundManager.seal` time, in exact round-budget amounts. Checked 2026-10-08.
+
+## §LEND. SolonLend checks (before supplying, depositing or borrowing)
+
+`node verify.mjs` runs LEND-1 to LEND-4. By hand (`L = addresses.json → lend`):
+
+```sh
+# LEND-1 the oracle is ours and prices sanely: codehash == pin; wired to the V3 stock anchor;
+# price() == peek(NVDA.sol).price18 * 1e6 (Sourcify: match, creation+runtime, chain 5042)
+cast keccak $(cast code $ORACLE --rpc-url $ARC)          # == L.oracle.codehash
+cast call $ORACLE 'source()(address)' --rpc-url $ARC     # == L.oracle.source (SolonStockOracle)
+cast call $ORACLE 'asset()(address)'  --rpc-url $ARC     # == NVDA.sol
+cast call $ORACLE 'price()(uint256)'  --rpc-url $ARC     # ≈ NVDA price in USD × 1e24, > 0
+
+# LEND-2 the market on the singleton is exactly the documented one: recompute the id from the
+# five params, then read it back
+cast call $MORPHO 'idToMarketParams(bytes32)(address,address,address,address,uint256)' $ID --rpc-url $ARC
+
+# LEND-3 vault + adapter provenance comes from Morpho's own factories, not from this file:
+cast call $VAULT_FACTORY 'vaultV2(address,address,bytes32)(address)' $OWNER 0x3600…0000 $(cast keccak "solonlend-v1") --rpc-url $ARC   # == L.vault.address
+cast call $ADAPTER_FACTORY 'morphoMarketV1AdapterV2(address)(address)' $VAULT --rpc-url $ARC  # == L.vault.adapter
+cast call $ADAPTER 'morpho()(address)' --rpc-url $ARC        # == L.morpho
+cast call $ADAPTER 'parentVault()(address)' --rpc-url $ARC   # == L.vault.address
+
+# LEND-4 vault economics you will pay: asset is the USDC view, fee 10% on interest, rate cap set
+cast call $VAULT 'asset()(address)' --rpc-url $ARC               # == 0x3600…0000
+cast call $VAULT 'performanceFee()(uint256)' --rpc-url $ARC      # == 1e17 (10%) — if it changed, this file is stale
+cast call $VAULT 'maxRate()(uint256)' --rpc-url $ARC             # > 0 (0 would freeze the share price)
+```
+
+Manual judgment, not scripted: the vault's `_roles` disclosure (single-EOA curator, zero
+timelocks) and the oracle's weekend freeze are **accepted designs, not bugs** — decide if
+your principal accepts them before moving value. Morpho singleton provenance: cross-check
+`L.morpho` against Morpho's own published Arc deployment and `owner()` == Morpho DAO;
+this repo pins but does not own it. Checked 2026-10-09.

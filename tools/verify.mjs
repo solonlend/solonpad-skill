@@ -2,7 +2,7 @@
 // Read-only: no keys, no transactions, no SolonPad API — chain reads only.
 // Exit 0 = all green, 1 = any red.
 //   cd tools && npm i && node verify.mjs      (ARC_RPC / RH_RPC override the public RPCs)
-import { createPublicClient, http, parseAbi, keccak256 } from 'viem';
+import { createPublicClient, http, parseAbi, keccak256, encodeAbiParameters } from 'viem';
 import { readFileSync } from 'node:fs';
 
 const A = JSON.parse(readFileSync(new URL('../addresses.json', import.meta.url)));
@@ -246,6 +246,49 @@ try {
 } catch (err) {
   console.log(`info  V3.1 kind-1 launch not possible now: stockLaunchTick() reverts ${err.cause?.data?.errorName ?? err.shortMessage}${err.cause?.data?.args ? '(' + err.cause.data.args.join(',') + ')' : ''} (USDC launches unaffected)`);
 }
+
+// ---- §LEND (SolonLend on canonical Morpho, live since 2026-10-08) — VERIFY.md §LEND ----
+const LE = A.lend;
+const M = LE.ourMarket;
+
+// LEND-1. our one contract: oracle codehash == pin, wired to the V3 stock anchor, price() == peek × 1e6
+const oracleCode = await arc.getCode({ address: LE.oracle.SolonLendOracle });
+const lendOracleAbi = parseAbi(['function source() view returns (address)', 'function asset() view returns (address)', 'function price() view returns (uint256)']);
+const [oSrc, oAsset, oPrice] = await Promise.all(['source', 'asset', 'price'].map(fn => arc.readContract({ address: LE.oracle.SolonLendOracle, abi: lendOracleAbi, functionName: fn })));
+const [peek18] = await arc.readContract({ address: LE.oracle.source, abi: parseAbi(['function peek(address) view returns (uint128, uint64)']), functionName: 'peek', args: [M.collateralToken] });
+check('§LEND-1 oracle: codehash pinned, source = SolonStockOracle, asset = NVDA.sol, price = peek × 1e6 > 0',
+  !!oracleCode && keccak256(oracleCode) === LE.oracle.codehash && eq(oSrc, LE.oracle.source) && eq(oAsset, M.collateralToken) && oPrice > 0n && oPrice === peek18 * 10n ** 6n,
+  `price $${Number(oPrice) / 1e24}`);
+
+// LEND-2. the market id recomputes from the five params and reads back identically from the singleton
+const lendParams = { loanToken: M.loanToken, collateralToken: M.collateralToken, oracle: M.oracle, irm: M.irm, lltv: BigInt(M.lltv) };
+const lendId = keccak256(encodeAbiParameters([{ components: [
+  { name: 'loanToken', type: 'address' }, { name: 'collateralToken', type: 'address' },
+  { name: 'oracle', type: 'address' }, { name: 'irm', type: 'address' }, { name: 'lltv', type: 'uint256' }], type: 'tuple' }], [lendParams]));
+const onchainParams = await arc.readContract({ address: LE.morpho, abi: parseAbi(['function idToMarketParams(bytes32) view returns (address, address, address, address, uint256)']), functionName: 'idToMarketParams', args: [lendId] });
+check('§LEND-2 market id recomputes and the singleton returns the documented params (LLTV 62.5%)',
+  lendId === M.id && eq(onchainParams[0], M.loanToken) && eq(onchainParams[1], M.collateralToken) && eq(onchainParams[2], M.oracle) && eq(onchainParams[3], M.irm) && onchainParams[4] === BigInt(M.lltv),
+  lendId);
+
+// LEND-3. vault + adapter provenance: both are instances registered by Morpho's own factories
+const lendSalt = keccak256(new TextEncoder().encode(LE.vault.salt));
+const vaultFromFactory = await arc.readContract({ address: LE.vaultV2Factory, abi: parseAbi(['function vaultV2(address, address, bytes32) view returns (address)']), functionName: 'vaultV2', args: [LE.vault.owner, LE.loanToken, lendSalt] });
+const adapterFromFactory = await arc.readContract({ address: LE.adapterFactory, abi: parseAbi(['function morphoMarketV1AdapterV2(address) view returns (address)']), functionName: 'morphoMarketV1AdapterV2', args: [LE.vault.address] });
+const [adMorpho, adVault] = await Promise.all([
+  arc.readContract({ address: LE.vault.adapter, abi: parseAbi(['function morpho() view returns (address)']), functionName: 'morpho' }),
+  arc.readContract({ address: LE.vault.adapter, abi: parseAbi(['function parentVault() view returns (address)']), functionName: 'parentVault' }),
+]);
+check('§LEND-3 vault and adapter come from Morpho\'s factories and point at the singleton',
+  eq(vaultFromFactory, LE.vault.address) && eq(adapterFromFactory, LE.vault.adapter) && eq(adMorpho, LE.morpho) && eq(adVault, LE.vault.address),
+  `vault ${vaultFromFactory}, adapter ${adapterFromFactory}`);
+
+// LEND-4. vault economics you will pay; roles are the documented single EOA (disclosure, not a pass/fail)
+const lendVaultAbi = parseAbi(['function asset() view returns (address)', 'function performanceFee() view returns (uint256)', 'function maxRate() view returns (uint256)', 'function curator() view returns (address)', 'function owner() view returns (address)', 'function totalAssets() view returns (uint256)']);
+const [vAsset, vFee, vRate, vCur, vOwn, vTot] = await Promise.all(['asset', 'performanceFee', 'maxRate', 'curator', 'owner', 'totalAssets'].map(fn => arc.readContract({ address: LE.vault.address, abi: lendVaultAbi, functionName: fn })));
+check('§LEND-4 vault: asset = 0x3600 USDC view, performance fee 10%, maxRate set',
+  eq(vAsset, LE.loanToken) && vFee === BigInt(LE.vault.performanceFeeWad) && vRate > 0n,
+  `fee ${vFee}, maxRate ${vRate}, totalAssets ${vTot}`);
+console.log(`info  §LEND vault roles: owner ${vOwn}, curator ${vCur} (single EOA by design — read lend.vault._roles before depositing)`);
 
 const failed = results.filter(([, ok]) => !ok).length;
 console.log(`\n${results.length - failed}/${results.length} checks green${failed ? ` — ${failed} FAILED: do not move value` : ' — safe to proceed'}`);

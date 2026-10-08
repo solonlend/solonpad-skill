@@ -541,5 +541,74 @@
    "holderFinalizeWindowSeconds": 1800,
    "holderSealTimeoutSeconds": 604800
   }
+ },
+ "lend": {
+  "_comment": "SolonLend (/lend, live 2026-10-08): stock-collateral lending on Arc's CANONICAL Morpho. The Morpho Blue singleton, the Vault V2 factory and the market-adapter factory are Morpho's own deployment (morpho.owner() = Morpho DAO), not SolonPad code; our market is permissionless createMarket output. The only SolonPad-written contract is SolonLendOracle: immutable, ownerless, Sourcify match (creation+runtime, verified 2026-10-08), runtime codehash pinned below. The deposit vault and its adapter are factory instances of Morpho's audited bytecode and are NOT separately Sourcify-verified: prove their provenance with the two factory registry reads in VERIFY.md \u00a7LEND, never by trusting this file.",
+  "verifiedAt": "2026-10-09",
+  "liveSince": "2026-10-08",
+  "morpho": "0x34CD04070dD72b14E241112F6d83812Df5Af7fCD",
+  "morphoOwner": "0xcAb782bB6a811727b89F09d9b290acbA66223ddD",
+  "adaptiveIrm": "0xF02615d094Fc02fC031C35fe705e175aA4653f20",
+  "loanToken": "0x3600000000000000000000000000000000000000",
+  "vaultV2Factory": "0x3b0eefaBfa22ec7CF2c73877ac16e78D76749f12",
+  "adapterFactory": "0x6C2FF5114E45b50bc7195c2F1f87C98cbdad62Cc",
+  "ourMarket": {
+   "id": "0x55098be724d711573c4c8053ae87ad02c107ac18e94c8d0640ccb4ab07fa2cbc",
+   "_id": "keccak256(abi.encode(loanToken, collateralToken, oracle, irm, lltv)) \u2014 recompute it from the five params below, never trust a pasted id",
+   "loanToken": "0x3600000000000000000000000000000000000000",
+   "collateralToken": "0x2312290792Cf429605D09A42Fa43dAB810486c18",
+   "collateralSymbol": "NVDA.sol",
+   "oracle": "0xF48E05c437B27BD447c443847947C186eD3DdcC2",
+   "irm": "0xF02615d094Fc02fC031C35fe705e175aA4653f20",
+   "lltv": "625000000000000000",
+   "createdAtBlock": 24876014
+  },
+  "oracle": {
+   "SolonLendOracle": "0xF48E05c437B27BD447c443847947C186eD3DdcC2",
+   "codehash": "0xfa7ca524477aa6348991e33e5973b204d4d971ee4739c8196d2b610d6bacbe65",
+   "source": "0xaCc5c366A3BDf3B3C452A8f24548B14af16Cb466",
+   "_source": "SolonStockOracle, the V3 stock anchor (v3.stockLayer.SolonStockOracle): price() = peek(NVDA.sol).price18 * 1e6, Morpho's 1e36 scale. Frozen at the last close while the exchange is closed; no circuit breaker \u2014 the market's 62.5% LLTV is the gap buffer."
+  },
+  "vault": {
+   "address": "0xD02ece663C03D2786033140c77BB71d85f552b0c",
+   "adapter": "0x6B75F2EE61Fe51443697b736fB685784d6b63F68",
+   "salt": "solonlend-v1",
+   "owner": "0xdD43ee6f3fc4786c62D0727F07F4c668EE9F4F13",
+   "performanceFeeWad": "100000000000000000",
+   "_roles": "owner = curator = allocator = performanceFeeRecipient = the operator EOA above, and the vault runs with zero timelocks: every curator setting (caps, fees within Vault V2's hard bounds, adapters) can change in one tx with no notice. Deposit only if you accept that; re-read performanceFee() and the caps yourself, don't trust this file."
+  },
+  "thirdPartyMarkets": {
+   "_comment": "The five pre-existing Arc Morpho markets /lend lists next to ours (CreateMarket scan 2026-10-08; collateral decimals read on-chain the same day). Same singleton, loanToken 0x3600 USDC and AdaptiveCurveIRM for all five. NOT SolonPad's: each oracle and its risk are that market's curator's, /lend only reads them.",
+   "PST": {
+    "collateralToken": "0xa6Db07ebF438d91Aa653746fc05523e435645525",
+    "oracle": "0x632dE25165B997110E92764b940494eA7fF1FE87",
+    "lltv": "860000000000000000",
+    "collateralDecimals": 6
+   },
+   "sUSDai": {
+    "collateralToken": "0x0B2b2B2076d95dda7817e785989fE353fe955ef9",
+    "oracle": "0x6B585b7217E29F11A3b743A6a7bB84754cbA6727",
+    "lltv": "860000000000000000",
+    "collateralDecimals": 18
+   },
+   "syrupUSDC": {
+    "collateralToken": "0x0dC6b79F3c3854E4d74514fD4d29BE6c96Beee39",
+    "oracle": "0x828e006717949907a8E21cfEb553dC66f02cfDDB",
+    "lltv": "915000000000000000",
+    "collateralDecimals": 6
+   },
+   "XAUM": {
+    "collateralToken": "0x178b01f61CBeA1D2a5581Fe1621Be607835EC349",
+    "oracle": "0x4e17777Eb783B0b99aC133a73Bda3f131AFa2c1d",
+    "lltv": "770000000000000000",
+    "collateralDecimals": 18
+   },
+   "nOPAL": {
+    "collateralToken": "0x119Dd7dAFf816f29D7eE47596ae5E4bdC4299165",
+    "oracle": "0xf3844a7DbF0f1B97ADa0137D768081fe4b3D5778",
+    "lltv": "860000000000000000",
+    "collateralDecimals": 6
+   }
+  }
  }
 }
